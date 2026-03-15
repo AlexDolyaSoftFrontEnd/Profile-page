@@ -1,0 +1,815 @@
+/* ============================================
+   CSS CUSTOM PROPERTIES (БІЛИЙ ФОН)
+   ============================================ */
+   :root {
+    /* Кольори - біла тема */
+    --pd-bg: #ffffff;
+    --pd-text: #212529;
+    --pd-text-muted: #6c757d;
+    --pd-border: #e9ecef;
+    --pd-border-light: #f8f9fa;
+    --pd-primary: #9b72ea;
+    --pd-primary-hover: #8a5fe0;
+    --pd-primary-light: rgba(155, 114, 234, 0.15);
+    --pd-danger: #dc3545;
+    --pd-success: #28a745;
+    --pd-info: #17a2b8;
+    
+    /* Тіні */
+    --pd-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --pd-shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.12);
+    --pd-shadow-focus: 0 0 0 3px var(--pd-primary-light);
+    
+    /* Відступи та розміри */
+    --pd-padding: 1.5rem;
+    --pd-padding-sm: 1rem;
+    --pd-border-radius: 12px;
+    --pd-border-radius-sm: 8px;
+    
+    /* Анімації */
+    --pd-transition: 0.2s ease-out;
+    --pd-animation-duration: 0.4s;
+  }
+  
+  /* ============================================
+     CONTENT HEADER (ЗАГОЛОВОК СТОРІНКИ) - ПО ЦЕНТРУ
+     ============================================ */
+  .content-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: var(--pd-padding);
+    background: #ffffff;
+    border-radius: var(--pd-border-radius);
+    border: 1px solid var(--pd-border);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: pdHeaderFadeIn var(--pd-animation-duration) ease-out forwards;
+  }
+  
+  @keyframes pdHeaderFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     BREADCRUMB (ХЛІБНІ КРИХТИ) - ПО ЦЕНТРУ
+     ============================================ */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
+    color: var(--pd-text-muted);
+    text-align: center;
+  }
+  
+  .breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .breadcrumb li span {
+    color: var(--pd-text-muted);
+    transition: color var(--pd-transition);
+  }
+  
+  .breadcrumb li span:hover {
+    color: var(--pd-primary);
+  }
+  
+  .breadcrumb-separator {
+    color: var(--pd-border);
+    font-weight: bold;
+  }
+  
+  /* ============================================
+     PAGE TITLE (ЗАГОЛОВОК СТОРІНКИ) - ПО ЦЕНТРУ
+     ============================================ */
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--pd-text);
+    margin: 0;
+    line-height: 1.3;
+    text-align: center;
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: pdTitleFadeIn var(--pd-animation-duration) ease-out forwards;
+    animation-delay: 0.1s;
+  }
+  
+  @keyframes pdTitleFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     PAGE SUBTITLE (ПІДЗАГОЛОВОК) - ПО ЦЕНТРУ
+     ============================================ */
+  .page-subtitle {
+    font-size: 1rem;
+    color: var(--pd-text-muted);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 600px;
+    text-align: center;
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: pdSubtitleFadeIn var(--pd-animation-duration) ease-out forwards;
+    animation-delay: 0.2s;
+  }
+  
+  @keyframes pdSubtitleFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     PERSONAL DATA GRID (СІТКА ДАНИХ) - ПО ЦЕНТРУ
+     ============================================ */
+  .personal-data-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: var(--pd-padding);
+    background: #ffffff;
+    border-radius: var(--pd-border-radius);
+    border: 1px solid var(--pd-border);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: pdGridFadeIn var(--pd-animation-duration) ease-out forwards;
+    animation-delay: 0.3s;
+  }
+  
+  @keyframes pdGridFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     DATA ROW (РЯДОК ДАНИХ) - ПО ЦЕНТРУ
+     ============================================ */
+  .data-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: var(--pd-border-radius-sm);
+    border: 1px solid var(--pd-border);
+    transition: all var(--pd-transition);
+    text-align: center;
+    
+    /* Анімація появи кожного рядка */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: pdRowSlideIn var(--pd-animation-duration) ease-out forwards;
+  }
+  
+  /* Затримка для кожного рядка (stagger effect) */
+  .data-row:nth-child(1) { animation-delay: 0.4s; }
+  .data-row:nth-child(2) { animation-delay: 0.45s; }
+  .data-row:nth-child(3) { animation-delay: 0.5s; }
+  .data-row:nth-child(4) { animation-delay: 0.55s; }
+  .data-row:nth-child(5) { animation-delay: 0.6s; }
+  .data-row:nth-child(6) { animation-delay: 0.65s; }
+  
+  @keyframes pdRowSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .data-row:hover {
+    background: var(--pd-border-light);
+    border-color: var(--pd-primary);
+    box-shadow: var(--pd-shadow);
+    transform: translateY(-2px);
+  }
+  
+  /* ============================================
+     DATA LABEL (МІТКА ДАНИХ) - ЗЛІВА ⭐
+     ============================================ */
+  .data-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--pd-text-muted);
+    margin: 0;
+    min-width: 180px;
+    flex-shrink: 0;
+    line-height: 1.4;
+    text-align: left; /* ← ТЕКСТ ЗЛІВА */
+  }
+  
+  /* ============================================
+     DATA VALUE (ЗНАЧЕННЯ ДАНИХ) - ПО ЦЕНТРУ
+     ============================================ */
+  .data-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--pd-text);
+    margin: 0;
+    line-height: 1.4;
+    word-break: break-word;
+    text-align: center;
+  }
+  
+  /* ============================================
+     EDIT BUTTON WRAPPER - ПО ЦЕНТРУ
+     ============================================ */
+  .edit-button-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--pd-padding);
+    
+    /* Анімація появи */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: pdButtonFadeIn var(--pd-animation-duration) ease-out forwards;
+    animation-delay: 0.7s;
+  }
+  
+  @keyframes pdButtonFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     EDIT BUTTON (КНОПКА РЕДАГУВАННЯ) - ПО ЦЕНТРУ
+     ============================================ */
+  .edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--pd-border-radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--pd-transition);
+    box-shadow: 0 4px 12px rgba(155, 114, 234, 0.3);
+  }
+  
+  .edit-button:hover {
+    background: linear-gradient(135deg, var(--pd-primary-hover) 0%, #7a4bd6 100%);
+    box-shadow: 0 6px 16px rgba(155, 114, 234, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .edit-button:active {
+    background: linear-gradient(135deg, #7a4bd6 0%, #6f42c1 100%);
+    box-shadow: 0 2px 6px rgba(155, 114, 234, 0.3);
+    transform: translateY(0);
+  }
+  
+  .edit-button:focus-visible {
+    outline: 2px solid var(--pd-primary);
+    outline-offset: 2px;
+  }
+  
+  .edit-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  
+  /* ============================================
+     EDIT BUTTON BOTTOM (АЛЬТЕРНАТИВНА ПОЗИЦІЯ)
+     ============================================ */
+  .edit-button-bottom {
+    margin-top: 1rem;
+  }
+  
+  /* ============================================
+     MODAL FORM STYLES (ФОРМА В МОДАЛЦІ) - ПО ЦЕНТРУ
+     ============================================ */
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--pd-text);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .form-label span[aria-hidden="true"] {
+    color: var(--pd-danger);
+  }
+  
+  /* ============================================
+     FORM INPUTS (ПОЛЯ ВВОДУ) - БІЛИЙ ФОН
+     ============================================ */
+  .form-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--pd-border);
+    border-radius: var(--pd-border-radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    background: #ffffff;
+    color: var(--pd-text);
+    transition: all var(--pd-transition);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .form-input:hover {
+    border-color: #adb5bd;
+    background: #ffffff;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--pd-primary);
+    box-shadow: var(--pd-shadow-focus);
+    background: #ffffff;
+  }
+  
+  .form-input:focus-visible {
+    outline: 2px solid var(--pd-primary);
+    outline-offset: 2px;
+    background: #ffffff;
+  }
+  
+  .form-input::placeholder {
+    color: #adb5bd;
+  }
+  
+  .form-input:disabled {
+    background: var(--pd-border-light);
+    color: var(--pd-text-muted);
+    cursor: not-allowed;
+  }
+  
+  /* Select з стрілочкою */
+  select.form-input {
+    cursor: pointer;
+    appearance: none;
+    background: #ffffff;
+    background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  
+  /* ============================================
+     INPUT WITH ICON (ПОЛЕ З ІКОНКОЮ)
+     ============================================ */
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .input-icon-right {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--pd-text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+    user-select: none;
+    background: #ffffff;
+  }
+  
+  .input-icon-right.interactive {
+    pointer-events: auto;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all var(--pd-transition);
+  }
+  
+  .input-icon-right.interactive:hover,
+  .input-icon-right.interactive:focus {
+    background: var(--pd-border-light);
+    color: var(--pd-text);
+  }
+  
+  .input-icon-right.status-success {
+    color: var(--pd-success);
+  }
+  
+  .input-icon-right.status-error {
+    color: var(--pd-danger);
+  }
+  
+  .input-icon-right.status-info {
+    color: var(--pd-info);
+  }
+  
+  /* ============================================
+     FORM ACTIONS (КНОПКИ ФОРМИ) - ПО ЦЕНТРУ
+     ============================================ */
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--pd-border);
+    margin-top: 0.5rem;
+  }
+  
+  .btn-cancel,
+  .btn-save {
+    padding: 0.75rem 1.75rem;
+    border-radius: var(--pd-border-radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--pd-transition);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 120px;
+    background: #ffffff;
+  }
+  
+  .btn-cancel {
+    color: var(--pd-text);
+    border: 2px solid var(--pd-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .btn-cancel:hover:not(:disabled) {
+    background: var(--pd-border-light);
+    border-color: #adb5bd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .btn-cancel:active:not(:disabled) {
+    background: #e9ecef;
+    border-color: #6c757d;
+    transform: translateY(0);
+  }
+  
+  .btn-cancel:focus-visible {
+    outline: 2px solid var(--pd-primary);
+    outline-offset: 2px;
+    background: #ffffff;
+  }
+  
+  .btn-save {
+    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
+    color: #ffffff;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 12px rgba(155, 114, 234, 0.3);
+  }
+  
+  .btn-save:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--pd-primary-hover) 0%, #7a4bd6 100%);
+    box-shadow: 0 6px 16px rgba(155, 114, 234, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .btn-save:active:not(:disabled) {
+    background: linear-gradient(135deg, #7a4bd6 0%, #6f42c1 100%);
+    box-shadow: 0 2px 6px rgba(155, 114, 234, 0.3);
+    transform: translateY(0);
+  }
+  
+  .btn-save:focus-visible {
+    outline: 2px solid #6f42c1;
+    outline-offset: 2px;
+    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
+  }
+  
+  .btn-cancel:disabled,
+  .btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  /* ============================================
+     ERROR MESSAGE (ПОВІДОМЛЕННЯ ПРО ПОМИЛКУ) - ПО ЦЕНТРУ
+     ============================================ */
+  .error-message {
+    font-size: 0.875rem;
+    color: var(--pd-danger);
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    text-align: center;
+  }
+  
+  /* ============================================
+     SUCCESS MESSAGE (ПОВІДОМЛЕННЯ ПРО УСПІХ) - ПО ЦЕНТРУ
+     ============================================ */
+  .success-message {
+    font-size: 0.875rem;
+    color: var(--pd-success);
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    text-align: center;
+  }
+  
+  /* ============================================
+     RESPONSIVE / MOBILE
+     ============================================ */
+  @media (max-width: 768px) {
+    .content-header {
+      padding: var(--pd-padding-sm);
+      margin-bottom: 1rem;
+    }
+  
+    .page-title {
+      font-size: 1.5rem;
+    }
+  
+    .page-subtitle {
+      font-size: 0.9rem;
+    }
+  
+    .personal-data-grid {
+      padding: var(--pd-padding-sm);
+      max-width: 100%;
+    }
+  
+    .data-row {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.875rem;
+    }
+  
+    .data-label {
+      min-width: auto;
+      font-size: 0.825rem;
+      text-align: center; /* На мобільних теж по центру */
+    }
+  
+    .data-value {
+      font-size: 0.95rem;
+    }
+  
+    .edit-button-wrapper {
+      padding: 0 var(--pd-padding-sm);
+    }
+  
+    .edit-button {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .form-actions .btn-cancel,
+    .form-actions .btn-save {
+      width: 100%;
+      max-width: 300px;
+    }
+  
+    .form-input {
+      max-width: 100%;
+    }
+  
+    .input-wrapper {
+      max-width: 100%;
+    }
+  }
+  
+  /* ============================================
+     TABLET
+     ============================================ */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .personal-data-grid {
+      max-width: 700px;
+    }
+  
+    .data-label {
+      min-width: 200px;
+    }
+  }
+  
+  /* ============================================
+     ACCESSIBILITY: REDUCED MOTION
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .content-header,
+    .page-title,
+    .page-subtitle,
+    .personal-data-grid,
+    .data-row,
+    .edit-button-wrapper,
+    .edit-button,
+    .btn-cancel,
+    .btn-save {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none;
+    }
+  }
+  
+  /* ============================================
+     ACCESSIBILITY: HIGH CONTRAST
+     ============================================ */
+  @media (prefers-contrast: high) {
+    .personal-data-grid {
+      border: 2px solid #000000;
+      background: #ffffff;
+    }
+  
+    .data-row {
+      border: 2px solid #000000;
+      background: #ffffff;
+    }
+  
+    .form-input {
+      border-width: 2px;
+      border-color: #000000;
+      background: #ffffff;
+    }
+  
+    .edit-button {
+      background: #000000;
+      border: 2px solid #000000;
+    }
+  
+    .btn-cancel {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+    }
+  
+    .btn-save {
+      background: #000000;
+      color: #ffffff;
+      border: 2px solid #000000;
+    }
+  }
+  
+  /* ============================================
+     PRINT STYLES
+     ============================================ */
+  @media print {
+    .content-header,
+    .page-title,
+    .page-subtitle,
+    .personal-data-grid,
+    .data-row {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      background: #ffffff !important;
+    }
+  
+    .edit-button-wrapper {
+      display: none;
+    }
+  
+    .data-row {
+      break-inside: avoid;
+    }
+  }
+  
+  /* ============================================
+     UTILITY CLASSES
+     ============================================ */
+  
+  /* Візуально прихований, але доступний для скрінрідерів */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  
+  /* Підказка під полем */
+  .form-hint {
+    font-size: 0.875rem;
+    color: var(--pd-text-muted);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+    text-align: center;
+    background: #ffffff;
+  }
+  
+  /* Стан валідації */
+  .form-input:invalid:not(:placeholder-shown) {
+    border-color: var(--pd-danger);
+    background: #ffffff;
+  }
+  
+  .form-input:valid:not(:placeholder-shown) {
+    border-color: var(--pd-success);
+    background: #ffffff;
+  }
+  
+  /* Loading state */
+  .loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+  }
+  
+  .loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--pd-border);
+    border-top-color: var(--pd-primary);
+    border-radius: 50%;
+    animation: pdSpin 0.8s linear infinite;
+    transform: translate(-50%, -50%);
+  }
+  
+  @keyframes pdSpin {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  
+  /* Центрування всього контенту */
+  .personal-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: #ffffff;
+  }

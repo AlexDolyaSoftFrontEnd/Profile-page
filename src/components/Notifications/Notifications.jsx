@@ -2,14 +2,8 @@ import React, { useState, useMemo } from 'react';
 import './Notifications.css';
 
 const Notifications = () => {
-  /* ============================================
-     СОСТОЯНИЕ ФИЛЬТРА
-     ============================================ */
   const [filter, setFilter] = useState('all');
   
-  /* ============================================
-     СПИСОК СПОВІЩЕНЬ (МОКОВЫЕ ДАННЫЕ)
-     ============================================ */
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -29,25 +23,16 @@ const Notifications = () => {
     }
   ]);
 
-  /* ============================================
-     ФИЛЬТРАЦИЯ СПОВІЩЕНЬ (MEMOIZED)
-     ============================================ */
   const filteredNotifications = useMemo(() => {
     if (filter === 'unread') return notifications.filter(n => !n.read);
     if (filter === 'read') return notifications.filter(n => n.read);
     return notifications;
   }, [notifications, filter]);
 
-  /* ============================================
-     КОЛИЧЕСТВО НЕПРОЧИТАННЫХ (MEMOIZED)
-     ============================================ */
   const unreadCount = useMemo(() => 
     notifications.filter(n => !n.read).length
   , [notifications]);
 
-  /* ============================================
-     ФОРМАТИРОВАНИЕ ДАТЫ
-     ============================================ */
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('uk-UA', {
@@ -58,9 +43,6 @@ const Notifications = () => {
     });
   };
 
-  /* ============================================
-     ИКОНКА ПО ТИПУ СПОВІЩЕНИЯ
-     ============================================ */
   const getNotificationIcon = (type) => {
     const icons = {
       success: '✓',
@@ -71,39 +53,26 @@ const Notifications = () => {
     return icons[type] || 'ℹ';
   };
 
-  /* ============================================
-     ОТМЕТИТЬ КАК ПРОЧИТАННОЕ
-     ============================================ */
   const handleMarkAsRead = (id) => {
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
   };
 
-  /* ============================================
-     УДАЛИТЬ СПОВІЩЕНИЕ
-     ============================================ */
   const handleDismiss = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  /* ============================================
-     ОТМЕТИТЬ ВСЕ КАК ПРОЧИТАННЫЕ
-     ============================================ */
   const handleMarkAllAsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  /* ============================================
-     ОЧИСТИТЬ ВСЕ СПОВІЩЕНИЯ
-     ============================================ */
   const handleClearAll = () => {
     setNotifications([]);
   };
 
   return (
     <div className="notifications-container">
-      {/* ЗАГОЛОВОК СТРАНИЦЫ СПОВІЩЕНЬ */}
       <header className="notifications-header">
         <div>
           <h2 className="notifications-title">Сповіщення</h2>
@@ -111,7 +80,6 @@ const Notifications = () => {
             Переглядайте оновлення та важливі повідомлення
           </p>
         </div>
-        {/* Бейдж непрочитанных */}
         {unreadCount > 0 && (
           <span className="notifications-badge" aria-label={unreadCount + ' непрочитаних'}>
             {unreadCount}
@@ -119,7 +87,6 @@ const Notifications = () => {
         )}
       </header>
 
-      {/* ФИЛЬТРЫ СПОВІЩЕНЬ */}
       <div className="notifications-filters" role="tablist" aria-label="Фильтры">
         {[
           { id: 'all', label: 'Усі' },
@@ -139,7 +106,6 @@ const Notifications = () => {
         ))}
       </div>
 
-      {/* КНОПКА "ОТМЕТИТЬ ВСЕ КАК ПРОЧИТАННЫЕ" */}
       {unreadCount > 0 && (
         <button
           type="button"
@@ -150,7 +116,6 @@ const Notifications = () => {
         </button>
       )}
 
-      {/* СПИСОК СПОВІЩЕНЬ */}
       <ul 
         className="notifications-list" 
         role="list"
@@ -158,7 +123,6 @@ const Notifications = () => {
         aria-busy={notifications.length === 0}
       >
         {filteredNotifications.length === 0 ? (
-          /* Пустое состояние */
           <li className="notifications-empty" role="listitem">
             <span className="empty-icon" aria-hidden="true">🔔</span>
             <p>
@@ -170,7 +134,6 @@ const Notifications = () => {
             </p>
           </li>
         ) : (
-          /* Список сповіщень */
           filteredNotifications.map((notification) => (
             <li
               key={notification.id}
@@ -178,7 +141,6 @@ const Notifications = () => {
               role="listitem"
             >
               <div className="notification-content">
-                {/* Иконка типа сповіщения */}
                 <span 
                   className="notification-icon type-icon" 
                   aria-label={'Тип: ' + notification.type}
@@ -186,7 +148,6 @@ const Notifications = () => {
                   {getNotificationIcon(notification.type)}
                 </span>
                 
-                {/* Текст сповіщения */}
                 <div className="notification-text">
                   <h4 className="notification-title">{notification.title}</h4>
                   <p className="notification-message">{notification.message}</p>
@@ -196,7 +157,6 @@ const Notifications = () => {
                 </div>
               </div>
 
-              {/* Кнопки действий */}
               <div className="notification-actions">
                 {!notification.read && (
                   <button
@@ -211,7 +171,7 @@ const Notifications = () => {
                   type="button"
                   className="action-btn dismiss-btn"
                   onClick={() => handleDismiss(notification.id)}
-                  aria-label="Удалить"
+                  aria-label="Видалити"
                 >
                   ✕
                 </button>
@@ -221,7 +181,6 @@ const Notifications = () => {
         )}
       </ul>
 
-      {/* ПОДВАЛ (КНОПКА ОЧИСТКИ) */}
       {notifications.length > 0 && (
         <footer className="notifications-footer">
           <button 

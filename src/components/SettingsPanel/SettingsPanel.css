@@ -1,0 +1,523 @@
+/* ============================================
+   CSS CUSTOM PROPERTIES (АНІМАЦІЇ)
+   ============================================ */
+   :root {
+    --settings-animation-duration: 0.4s;
+    --settings-animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    --settings-stagger-delay: 0.05s;
+  }
+  
+  /* ============================================
+     SETTINGS PANEL - БАЗОВІ СТИЛІ
+     ============================================ */
+  .settings {
+    display: flex;
+    align-items: center;
+  }
+  
+  .settings-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    max-width: 600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: left;
+    
+    /* Плавна поява панелі */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: settingsPanelFadeIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+  }
+  
+  @keyframes settingsPanelFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     HEADER (ЗАГОЛОВОК + ОПИС)
+     ============================================ */
+  .settings-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    align-items: flex-start;
+    text-align: left;
+    
+    /* Плавна поява заголовка */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: settingsHeaderFadeIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+    animation-delay: 0.1s;
+  }
+  
+  @keyframes settingsHeaderFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .settings-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0;
+    line-height: 1.3;
+    text-align: left;
+  }
+  
+  .settings-description {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+    text-align: left;
+    max-width: 100%;
+  }
+  
+  /* ============================================
+     CONTENT (СПИСОК НАЛАШТУВАНЬ)
+     ============================================ */
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  /* ============================================
+     SETTING ITEM - ПОЯВА З ЗАТРИМКОЮ
+     ============================================ */
+  .setting-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    
+    /* Плавна поява кожного елемента списку */
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: settingItemSlideIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+  }
+  
+  /* Затримка для кожного елемента списку (stagger effect) */
+  .setting-item:nth-child(1) { animation-delay: 0.2s; }
+  .setting-item:nth-child(2) { animation-delay: 0.25s; }
+  .setting-item:nth-child(3) { animation-delay: 0.3s; }
+  .setting-item:nth-child(4) { animation-delay: 0.35s; }
+  .setting-item:nth-child(5) { animation-delay: 0.4s; }
+  
+  @keyframes settingItemSlideIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .setting-item:hover {
+    border-color: #adb5bd;
+    background: #f8f9fa;
+    transform: translateX(4px);
+  }
+  
+  .setting-item:focus-within {
+    border-color: #9b72ea;
+    box-shadow: 0 0 0 3px rgba(155, 114, 234, 0.15);
+    outline: none;
+  }
+  
+  /* Checkbox styling */
+  .setting-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+    accent-color: #9b72ea;
+    cursor: pointer;
+    margin: 0.125rem 0 0 0;
+    flex-shrink: 0;
+    transition: transform 0.2s ease-out;
+  }
+  
+  .setting-checkbox:hover {
+    transform: scale(1.1);
+  }
+  
+  .setting-checkbox:focus-visible {
+    outline: 2px solid #9b72ea;
+    outline-offset: 2px;
+  }
+  
+  /* Wrapper для тексту праворуч */
+  .setting-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+  }
+  
+  /* Основний лейбл */
+  .setting-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #212529;
+    line-height: 1.4;
+    text-align: left;
+    transition: color 0.2s ease-out;
+  }
+  
+  .setting-item:hover .setting-label {
+    color: #9b72ea;
+  }
+  
+  /* Підказка під лейблом */
+  .setting-hint {
+    font-size: 0.875rem;
+    color: #6c757d;
+    line-height: 1.4;
+    text-align: left;
+    transition: color 0.2s ease-out;
+  }
+  
+  .setting-item:hover .setting-hint {
+    color: #495057;
+  }
+  
+  /* ============================================
+     FOOTER TEXT (ІНФО ВНИЗУ)
+     ============================================ */
+  .settings-footer {
+    padding: 1rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    text-align: left;
+    
+    /* Плавна поява футера */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: settingsFooterFadeIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+    animation-delay: 0.5s;
+  }
+  
+  @keyframes settingsFooterFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .settings-footer-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    text-align: left;
+  }
+  
+  .footer-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    animation: footerIconPulse 2s ease-in-out infinite;
+    animation-delay: 0.7s;
+  }
+  
+  @keyframes footerIconPulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+  }
+  
+  /* ============================================
+     ACTIONS (КНОПКИ)
+     ============================================ */
+  .settings-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e9ecef;
+    
+    /* Плавна поява кнопок */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: settingsActionsFadeIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+    animation-delay: 0.6s;
+  }
+  
+  @keyframes settingsActionsFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ============================================
+     BUTTON STYLES
+     ============================================ */
+  .btn {
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 120px;
+    text-align: center;
+    
+    /* Плавна поява кнопок з затримкою */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: buttonFadeIn var(--settings-animation-duration) var(--settings-animation-timing) forwards;
+  }
+  
+  .btn-cancel {
+    animation-delay: 0.7s;
+  }
+  
+  .btn-save {
+    animation-delay: 0.75s;
+  }
+  
+  @keyframes buttonFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Кнопка "Скасувати" */
+  .btn-cancel {
+    background: #ffffff;
+    color: #495057;
+    border: 2px solid #ced4da;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .btn-cancel:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #212529;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  .btn-cancel:active:not(:disabled) {
+    background: #e9ecef;
+    border-color: #6c757d;
+    transform: translateY(0);
+  }
+  
+  .btn-cancel:focus-visible {
+    outline: 2px solid #9b72ea;
+    outline-offset: 2px;
+  }
+  
+  /* Кнопка "Зберегти зміни" */
+  .btn-save {
+    background: linear-gradient(135deg, #9b72ea 0%, #8a5fe0 100%);
+    color: #ffffff;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 12px rgba(155, 114, 234, 0.3);
+  }
+  
+  .btn-save:hover:not(:disabled) {
+    background: linear-gradient(135deg, #8a5fe0 0%, #7a4bd6 100%);
+    box-shadow: 0 6px 16px rgba(155, 114, 234, 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .btn-save:active:not(:disabled) {
+    background: linear-gradient(135deg, #7a4bd6 0%, #6f42c1 100%);
+    box-shadow: 0 2px 6px rgba(155, 114, 234, 0.3);
+    transform: translateY(0);
+  }
+  
+  .btn-save:focus-visible {
+    outline: 2px solid #6f42c1;
+    outline-offset: 2px;
+  }
+  
+  /* Ripple effect для кнопок */
+  .btn-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+  }
+  
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+  
+  /* ============================================
+     RESPONSIVE / MOBILE
+     ============================================ */
+  @media (max-width: 768px) {
+    .settings-panel {
+      padding: 1rem;
+      border-radius: 12px 12px 0 0;
+      max-width: 100%;
+    }
+  
+    .settings-title {
+      font-size: 1.25rem;
+    }
+  
+    .settings-description {
+      font-size: 0.9rem;
+    }
+  
+    .setting-item {
+      padding: 0.75rem;
+      gap: 0.75rem;
+    }
+  
+    .setting-label {
+      font-size: 0.95rem;
+    }
+  
+    .setting-hint {
+      font-size: 0.825rem;
+    }
+  
+    .settings-footer {
+      padding: 0.875rem;
+    }
+  
+    .settings-footer-text {
+      font-size: 0.825rem;
+    }
+  
+    .settings-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  
+    .settings-actions .btn {
+      flex: 1;
+      min-width: auto;
+    }
+  }
+  
+  /* ============================================
+     ACCESSIBILITY: REDUCED MOTION
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .settings-panel,
+    .settings-header,
+    .setting-item,
+    .settings-footer,
+    .settings-actions,
+    .btn,
+    .footer-icon {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    
+    .setting-item,
+    .btn-cancel,
+    .btn-save,
+    .setting-checkbox {
+      transition: none;
+      transform: none;
+    }
+    
+    .setting-item:hover {
+      transform: none;
+    }
+  }
+  
+  /* ============================================
+     ACCESSIBILITY: HIGH CONTRAST
+     ============================================ */
+  @media (prefers-contrast: high) {
+    .settings-panel {
+      border: 2px solid #000000;
+    }
+  
+    .setting-item {
+      border: 2px solid #000000;
+    }
+  
+    .btn-cancel {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+    }
+  
+    .btn-save {
+      background: #000000;
+      color: #ffffff;
+      border: 2px solid #000000;
+    }
+  
+    .settings-footer {
+      border: 2px solid #000000;
+      background: #ffffff;
+    }
+  }
+  
+  /* ============================================
+     PRINT STYLES
+     ============================================ */
+  @media print {
+    .settings-panel,
+    .settings-header,
+    .setting-item,
+    .settings-footer,
+    .settings-actions,
+    .btn {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }

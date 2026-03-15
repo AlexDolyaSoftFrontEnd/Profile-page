@@ -1,29 +1,43 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import './Modal.css';
 
 /**
- * Компонент модального окна
+ * Семантичний компонент модального вікна з білим фоном
+ * Повна підтримка доступності (WCAG 2.1 AA)
+ * 
  * @param {Object} props
- * @param {boolean} props.isOpen - Открыто ли модальное окно
- * @param {Function} props.onClose - Функция закрытия модального окна
- * @param {string} props.title - Заголовок модального окна
- * @param {React.ReactNode} props.children - Дочерние элементы (контент модального окна)
+ * @param {boolean} props.isOpen - Стан відкриття модалки
+ * @param {Function} props.onClose - Функція закриття
+ * @param {string} props.title - Заголовок (обов'язковий для aria-labelledby)
+ * @param {string} props.description - Опис для aria-describedby (опціонально)
+ * @param {React.ReactNode} props.children - Контент модалки
+ * @param {string} props.size - Розмір: 'small' | 'medium' | 'large' | 'fullscreen'
+ * @param {boolean} props.closeOnOverlay - Закриття при кліку на оверлей
+ * @param {boolean} props.closeOnEscape - Закриття по клавіші Escape
+ * @param {string} props.initialFocus - Селектор елемента для початкового фокусу
  */
-const Modal = ({ isOpen, onClose, title, children }) => {
-  // Ссылка на основной элемент модального окна
+const Modal = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  description, 
+  children, 
+  size = 'medium',
+  closeOnOverlay = true,
+  closeOnEscape = true,
+  initialFocus = null
+}) => {
   const modalRef = useRef(null);
-  // Сохраняем элемент, который был в фокусе до открытия модалки
+  const titleId = 'modal-title';
+  const descriptionId = 'modal-description';
   const previousActiveElement = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  /**
-   * Получаем все фокусируемые элементы внутри модального окна
-   * @returns {NodeList} Список фокусируемых элементов
-   */
+  // Отримуємо фокусовані елементи для focus trap
   const getFocusableElements = useCallback(() => {
     if (!modalRef.current) return [];
     
-    // Селекторы всех фокусируемых элементов
     const focusableSelectors = [
       'button:not([disabled])',
       'input:not([disabled])',
@@ -37,67 +51,93 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   }, []);
 
   /* ============================================
-     УПРАВЛЕНИЕ ФОКУСОМ ПРИ ОТКРЫТИИ/ЗАКРЫТИИ
+     МОНТУВАННЯ ПОРТАЛУ
+     ============================================ */
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  /* ============================================
+     УПРАВЛІННЯ ФОКУСОМ ТА БЛОКУВАННЯМ СКРОЛУ
      ============================================ */
   useEffect(() => {
     if (isOpen) {
-      // Сохраняем текущий элемент в фокусе (чтобы вернуть после закрытия)
+      // Зберігаємо поточний фокус для повернення
       previousActiveElement.current = document.activeElement;
 
-      // Блокируем прокрутку body при открытом модальном окне
+      // Блокуємо скролл основної сторінки
+      const scrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
 
-      // Устанавливаем фокус на первый фокусируемый элемент после рендера
+      // Фокус на модалку після рендеру
       const timer = setTimeout(() => {
-        const focusableElements = getFocusableElements();
-        if (focusableElements.length > 0) {
-          focusableElements[0].focus();
+        if (initialFocus) {
+          const element = modalRef.current?.querySelector(initialFocus);
+          element?.focus();
         } else {
-          modalRef.current?.focus();
+          const focusableElements = getFocusableElements();
+          if (focusableElements.length > 0) {
+            focusableElements[0].focus();
+          } else {
+            modalRef.current?.focus();
+          }
         }
-      }, 0);
+      }, 100);
 
-      // Очистка при размонтировании
       return () => {
         clearTimeout(timer);
+        // Відновлюємо скролл
         document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        // Повертаємо скролл на попередню позицію
+        window.scrollTo(0, scrollY);
+        // Повертаємо фокус
+        previousActiveElement.current?.focus();
       };
-    } else {
-      // Возвращаем прокрутку body
-      document.body.style.overflow = '';
-      // Возвращаем фокус на предыдущий элемент
-      previousActiveElement.current?.focus();
     }
-  }, [isOpen, getFocusableElements]);
+  }, [isOpen, getFocusableElements, initialFocus]);
 
+  /* ============================================
+     ОБРОБКА КЛАВІШ (Escape, Tab)
+     ============================================ */
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e) => {
-      // Закрытие модального окна по клавише Escape
-      if (e.key === 'Escape') {
+      // Закриття по Escape
+      if (closeOnEscape && e.key === 'Escape') {
         e.preventDefault();
+        e.stopPropagation();
         onClose();
         return;
       }
 
-      // Удержание фокуса внутри модального окна (Focus Trap)
+      // Focus Trap для Tab
       if (e.key === 'Tab') {
         const focusableElements = getFocusableElements();
-        if (focusableElements.length === 0) return;
+        if (focusableElements.length === 0) {
+          e.preventDefault();
+          return;
+        }
 
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
 
         if (e.shiftKey) {
-          // Shift + Tab: если на первом элементе → переходим на последний
-          if (document.activeElement === firstElement) {
+          // Shift + Tab
+          if (document.activeElement === firstElement || !modalRef.current?.contains(document.activeElement)) {
             e.preventDefault();
             lastElement.focus();
           }
         } else {
-          // Tab: если на последнем элементе → переходим на первый
-          if (document.activeElement === lastElement) {
+          // Tab
+          if (document.activeElement === lastElement || !modalRef.current?.contains(document.activeElement)) {
             e.preventDefault();
             firstElement.focus();
           }
@@ -105,56 +145,84 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       }
     };
 
-    // Добавляем обработчик нажатий клавиш
-    document.addEventListener('keydown', handleKeyDown);
-    // Удаляем обработчик при размонтировании
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, getFocusableElements]);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose, closeOnEscape, getFocusableElements]);
 
+  /* ============================================
+     ОБРОБКА КЛІКІВ ПО ОВЕРЛЕЮ
+     ============================================ */
   const handleOverlayClick = useCallback((e) => {
-    // Закрываем только если клик был по самому overlay, а не по контенту
-    if (e.target === e.currentTarget) {
+    if (closeOnOverlay && e.target === e.currentTarget) {
       onClose();
     }
-  }, [onClose]);
+  }, [onClose, closeOnOverlay]);
 
-  // Если модальное окно закрыто — ничего не рендерим
-  if (!isOpen) return null;
+  /* ============================================
+     ЗАПОБІГАННЯ КЛІКАМ ВСЕРЕДИНІ МОДАЛКИ
+     ============================================ */
+  const handleModalClick = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
 
-  // Рендерим модальное окно через Portal в document.body
+  // Нічого не рендеримо, якщо модалка закрита або не змонтована
+  if (!isOpen || !isMounted) return null;
+
+  // Semantic Portal: рендеримо в <div id="modal-root"> або document.body
+  const modalRoot = document.getElementById('modal-root') || document.body;
+
   return createPortal(
-    <div 
-      className="modal-overlay" 
-      onClick={handleOverlayClick} 
-      role="presentation"
-      aria-hidden="false"
+    <section 
+      className={`modal-overlay modal-overlay--${size}`}
+      onClick={handleOverlayClick}
+      aria-hidden="true"
     >
-      <div
+      {/* Семантичний діалог з правильними ARIA */}
+      <dialog
         ref={modalRef}
-        className="modal-content"
+        className="modal-dialog"
+        open
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
-        tabIndex={-1}
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descriptionId : undefined}
+        onClick={handleModalClick}
       >
-        {/* Шапка модального окна */}
+        {/* Шапка модалки */}
         <header className="modal-header">
-          <h2 id="modal-title" className="modal-title">{title}</h2>
-          {/* Кнопка закрытия */}
+          <h1 id={titleId} className="modal-title">
+            {title}
+          </h1>
+          
+          {/* Кнопка закриття з семантикою */}
           <button
             type="button"
             className="modal-close"
             onClick={onClose}
-            aria-label="Закрыть модальное окно"
+            aria-label="Закрити модальне вікно"
+            tabIndex={0}
           >
-            <span aria-hidden="true">✕</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </header>
-        {/* Тело модального окна (контент) */}
-        <div className="modal-body">{children}</div>
-      </div>
-    </div>,
-    document.body
+
+        {/* Основний контент */}
+        <main className="modal-main">
+          {description && (
+            <p id={descriptionId} className="modal-description">
+              {description}
+            </p>
+          )}
+          {children}
+        </main>
+
+        {/* Футер для дій (опціонально) */}
+        <footer className="modal-footer">
+          <slot name="actions"></slot>
+        </footer>
+      </dialog>
+    </section>,
+    modalRoot
   );
 };
 

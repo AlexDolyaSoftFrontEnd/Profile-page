@@ -1,98 +1,44 @@
-/* ============================================
-   КОНТЕЙНЕР БОКОВОЙ ПАНЕЛИ
-   ============================================ */
-   .sidebar {
-    width: 280px;
-    background: white;
-    padding: 24px;
-    border-right: 1px solid #e9ecef;
-    flex-shrink: 0;
-  }
-  
-  /* ============================================
-     СПИСОК НАВИГАЦИИ
-     ============================================ */
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  /* ============================================
-     КНОПКА НАВИГАЦИИ
-     ============================================ */
-  .sidebar-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    background: #f8f9fa;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    color: #495057;
-    transition: all 0.2s ease;
-    text-align: left;
-    font-family: inherit;
-  }
-  
-  /* Состояние при наведении */
-  .sidebar-nav-item:hover {
-    background: #e9ecef;
-  }
-  
-  /* Активная вкладка */
-  .sidebar-nav-item.active {
-    background: #d4b8ff;
-    color: #6f42c1;
-    font-weight: 500;
-  }
-  
-  /* Видимая обводка при фокусе с клавиатуры */
-  .sidebar-nav-item:focus-visible {
-    outline: 2px solid #9b72ea;
-    outline-offset: 2px;
-  }
-  
-  /* ============================================
-     ИКОНКА НАВИГАЦИИ
-     ============================================ */
-  .nav-icon {
-    font-size: 20px;
-    line-height: 1;
-  }
-  
-  /* ============================================
-     АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
-     ============================================ */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid #e9ecef;
-      padding: 16px;
-    }
-  
-    .sidebar-nav {
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-  
-    .sidebar-nav-item {
-      flex: 1;
-      min-width: 140px;
-      justify-content: center;
-    }
-  }
-  
-  /* ============================================
-     ПОДДЕРЖКА УМЕНЬШЕНИЯ ДВИЖЕНИЯ
-     ============================================ */
-  @media (prefers-reduced-motion: reduce) {
-    .sidebar-nav-item {
-      transition: none !important;
-    }
-  }
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.sidebar-nav-item:hover {
+  background-color: #e0e0e0;
+}
+
+.sidebar-nav-item.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+}
+
+.nav-label {
+  font-size: 1rem;
+}

@@ -26,9 +26,6 @@
     margin-bottom: 32px;
   }
   
-  /* ============================================
-     ХЛЕБНЫЕ КРОШКИ
-     ============================================ */
   .breadcrumb {
     display: flex;
     align-items: center;
@@ -72,7 +69,6 @@
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s;
-    float: right;
     font-family: inherit;
   }
   
@@ -86,12 +82,23 @@
     outline-offset: 2px;
   }
   
+  /* Обертка для кнопки внизу */
+  .edit-button-wrapper {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .edit-button-bottom {
+    /* Стили для нижней кнопки */
+  }
+  
   /* ============================================
      СЕТКА ДАННЫХ ПРОФИЛЯ
      ============================================ */
   .personal-data-grid {
     max-width: 800px;
-    margin-top: 48px;
+    margin-top: 24px;
   }
   
   .data-row {
@@ -140,8 +147,11 @@
       width: 100%;
     }
   
+    .edit-button-wrapper {
+      justify-content: center; /* Центрируем на мобильных */
+    }
+  
     .edit-button {
-      float: none;
       width: 100%;
       justify-content: center;
     }

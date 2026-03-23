@@ -5,6 +5,7 @@ import PersonalData from './components/PersonalData/PersonalData';
 import Notifications from './components/Notifications/Notifications';
 import SettingsPanel from './components/SettingsPanel/SettingsPanel';
 import './index.css';
+import Home from './components/Home/Home';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         {/* Головний маршрут профілю з вкладеними вкладками */}
         <Route path="/profile" element={<ProfilePage />}>
           <Route index element={<Navigate to="personal-data" replace />} />
+          <Route path="home" element={<Home />} />
           <Route path="personal-data" element={<PersonalData />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="settingspanel" element={<SettingsPanel />} />

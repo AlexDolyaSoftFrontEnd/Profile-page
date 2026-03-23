@@ -52,7 +52,8 @@ const Sidebar = () => {
   const getActiveTab = () => {
     const pathname = location.pathname;
     
-    if (pathname === '/profile') return 'home';
+    // Уніфікована перевірка шляхів під /profile/
+    if (pathname === '/profile' || pathname === '/profile/home') return 'home';
     if (pathname === '/profile/personal-data') return 'personal-data';
     if (pathname === '/profile/notifications') return 'notifications';
     if (pathname === '/profile/settingspanel') return 'settingspanel';
@@ -71,6 +72,7 @@ const Sidebar = () => {
               <button
                 type="button"
                 className={`sidebar-nav-item ${activeTab === item.id ? 'active' : ''}`}
+                // Уніфікований маршрут: /profile/[id]
                 onClick={() => navigate(`/profile/${item.id}`)}
                 aria-current={activeTab === item.id ? 'page' : undefined}
                 data-tooltip={item.label}

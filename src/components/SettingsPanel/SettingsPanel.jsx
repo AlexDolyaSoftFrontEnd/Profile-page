@@ -31,24 +31,9 @@ const SettingsPanel = () => {
 
   const settingsList = [
     { 
-      key: 'emailNotifications', 
-      label: 'Сповіщення на Email',
-      hint: 'Отримувати листи про активність акаунту'
-    },
-    { 
       key: 'pushNotifications', 
       label: 'Push-сповіщення',
       hint: 'Сповіщення в браузері та мобільному додатку'
-    },
-    { 
-      key: 'darkMode', 
-      label: 'Темна тема',
-      hint: 'Темна кольорова схема інтерфейсу'
-    },
-    { 
-      key: 'twoFactorAuth', 
-      label: 'Двофакторна автентифікація',
-      hint: 'Додатковий захист при вході в акаунт'
     },
     { 
       key: 'marketingEmails', 

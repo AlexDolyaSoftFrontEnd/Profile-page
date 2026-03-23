@@ -12,6 +12,8 @@
      ============================================ */
   html {
     scroll-behavior: smooth;
+    /* Приховуємо стандартний скролбар для кастомного */
+    scrollbar-gutter: stable;
   }
   
   /* ============================================
@@ -24,6 +26,46 @@
     background-color: #fff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh; /* Замість height: 100% для правильного скролу */
+    overflow-x: hidden; /* Запобігаємо горизонтальному скролу */
+  }
+  
+  /* ============================================
+     КАСТОМНИЙ СКРОЛЛБАР (Chrome, Safari, Edge)
+     ============================================ */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #9b72ea 0%, #8a5fe0 100%);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.3s ease;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #8a5fe0 0%, #7a4dd4 100%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #7a4dd4 0%, #6d44b8 100%);
+  }
+  
+  /* ============================================
+     КАСТОМНИЙ СКРОЛЛБАР (Firefox)
+     ============================================ */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #9b72ea transparent;
   }
   
   /* ============================================
@@ -79,4 +121,38 @@
   ::selection {
     background: #d4b8ff;
     color: #212529;
+  }
+  
+  /* ============================================
+     УТИЛИТЫ ДЛЯ СКРОЛА
+     ============================================ */
+  /* Приховати скролбар, але залишити функціонал */
+  .scrollbar-hidden {
+    -ms-overflow-style: none;  /* IE/Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  /* Плавне приховування скролбара при неактивності */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  /* Темна тема для скролбара */
+  @media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #7a4dd4 0%, #6d44b8 100%);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #8a5fe0 0%, #7a4dd4 100%);
+    }
+    
+    * {
+      scrollbar-color: #7a4dd4 transparent;
+    }
   }

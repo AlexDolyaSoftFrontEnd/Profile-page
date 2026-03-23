@@ -14,16 +14,6 @@ const Home = () => {
     <div className="dashboard-container">
       {/* Header */}
       <div className="header">
-        <div className="avatar avatar-large">
-          <svg viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="20" fill="#1a3a3a"/>
-            <circle cx="15" cy="18" r="3" fill="#4ade80"/>
-            <circle cx="25" cy="18" r="3" fill="#4ade80"/>
-            <circle cx="20" cy="25" r="3" fill="#4ade80"/>
-            <circle cx="15" cy="28" r="2" fill="#4ade80"/>
-            <circle cx="25" cy="28" r="2" fill="#4ade80"/>
-          </svg>
-        </div>
         <h1 className="greeting">Здравствуйте, Александр !</h1>
       </div>
 

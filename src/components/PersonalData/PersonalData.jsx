@@ -5,9 +5,8 @@ import './PersonalData.css';
 const PersonalData = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Дані профілю (без поля gender)
+  // Дані профілю
   const [profileData, setProfileData] = useState({
-    fullName: 'Олександр Долинський',
     birthDate: '22 серпня 1992 р.',
     birthDateRaw: '1992-08-22',
     location: 'Вул. Балукова 1 кв. 52',
@@ -48,14 +47,13 @@ const PersonalData = () => {
   return (
     <>
       <div className="content-header">
-        <h1 className="page-title">Особисті дані</h1>
+        <h1 className="page-title">Особисті Дані</h1>
         <p className="page-subtitle">Вкажіть інформацію, яка буде доступна.</p>
       </div>
 
-      {/* Сітка даних (без поля "Стать") */}
+      {/* Сітка даних */}
       <dl className="personal-data-grid">
         {[
-          { label: "Ім'я та прізвище", value: profileData.fullName },
           { label: 'Дата народження', value: profileData.birthDate },
           { label: 'Місце проживання', value: profileData.location },
           { label: 'Електронна пошта', value: profileData.email },
@@ -69,7 +67,11 @@ const PersonalData = () => {
       </dl>
 
       <div className="edit-button-wrapper">
-        <button className="edit-button edit-button-bottom" onClick={openModal} type="button">
+        <button 
+          className="edit-button edit-button-bottom" 
+          onClick={openModal} 
+          type="button"
+        >
           <span className="edit-icon" aria-hidden="true">✎</span>
           <span>Редагувати</span>
         </button>
@@ -79,7 +81,6 @@ const PersonalData = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal} title="Редагування профілю">
         <form className="edit-form" onSubmit={handleSave}>
           {[
-            { id: 'fullName', label: "Ім'я та прізвище", type: 'text', required: true },
             { id: 'birthDateRaw', label: 'Дата народження', type: 'date', required: true },
             { id: 'location', label: 'Місце проживання', type: 'text', required: true },
             { id: 'email', label: 'Електронна пошта', type: 'email', required: true },
@@ -89,29 +90,15 @@ const PersonalData = () => {
               <label htmlFor={field.id} className="form-label">
                 {field.label} {field.required && <span aria-hidden="true">*</span>}
               </label>
-              {field.type === 'select' ? (
-                <select
-                  id={field.id}
-                  name={field.id}
-                  className="form-input"
-                  value={formData[field.id]}
-                  onChange={handleInputChange}
-                >
-                  {field.options.map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type={field.type}
-                  id={field.id}
-                  name={field.id}
-                  className="form-input"
-                  value={formData[field.id]}
-                  onChange={handleInputChange}
-                  required={field.required}
-                />
-              )}
+              <input
+                type={field.type}
+                id={field.id}
+                name={field.id}
+                className="form-input"
+                value={formData[field.id]}
+                onChange={handleInputChange}
+                required={field.required}
+              />
             </div>
           ))}
           

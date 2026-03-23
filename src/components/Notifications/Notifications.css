@@ -2,7 +2,7 @@
    КОНТЕЙНЕР СПОВІЩЕНЬ
    ============================================ */
    .notifications-container {
-    max-width: 700px;
+    max-width: 100%;
     animation: fadeIn 0.3s ease-out;
   }
   

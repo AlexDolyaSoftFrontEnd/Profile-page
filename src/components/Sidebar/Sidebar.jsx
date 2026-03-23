@@ -38,6 +38,15 @@ const Sidebar = () => {
       )
     },
     { 
+      id: 'news', 
+      label: 'Новини', 
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+        </svg>
+      )
+    },
+    { 
       id: 'settingspanel', 
       label: 'Налаштування', 
       icon: (
@@ -52,10 +61,10 @@ const Sidebar = () => {
   const getActiveTab = () => {
     const pathname = location.pathname;
     
-    // Уніфікована перевірка шляхів під /profile/
     if (pathname === '/profile' || pathname === '/profile/home') return 'home';
     if (pathname === '/profile/personal-data') return 'personal-data';
     if (pathname === '/profile/notifications') return 'notifications';
+    if (pathname === '/profile/news') return 'news';
     if (pathname === '/profile/settingspanel') return 'settingspanel';
     
     return 'home';
@@ -72,7 +81,6 @@ const Sidebar = () => {
               <button
                 type="button"
                 className={`sidebar-nav-item ${activeTab === item.id ? 'active' : ''}`}
-                // Уніфікований маршрут: /profile/[id]
                 onClick={() => navigate(`/profile/${item.id}`)}
                 aria-current={activeTab === item.id ? 'page' : undefined}
                 data-tooltip={item.label}
@@ -80,7 +88,6 @@ const Sidebar = () => {
                 <span className="nav-icon" aria-hidden="true">{item.icon}</span>
               </button>
               
-              {/* Тултіп з стрілкою */}
               <div className="nav-tooltip" role="tooltip">
                 <span className="tooltip-text">{item.label}</span>
               </div>
@@ -89,48 +96,7 @@ const Sidebar = () => {
         </nav>
       </div>
       
-      <div className="sidebar-bottom">
-        <div className="nav-item-wrapper">
-          <button
-            type="button"
-            className="sidebar-nav-item help-btn"
-            onClick={() => navigate('/help')}
-            data-tooltip="Допомога"
-          >
-            <span className="nav-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-              </svg>
-            </span>
-          </button>
-          
-          <div className="nav-tooltip" role="tooltip">
-            <span className="tooltip-text">Допомога</span>
-          </div>
-        </div>
-        
-        <div className="nav-item-wrapper">
-          <button
-            type="button"
-            className="sidebar-nav-item profile-btn"
-            onClick={() => navigate('/')}
-            data-tooltip="Профіль"
-          >
-            <span className="nav-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </span>
-          </button>
-          
-          <div className="nav-tooltip" role="tooltip">
-            <span className="tooltip-text">Профіль</span>
-          </div>
-        </div>
-      </div>
+      {/* Видалено секцію sidebar-bottom з кнопками "Допомога" та "Профіль" */}
     </aside>
   );
 };

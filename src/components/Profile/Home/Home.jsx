@@ -40,9 +40,9 @@ const Home = () => {
             <p className="alert-text">
               Отправляйте электронные письма из службы поддержки, используя собственный домен.
             </p>
-            <p className="alert-subtext">
+            {/* <p className="alert-subtext">
               <span className="days-count">13</span> осталось дней до окончания вашего судебного процесса
-            </p>
+            </p> */}
           </div>
           <button className="alert-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

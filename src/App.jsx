@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ProfilePage from './components/ProfilePage/ProfilePage';
-import PersonalData from './components/PersonalData/PersonalData';
-import Notifications from './components/Notifications/Notifications';
-import SettingsPanel from './components/SettingsPanel/SettingsPanel';
+import ProfilePage from './components/Profile/ProfilePage/ProfilePage';
+import PersonalData from './components/Profile/PersonalData/PersonalData';
+import Notifications from './components/Profile/Notifications/Notifications';
+import SettingsPanel from './components/Profile/SettingsPanel/SettingsPanel';
+import Home from './components/Profile/Home/Home';
+import News from './components/Profile/News/News'; 
 import './index.css';
-import Home from './components/Home/Home';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           <Route path="personal-data" element={<PersonalData />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="settingspanel" element={<SettingsPanel />} />
-          {/* Додайте інші вкладки за потреби: security, privacy, help */}
+          {/* Додано маршрут для новин */}
+          <Route path="news" element={<News />} />
           
           {/* 404 для невідомих вкладок */}
           <Route path="*" element={<Navigate to="personal-data" replace />} />

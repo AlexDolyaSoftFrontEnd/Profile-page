@@ -77,7 +77,7 @@ const Notifications = () => {
         <div>
           <h2 className="notifications-title">Сповіщення</h2>
           <p className="notifications-subtitle">
-            Переглядайте оновлення та важливі повідомлення
+            Переглядайте повідомлення з акаунтів.
           </p>
         </div>
         {unreadCount > 0 && (

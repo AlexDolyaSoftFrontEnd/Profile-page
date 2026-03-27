@@ -15,7 +15,7 @@ import Home from './components/Profile/Home/Home';
 import News from './components/Profile/News/News';
 
 // ============================================
-// 📋 КОНФІГУРАЦІЯ МАРШРУТІВ
+// КОНФІГУРАЦІЯ МАРШРУТІВ
 // ============================================
 const router = createBrowserRouter([
   {
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
 ]);
 
 // ============================================
-// 🚨 Компонент обробки помилок (опціонально)
+// Компонент обробки помилок (опціонально)
 // ============================================
 function ProfileErrorBoundary({ error }) {
   return (
@@ -81,7 +81,7 @@ function ProfileErrorBoundary({ error }) {
 }
 
 // ============================================
-// 🚀 Головний компонент додатку
+// Головний компонент додатку
 // ============================================
 function App() {
   return <RouterProvider router={router} />;

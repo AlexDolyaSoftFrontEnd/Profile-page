@@ -200,7 +200,7 @@ const News = () => {
     <div className="news-container" role="region" aria-label="Пости">
       <header className="news-header">
         <h1 className="news-title">Публікації</h1>
-        <p className="news-subtitle">Керуйте постами в соціальних мережах</p>
+        <p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p>
       </header>
 
       {/* Platform Tabs */}

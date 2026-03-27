@@ -36,7 +36,7 @@ const Home = () => {
           </div>
           <div className="alert-content">
             <p className="alert-text">
-              Надсилайте новини з адмін-панелі, використовуючи власний акаунт.
+              Надсилайте публікації з адмін-панелі, використовуючи власний акаунт.
             </p>
           </div>
           <button className="alert-action" aria-label="Дія">

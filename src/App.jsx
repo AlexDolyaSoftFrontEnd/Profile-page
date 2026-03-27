@@ -2,8 +2,7 @@ import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
-  Navigate,
-  Outlet
+  Navigate
 } from 'react-router-dom';
 
 // Імпорти компонентів
@@ -17,23 +16,22 @@ import News from './components/Profile/News/News';
 // ============================================
 // КОНФІГУРАЦІЯ МАРШРУТІВ
 // ============================================
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/profile/personal-data" replace />,
+    element: <Navigate to="/profile" replace />,
   },
   {
     path: '/profile',
     element: <ProfilePage />, // Батьківський компонент з <Outlet />
     children: [
+      // Home — головний маршрут (відображається на /profile)
       {
         index: true,
-        element: <Navigate to="personal-data" replace />,
-      },
-      {
-        path: 'home',
         element: <Home />,
       },
+      // Інші маршрути профілю
       {
         path: 'personal-data',
         element: <PersonalData />,
@@ -50,19 +48,20 @@ const router = createBrowserRouter([
         path: 'news',
         element: <News />,
       },
+      // Обробка невідомих шляхів
       {
         path: '*',
-        element: <Navigate to="personal-data" replace />,
+        element: <Navigate to="/profile" replace />,
       },
     ],
-    // Опціонально: обробка помилок для всіх вкладених маршрутів
     errorElement: <ProfileErrorBoundary />,
   },
 ]);
 
 // ============================================
-// Компонент обробки помилок (опціонально)
+// Компонент обробки помилок
 // ============================================
+
 function ProfileErrorBoundary({ error }) {
   return (
     <div role="alert" className="error-boundary">

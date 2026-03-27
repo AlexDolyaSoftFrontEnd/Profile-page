@@ -1,413 +1,218 @@
-/* Dashboard.css - Light Theme with Animations */
-
-/* Keyframes для анімацій */
 @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
   }
-  
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  /* Base styles */
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.dashboard-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #f9fafb;
+  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Loader */
+.dashboard-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: #6b7280;
+}
+
+.loader-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #8a5fe0;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.greeting {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+/* Alerts */
+.alerts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.alert-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: slideUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.alert-card:nth-child(1) { animation-delay: 0.1s; }
+.alert-card:nth-child(2) { animation-delay: 0.2s; }
+
+.alert-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.alert-card:hover .alert-icon {
+  transform: scale(1.1);
+}
+
+.alert-success .alert-icon {
+  color: #16a34a;
+  background-color: #dcfce7;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.alert-info .alert-icon {
+  color: #3b82f6;
+  background-color: #dbeafe;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-text {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.alert-action {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.alert-action:hover {
+  color: #3b82f6;
+  background-color: #eff6ff;
+  transform: translateX(4px);
+}
+
+.alert-action svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .dashboard-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    background-color: #f9fafb;
-    min-height: 100vh;
-    color: #1f2937;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    animation: fadeIn 0.5s ease-out;
+    padding: 24px 16px;
+  }
+
+  .greeting {
+    font-size: 22px;
+  }
+
+  .alert-card {
+    padding: 16px;
+  }
+
+  .alerts-section {
+    gap: 12px;
   }
   
-  /* Header animations */
   .header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
-    animation: slideInLeft 0.6s ease-out;
+    flex-wrap: wrap;
   }
-  
-  .avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    overflow: hidden;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  
-  .avatar-large {
-    width: 64px;
-    height: 64px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .dashboard-container {
+    background-color: #1f2937;
+    color: #f9fafb;
   }
   
   .greeting {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-    color: #111827;
-  }
-  
-  /* Alerts section */
-  .alerts-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 40px;
+    color: #f9fafb;
   }
   
   .alert-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 20px 24px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    animation: slideUp 0.5s ease-out forwards;
-    opacity: 0;
-  }
-  
-  .alert-card:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  
-  .alert-card:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  
-  .alert-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-  }
-  
-  .alert-card:hover .alert-icon {
-    transform: scale(1.1);
-  }
-  
-  .alert-success .alert-icon {
-    color: #16a34a;
-    background-color: #dcfce7;
-    border-radius: 50%;
-    padding: 8px;
-  }
-  
-  .alert-info .alert-icon {
-    color: #3b82f6;
-    background-color: #dbeafe;
-    border-radius: 50%;
-    padding: 8px;
-  }
-  
-  .alert-content {
-    flex: 1;
+    background-color: #374151;
+    border-color: #4b5563;
   }
   
   .alert-text {
-    margin: 0 0 8px 0;
-    font-size: 15px;
-    line-height: 1.5;
-    color: #374151;
+    color: #f9fafb;
   }
-  
-  .alert-subtext {
-    margin: 0;
-    font-size: 14px;
-    color: #6b7280;
-  }
-  
-  .days-count {
-    background-color: #e5e7eb;
-    color: #374151;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-    margin-right: 4px;
-    transition: background-color 0.2s;
-  }
-  
-  .days-count:hover {
-    background-color: #d1d5db;
-  }
-  
-  .alert-action {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    border-radius: 8px;
-  }
-  
-  .alert-action:hover {
-    color: #3b82f6;
-    background-color: #eff6ff;
-    transform: translateX(4px);
-  }
-  
-  .alert-action svg {
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* Team section */
-  .team-section {
-    margin-top: 40px;
-    animation: slideUp 0.6s ease-out forwards;
-    opacity: 0;
-    animation-delay: 0.3s;
-  }
-  
-  .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 24px 0;
-    line-height: 1.4;
-    color: #1f2937;
-  }
-  
-  .team-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    position: relative;
-    min-height: 280px;
-    animation: slideUp 0.6s ease-out forwards;
-    opacity: 0;
-    animation-delay: 0.4s;
-  }
-  
-  .team-members {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  
-  .team-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .team-avatar:hover {
-    transform: scale(1.1) translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-  }
-  
-  .team-avatar.owner svg {
-    background-color: #10b981;
-  }
-  
-  .team-avatar svg {
-    transition: transform 0.3s ease;
-  }
-  
-  .team-avatar:hover svg {
-    transform: scale(1.05);
-  }
-  
-  /* --- UPDATED BUTTON STYLES --- */
-  .invite-button {
-    background-color: #8a5fe0; /* Solid color instead of gradient */
-    color: #ffffff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(138, 95, 224, 0.3); /* Purple shadow */
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .invite-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-  }
-  
-  .invite-button:hover {
-    background-color: #7048c9; /* Darker shade for hover */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.4);
-  }
-  
-  .invite-button:hover::before {
-    left: 100%;
-  }
-  
-  .invite-button:active {
-    transform: translateY(0);
-  }
-  /* ----------------------------- */
-  
-  .team-illustration {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 300px;
-    height: 250px;
-    overflow: hidden;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-    animation-delay: 0.6s;
-  }
-  
-  .team-illustration svg {
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* Additional hover effects for interactivity */
-  .sidebar-nav-item {
-    transition: all 0.2s ease;
-  }
-  
-  .sidebar-nav-item:hover {
-    transform: translateX(4px);
-  }
-  
-  /* Staggered animation for team members */
-  .team-avatar {
-    animation: slideInLeft 0.4s ease-out forwards;
-    opacity: 0;
-  }
-  
-  .team-avatar:nth-child(1) { animation-delay: 0.5s; }
-  .team-avatar:nth-child(2) { animation-delay: 0.55s; }
-  .team-avatar:nth-child(3) { animation-delay: 0.6s; }
-  .team-avatar:nth-child(4) { animation-delay: 0.65s; }
-  .team-avatar:nth-child(5) { animation-delay: 0.7s; }
-  
-  /* Reduced motion preference */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .dashboard-container {
-      padding: 24px 16px;
-    }
-  
-    .greeting {
-      font-size: 22px;
-    }
-  
-    .alert-card {
-      padding: 16px;
-    }
-  
-    .team-illustration {
-      display: none;
-    }
-  
-    .team-card {
-      min-height: auto;
-    }
-    
-    .header {
-      flex-wrap: wrap;
-    }
-    
-    .alerts-section {
-      gap: 12px;
-    }
-  }
-  
-  /* Dark mode support (optional toggle) */
-  @media (prefers-color-scheme: dark) {
-    .dashboard-container {
-      background-color: #1f2937;
-      color: #f9fafb;
-    }
-    
-    .greeting {
-      color: #f9fafb;
-    }
-    
-    .alert-card,
-    .team-card {
-      background-color: #374151;
-      border-color: #4b5563;
-    }
-    
-    .alert-text,
-    .section-title {
-      color: #f9fafb;
-    }
-    
-    .alert-subtext {
-      color: #9ca3af;
-    }
-    
-    .days-count {
-      background-color: #4b5563;
-      color: #f9fafb;
-    }
-  }
+}

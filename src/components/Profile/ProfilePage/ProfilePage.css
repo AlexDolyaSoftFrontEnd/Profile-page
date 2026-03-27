@@ -1,29 +1,308 @@
-/* ============================================
-   ОСНОВНОЙ КОНТЕЙНЕР СТРАНИЦЫ
-   ============================================ */
-   .profile-container {
+.profile-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  padding: 48px;
+  background: #ffffff;
+}
+
+.content-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 12px;
+  list-style: none;
+  padding: 0;
+}
+
+.breadcrumb-separator {
+  color: #adb5bd;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  color: #6c757d;
+  font-size: 15px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.personal-data-grid {
+  max-width: 800px;
+  margin-top: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.data-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid #e9ecef;
+  transition: background 0.2s ease;
+}
+
+.data-row:first-child {
+  padding-top: 0;
+}
+
+.data-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.data-row:hover {
+  background: rgba(138, 95, 224, 0.03);
+  margin: 0 -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 8px;
+}
+
+.data-label {
+  width: 250px;
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.data-value {
+  flex: 1;
+  color: #212529;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+  word-break: break-word;
+}
+
+.edit-button-wrapper {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.edit-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #8a5fe0 0%, #7a4dd4 100%);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(138, 95, 224, 0.3);
+}
+
+.edit-button:hover {
+  background: linear-gradient(135deg, #7a4dd4 0%, #6d44b8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(138, 95, 224, 0.4);
+}
+
+.edit-button:active {
+  transform: translateY(0);
+}
+
+.edit-button:focus-visible {
+  outline: 2px solid #8a5fe0;
+  outline-offset: 2px;
+}
+
+.edit-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 24px;
+  }
+
+  .content-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .personal-data-grid {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .data-row {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+  }
+
+  .data-row:hover {
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .data-label {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .data-value {
+    font-size: 14px;
+  }
+
+  .edit-button-wrapper {
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  .edit-button {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  }
+
+  .main-content,
+  .personal-data-grid {
+    background: #23233d;
+    border-color: #2a2a4a;
+  }
+
+  .content-header {
+    border-bottom-color: #2a2a4a;
+  }
+
+  .page-title,
+  .data-value {
+    color: #f8f9fa;
+  }
+
+  .page-subtitle,
+  .breadcrumb,
+  .data-label {
+    color: #adb5bd;
+  }
+
+  .data-row {
+    border-bottom-color: #2a2a4a;
+  }
+
+  .data-row:hover {
+    background: rgba(138, 95, 224, 0.08);
+  }
+
+  .edit-button {
+    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.4);
+  }
+
+  .edit-button:hover {
+    box-shadow: 0 6px 20px rgba(138, 95, 224, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+   ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #9b72ea 0%, #8a5fe0 100%);
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+    background-clip: padding-box;
+    transition: background 0.3s ease;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #8a5fe0 0%, #7a4dd4 100%);
+    border: 2px solid #f1f1f1;
+    background-clip: padding-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, #7a4dd4 0%, #6d44b8 100%);
+  }
+  
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #8a5fe0 #f1f1f1;
+  }
+  
+  .profile-container {
     display: flex;
     min-height: 100vh;
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
   
-  /* ============================================
-     ОСНОВНОЙ КОНТЕНТ
-     ============================================ */
   .main-content {
     flex: 1;
-    padding: 32px 48px;
-    background: white;
-    position: relative;
-    overflow: hidden;
+    padding: 48px;
+    background: #ffffff;
+    overflow-y: auto;
   }
   
-  /* ============================================
-     ЗАГОЛОВОК СТРАНИЦЫ
-     ============================================ */
   .content-header {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e9ecef;
   }
   
   .breadcrumb {
@@ -32,7 +311,7 @@
     gap: 8px;
     color: #6c757d;
     font-size: 14px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     list-style: none;
     padding: 0;
   }
@@ -43,92 +322,115 @@
   
   .page-title {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 700;
     color: #212529;
     margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
   }
   
   .page-subtitle {
     color: #6c757d;
     font-size: 15px;
     margin: 0;
+    line-height: 1.5;
   }
   
-  /* ============================================
-     КНОПКА РЕДАКТИРОВАНИЯ
-     ============================================ */
-  .edit-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: transparent;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    color: #6c757d;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-  }
-  
-  .edit-button:hover {
-    background: #f8f9fa;
-    color: #495057;
-  }
-  
-  .edit-button:focus-visible {
-    outline: 2px solid #9b72ea;
-    outline-offset: 2px;
-  }
-  
-  /* Обертка для кнопки внизу */
-  .edit-button-wrapper {
-    margin-top: 32px;
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .edit-button-bottom {
-    /* Стили для нижней кнопки */
-  }
-  
-  /* ============================================
-     СЕТКА ДАННЫХ ПРОФИЛЯ
-     ============================================ */
   .personal-data-grid {
     max-width: 800px;
     margin-top: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   }
   
   .data-row {
     display: flex;
-    padding: 16px 0;
+    align-items: flex-start;
+    padding: 20px 0;
     border-bottom: 1px solid #e9ecef;
+    transition: background 0.2s ease;
+  }
+  
+  .data-row:first-child {
+    padding-top: 0;
   }
   
   .data-row:last-child {
     border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .data-row:hover {
+    background: rgba(138, 95, 224, 0.03);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    border-radius: 8px;
   }
   
   .data-label {
     width: 250px;
     color: #6c757d;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
+    flex-shrink: 0;
   }
   
   .data-value {
     flex: 1;
     color: #212529;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     margin: 0;
+    word-break: break-word;
   }
   
-  /* ============================================
-     АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
-     ============================================ */
+  .edit-button-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #8a5fe0 0%, #7a4dd4 100%);
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.3);
+  }
+  
+  .edit-button:hover {
+    background: linear-gradient(135deg, #7a4dd4 0%, #6d44b8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 95, 224, 0.4);
+  }
+  
+  .edit-button:active {
+    transform: translateY(0);
+  }
+  
+  .edit-button:focus-visible {
+    outline: 2px solid #8a5fe0;
+    outline-offset: 2px;
+  }
+  
+  .edit-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+  
   @media (max-width: 768px) {
     .profile-container {
       flex-direction: column;
@@ -138,30 +440,117 @@
       padding: 24px;
     }
   
+    .content-header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+    }
+  
+    .page-title {
+      font-size: 24px;
+    }
+  
+    .personal-data-grid {
+      padding: 20px;
+      border-radius: 12px;
+    }
+  
     .data-row {
       flex-direction: column;
-      gap: 4px;
+      gap: 8px;
+      padding: 16px 0;
+    }
+  
+    .data-row:hover {
+      margin: 0 -20px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
   
     .data-label {
       width: 100%;
+      font-size: 13px;
+    }
+  
+    .data-value {
+      font-size: 14px;
     }
   
     .edit-button-wrapper {
-      justify-content: center; /* Центрируем на мобильных */
+      justify-content: center;
+      margin-top: 32px;
     }
   
     .edit-button {
       width: 100%;
+      max-width: 300px;
       justify-content: center;
     }
   }
   
-  /* ============================================
-     ПОДДЕРЖКА УМЕНЬШЕНИЯ ДВИЖЕНИЯ
-     ============================================ */
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-color-scheme: dark) {
+    .profile-container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+  
+    .main-content,
+    .personal-data-grid {
+      background: #23233d;
+      border-color: #2a2a4a;
+    }
+  
+    .content-header {
+      border-bottom-color: #2a2a4a;
+    }
+  
+    .page-title,
+    .data-value {
+      color: #f8f9fa;
+    }
+  
+    .page-subtitle,
+    .breadcrumb,
+    .data-label {
+      color: #adb5bd;
+    }
+  
+    .data-row {
+      border-bottom-color: #2a2a4a;
+    }
+  
+    .data-row:hover {
+      background: rgba(138, 95, 224, 0.08);
+    }
+  
+    .edit-button {
+      box-shadow: 0 4px 12px rgba(138, 95, 224, 0.4);
+    }
+  
+    .edit-button:hover {
+      box-shadow: 0 6px 20px rgba(138, 95, 224, 0.5);
+    }
+  
+    /* Скролбар для темної теми */
+    ::-webkit-scrollbar-track {
+      background: #1a1a2e;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      border: 2px solid #1a1a2e;
+    }
+  
+    ::-webkit-scrollbar-thumb:hover {
+      border: 2px solid #1a1a2e;
+    }
+  
     * {
+      scrollbar-color: #8a5fe0 #1a1a2e;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;

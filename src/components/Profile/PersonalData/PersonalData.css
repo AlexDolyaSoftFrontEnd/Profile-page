@@ -1,587 +1,631 @@
 /* ============================================
-   CSS CUSTOM PROPERTIES (БІЛИЙ ФОН)
+   БАЗОВЫЕ СТИЛИ - АКЦЕНТ #8a5fe0
    ============================================ */
-   :root {
-    /* Кольори - біла тема */
-    --pd-bg: #ffffff;
-    --pd-text: #212529;
-    --pd-text-muted: #6c757d;
-    --pd-border: #e9ecef;
-    --pd-border-light: #f8f9fa;
-    --pd-primary: #9b72ea;
-    --pd-primary-hover: #8a5fe0;
-    --pd-primary-light: rgba(155, 114, 234, 0.15);
-    --pd-danger: #dc3545;
-    --pd-success: #28a745;
-    --pd-info: #17a2b8;
-    
-    /* Тіні */
-    --pd-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --pd-shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.12);
-    --pd-shadow-focus: 0 0 0 3px var(--pd-primary-light);
-    
-    /* Відступи та розміри */
-    --pd-padding: 1.5rem;
-    --pd-padding-sm: 1rem;
-    --pd-border-radius: 12px;
-    --pd-border-radius-sm: 8px;
-    
-    /* Анімації */
-    --pd-transition: 0.2s ease-out;
-    --pd-animation-duration: 0.4s;
+
+/* ============================================
+   КОНТЕЙНЕР
+   ============================================ */
+   .social-accounts-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background: #ffffff;
+    min-height: 100vh;
+    color: #212529;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
   /* ============================================
-     CONTENT HEADER (ЗАГОЛОВОК СТОРІНКИ) - ПО ЦЕНТРУ
+     СОСТОЯНИЕ ЗАГРУЗКИ
      ============================================ */
-  .content-header {
+  .loading-state {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
-    padding: var(--pd-padding);
-    background: #ffffff;
-    border-radius: var(--pd-border-radius);
-    border: 1px solid var(--pd-border);
-    margin-bottom: 1.5rem;
-    text-align: center;
-    
-    /* Анімація появи */
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: pdHeaderFadeIn var(--pd-animation-duration) ease-out forwards;
-  }
-  
-  @keyframes pdHeaderFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ============================================
-     BREADCRUMB (ХЛІБНІ КРИХТИ) - ПО ЦЕНТРУ
-     ============================================ */
-  .breadcrumb {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.875rem;
-    color: var(--pd-text-muted);
-    text-align: center;
+    min-height: 400px;
+    gap: 1rem;
+    color: #6c757d;
   }
   
-  .breadcrumb li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e9ecef;
+    border-top-color: #8a5fe0; /* Акцентный цвет */
+    border-radius: 50%;
+    animation: saSpin 1s linear infinite;
   }
   
-  .breadcrumb li span {
-    color: var(--pd-text-muted);
-    transition: color var(--pd-transition);
-  }
-  
-  .breadcrumb li span:hover {
-    color: var(--pd-primary);
-  }
-  
-  .breadcrumb-separator {
-    color: var(--pd-border);
-    font-weight: bold;
+  @keyframes saSpin {
+    to { transform: rotate(360deg); }
   }
   
   /* ============================================
-     PAGE TITLE (ЗАГОЛОВОК СТОРІНКИ) - ПО ЦЕНТРУ
+     ЗАГОЛОВОК РАЗДЕЛА
      ============================================ */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    animation: saFadeIn 0.4s ease-out;
+  }
+  
+  @keyframes saFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
   .page-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--pd-text);
-    margin: 0;
+    margin: 0 0 0.5rem 0;
+    color: #212529;
     line-height: 1.3;
-    text-align: center;
-    
-    /* Анімація появи */
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: pdTitleFadeIn var(--pd-animation-duration) ease-out forwards;
-    animation-delay: 0.1s;
   }
   
-  @keyframes pdTitleFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ============================================
-     PAGE SUBTITLE (ПІДЗАГОЛОВОК) - ПО ЦЕНТРУ
-     ============================================ */
   .page-subtitle {
     font-size: 1rem;
-    color: var(--pd-text-muted);
+    color: #6c757d;
     margin: 0;
     line-height: 1.5;
-    max-width: 600px;
-    text-align: center;
-    
-    /* Анімація появи */
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: pdSubtitleFadeIn var(--pd-animation-duration) ease-out forwards;
-    animation-delay: 0.2s;
   }
   
-  @keyframes pdSubtitleFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
   }
   
   /* ============================================
-     PERSONAL DATA GRID (СІТКА ДАНИХ) - ПО ЦЕНТРУ
+     ФИЛЬТР ПО СТАТУСУ (SELECT)
      ============================================ */
-  .personal-data-grid {
+  .filter-select {
+    padding: 0.625rem 2rem 0.625rem 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #ffffff;
+    color: #212529;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    appearance: none;
+    /* Кастомная стрелочка */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+  }
+  
+  .filter-select:focus {
+    outline: none;
+    border-color: #8a5fe0;
+    box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15);
+  }
+  
+  /* ============================================
+     СЕТКА ПЛАТФОРМ (ДОБАВЛЕНИЕ)
+     ============================================ */
+  .platforms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    animation: saFadeIn 0.4s ease-out 0.1s both;
+  }
+  
+  .platform-card {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: var(--pd-padding);
-    background: #ffffff;
-    border-radius: var(--pd-border-radius);
-    border: 1px solid var(--pd-border);
-    margin-bottom: 1.5rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    
-    /* Анімація появи */
-    opacity: 0;
-    transform: translateY(10px);
-    animation: pdGridFadeIn var(--pd-animation-duration) ease-out forwards;
-    animation-delay: 0.3s;
-  }
-  
-  @keyframes pdGridFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ============================================
-     DATA ROW (РЯДОК ДАНИХ) - ПО ЦЕНТРУ
-     ============================================ */
-  .data-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: #ffffff;
-    border-radius: var(--pd-border-radius-sm);
-    border: 1px solid var(--pd-border);
-    transition: all var(--pd-transition);
-    text-align: center;
-    
-    /* Анімація появи кожного рядка */
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: pdRowSlideIn var(--pd-animation-duration) ease-out forwards;
-  }
-  
-  /* Затримка для кожного рядка (stagger effect) */
-  .data-row:nth-child(1) { animation-delay: 0.4s; }
-  .data-row:nth-child(2) { animation-delay: 0.45s; }
-  .data-row:nth-child(3) { animation-delay: 0.5s; }
-  .data-row:nth-child(4) { animation-delay: 0.55s; }
-  .data-row:nth-child(5) { animation-delay: 0.6s; }
-  .data-row:nth-child(6) { animation-delay: 0.65s; }
-  
-  @keyframes pdRowSlideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .data-row:hover {
-    background: var(--pd-border-light);
-    border-color: var(--pd-primary);
-    box-shadow: var(--pd-shadow);
-    transform: translateY(-2px);
-  }
-  
-  /* ============================================
-     DATA LABEL (МІТКА ДАНИХ) - ЗЛІВА ⭐
-     ============================================ */
-  .data-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--pd-text-muted);
-    margin: 0;
-    min-width: 180px;
-    flex-shrink: 0;
-    line-height: 1.4;
-    text-align: left; /* ← ТЕКСТ ЗЛІВА */
-  }
-  
-  /* ============================================
-     DATA VALUE (ЗНАЧЕННЯ ДАНИХ) - ПО ЦЕНТРУ
-     ============================================ */
-  .data-value {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--pd-text);
-    margin: 0;
-    line-height: 1.4;
-    word-break: break-word;
-    text-align: center;
-  }
-  
-  /* ============================================
-     EDIT BUTTON WRAPPER - ПО ЦЕНТРУ
-     ============================================ */
-  .edit-button-wrapper {
-    display: flex;
-    justify-content: center;
-    padding: 0 var(--pd-padding);
-    
-    /* Анімація появи */
-    opacity: 0;
-    transform: translateY(10px);
-    animation: pdButtonFadeIn var(--pd-animation-duration) ease-out forwards;
-    animation-delay: 0.7s;
-  }
-  
-  @keyframes pdButtonFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ============================================
-     EDIT BUTTON (КНОПКА РЕДАГУВАННЯ) - ПО ЦЕНТРУ
-     ============================================ */
-  .edit-button {
-    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--pd-border-radius-sm);
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: inherit;
+    padding: 1.25rem 1rem;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all var(--pd-transition);
-    box-shadow: 0 4px 12px rgba(155, 114, 234, 0.3);
+    transition: all 0.2s ease-out;
+    text-align: center;
+    position: relative;
   }
   
-  .edit-button:hover {
-    background: linear-gradient(135deg, var(--pd-primary-hover) 0%, #7a4bd6 100%);
-    box-shadow: 0 6px 16px rgba(155, 114, 234, 0.4);
+  .platform-card:hover {
+    border-color: #8a5fe0; /* Акцент при наведении */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
   }
   
-  .edit-button:active {
-    background: linear-gradient(135deg, #7a4bd6 0%, #6f42c1 100%);
-    box-shadow: 0 2px 6px rgba(155, 114, 234, 0.3);
-    transform: translateY(0);
+  .platform-card.connected {
+    border-color: #28a745; /* Зеленый для подключенных */
+    background: rgba(40, 167, 69, 0.05);
   }
   
-  .edit-button:focus-visible {
-    outline: 2px solid var(--pd-primary);
-    outline-offset: 2px;
+  .platform-card.connected:hover {
+    background: rgba(40, 167, 69, 0.1);
   }
   
-  .edit-icon {
-    font-size: 1.1rem;
+  .platform-icon {
+    font-size: 2rem;
     line-height: 1;
   }
   
-  /* ============================================
-     EDIT BUTTON BOTTOM (АЛЬТЕРНАТИВНА ПОЗИЦІЯ)
-     ============================================ */
-  .edit-button-bottom {
-    margin-top: 1rem;
+  .platform-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #212529;
+  }
+  
+  .platform-status {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    color: #28a745;
   }
   
   /* ============================================
-     MODAL FORM STYLES (ФОРМА В МОДАЛЦІ) - ПО ЦЕНТРУ
+     СПИСОК ПОДКЛЮЧЕННЫХ АККАУНТОВ
      ============================================ */
-  .edit-form {
+  .section-subtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #212529;
+    animation: saFadeIn 0.4s ease-out 0.2s both;
+  }
+  
+  .accounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+  }
+  
+  .account-card {
+    padding: 1.25rem;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.2s ease-out;
+    animation: saSlideUp 0.4s ease-out both;
+  }
+  
+  /* Задержка анимации для эффекта "лесенки" */
+  .account-card:nth-child(1) { animation-delay: 0.3s; }
+  .account-card:nth-child(2) { animation-delay: 0.35s; }
+  .account-card:nth-child(3) { animation-delay: 0.4s; }
+  .account-card:nth-child(4) { animation-delay: 0.45s; }
+  .account-card:nth-child(5) { animation-delay: 0.5s; }
+  
+  @keyframes saSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .account-card:hover {
+    border-color: #8a5fe0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+  
+  .account-card.disconnected {
+    opacity: 0.85;
+    background: #f8f9fa;
+  }
+  
+  .account-card.disconnected:hover {
+    opacity: 1;
+  }
+  
+  /* Шапка карточки аккаунта */
+  .account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .account-platform {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid; /* Цвет платформы */
+  }
+  
+  .account-platform .platform-icon {
+    font-size: 1.25rem;
+  }
+  
+  .account-platform .platform-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  /* Бейдж статуса */
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .status-badge.connected {
+    background: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+  }
+  
+  .status-badge.disconnected {
+    background: rgba(220, 53, 69, 0.15);
+    color: #dc3545;
+  }
+  
+  /* Информация об аккаунте */
+  .account-info {
+    margin-bottom: 1rem;
+  }
+  
+  .account-username {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.5rem;
+    word-break: break-all;
+  }
+  
+  .account-stats {
+    display: flex;
+    gap: 1rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  
+  .stat-item svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Кнопки действий в карточке */
+  .account-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .account-actions button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    background: #f8f9fa;
+    color: #212529;
+  }
+  
+  .account-actions button svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .btn-edit:hover {
+    background: rgba(138, 95, 224, 0.15);
+    color: #8a5fe0;
+  }
+  
+  .btn-danger {
+    background: rgba(220, 53, 69, 0.1) !important;
+    color: #dc3545 !important;
+  }
+  
+  .btn-danger:hover {
+    background: rgba(220, 53, 69, 0.2) !important;
+  }
+  
+  .btn-success {
+    background: rgba(40, 167, 69, 0.1) !important;
+    color: #28a745 !important;
+  }
+  
+  .btn-success:hover {
+    background: rgba(40, 167, 69, 0.2) !important;
+  }
+  
+  /* ============================================
+     ПУСТОЕ СОСТОЯНИЕ
+     ============================================ */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6c757d;
+    animation: saFadeIn 0.4s ease-out;
+  }
+  
+  .empty-state svg {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    color: #e9ecef;
+  }
+  
+  .empty-state p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  
+  .empty-subtitle {
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-clear {
+    margin-top: 1rem;
+    padding: 0.5rem 1.25rem;
+    background: #8a5fe0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+  }
+  
+  .btn-clear:hover {
+    background: #7a4dd4;
+    transform: translateY(-1px);
+  }
+  
+  /* ============================================
+     ФОРМА В МОДАЛЬНОМ ОКНЕ
+     ============================================ */
+  .social-form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+  }
+  
+  .platform-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .platform-preview .platform-icon {
+    font-size: 1.5rem;
+  }
+  
+  .platform-preview .platform-name {
+    font-weight: 600;
+    font-size: 1rem;
   }
   
   .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    align-items: center;
-    text-align: center;
   }
   
   .form-label {
     font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--pd-text);
+    font-weight: 500;
+    color: #212529;
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    justify-content: center;
-    text-align: center;
   }
   
-  .form-label span[aria-hidden="true"] {
-    color: var(--pd-danger);
+  .required-mark {
+    color: #dc3545; /* Красный для обязательных полей */
   }
   
-  /* ============================================
-     FORM INPUTS (ПОЛЯ ВВОДУ) - БІЛИЙ ФОН
-     ============================================ */
-  .form-input {
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--pd-border);
-    border-radius: var(--pd-border-radius-sm);
-    font-size: 1rem;
-    font-family: inherit;
-    background: #ffffff;
-    color: var(--pd-text);
-    transition: all var(--pd-transition);
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    text-align: center;
-  }
-  
-  .form-input:hover {
-    border-color: #adb5bd;
-    background: #ffffff;
-  }
-  
-  .form-input:focus {
-    outline: none;
-    border-color: var(--pd-primary);
-    box-shadow: var(--pd-shadow-focus);
-    background: #ffffff;
-  }
-  
-  .form-input:focus-visible {
-    outline: 2px solid var(--pd-primary);
-    outline-offset: 2px;
-    background: #ffffff;
-  }
-  
-  .form-input::placeholder {
-    color: #adb5bd;
-  }
-  
-  .form-input:disabled {
-    background: var(--pd-border-light);
-    color: var(--pd-text-muted);
-    cursor: not-allowed;
-  }
-  
-  /* Select з стрілочкою */
-  select.form-input {
-    cursor: pointer;
-    appearance: none;
-    background: #ffffff;
-    background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-  }
-  
-  /* ============================================
-     INPUT WITH ICON (ПОЛЕ З ІКОНКОЮ)
-     ============================================ */
   .input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 400px;
   }
   
-  .input-icon-right {
+  .input-prefix {
     position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 12px;
+    color: #6c757d;
+    font-size: 0.9rem;
+    pointer-events: none;
+    background: #ffffff;
+    padding: 0 4px;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-left: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #ffffff;
+    color: #212529;
+    transition: all 0.2s ease-out;
+  }
+  
+  .form-input.with-prefix {
+    padding-left: 2.5rem; /* Отступ для префикса */
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: #8a5fe0;
+    box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15);
+  }
+  
+  .form-input.error {
+    border-color: #dc3545;
+  }
+  
+  .form-input.error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+  }
+  
+  .form-input::placeholder {
+    color: #6c757d;
+  }
+  
+  .form-error {
+    font-size: 0.8rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+  }
+  
+  /* Чекбокс */
+  .checkbox-label {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    color: var(--pd-text-muted);
-    font-size: 1rem;
-    pointer-events: none;
-    user-select: none;
-    background: #ffffff;
-  }
-  
-  .input-icon-right.interactive {
-    pointer-events: auto;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
     cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: all var(--pd-transition);
+    user-select: none;
   }
   
-  .input-icon-right.interactive:hover,
-  .input-icon-right.interactive:focus {
-    background: var(--pd-border-light);
-    color: var(--pd-text);
+  .checkbox-input {
+    width: 18px;
+    height: 18px;
+    accent-color: #8a5fe0;
+    cursor: pointer;
   }
   
-  .input-icon-right.status-success {
-    color: var(--pd-success);
+  .checkbox-text {
+    font-size: 0.95rem;
+    color: #212529;
   }
   
-  .input-icon-right.status-error {
-    color: var(--pd-danger);
-  }
-  
-  .input-icon-right.status-info {
-    color: var(--pd-info);
-  }
-  
-  /* ============================================
-     FORM ACTIONS (КНОПКИ ФОРМИ) - ПО ЦЕНТРУ
-     ============================================ */
+  /* Кнопки формы */
   .form-actions {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
+    gap: 0.75rem;
+    justify-content: flex-end;
     padding-top: 1rem;
-    border-top: 1px solid var(--pd-border);
     margin-top: 0.5rem;
+    border-top: 1px solid #e9ecef;
   }
   
-  .btn-cancel,
-  .btn-save {
-    padding: 0.75rem 1.75rem;
-    border-radius: var(--pd-border-radius-sm);
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all var(--pd-transition);
+  .form-actions button {
+    padding: 0.625rem 1.5rem;
     border: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-width: 120px;
-    background: #ffffff;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    min-width: 100px;
   }
   
   .btn-cancel {
-    color: var(--pd-text);
-    border: 2px solid var(--pd-border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: #f8f9fa;
+    color: #212529;
   }
   
-  .btn-cancel:hover:not(:disabled) {
-    background: var(--pd-border-light);
-    border-color: #adb5bd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
-  }
-  
-  .btn-cancel:active:not(:disabled) {
+  .btn-cancel:hover {
     background: #e9ecef;
-    border-color: #6c757d;
-    transform: translateY(0);
-  }
-  
-  .btn-cancel:focus-visible {
-    outline: 2px solid var(--pd-primary);
-    outline-offset: 2px;
-    background: #ffffff;
   }
   
   .btn-save {
-    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
-    color: #ffffff;
-    border: 2px solid transparent;
-    box-shadow: 0 4px 12px rgba(155, 114, 234, 0.3);
+    background: #8a5fe0;
+    color: #fff;
   }
   
-  .btn-save:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--pd-primary-hover) 0%, #7a4bd6 100%);
-    box-shadow: 0 6px 16px rgba(155, 114, 234, 0.4);
-    transform: translateY(-2px);
-  }
-  
-  .btn-save:active:not(:disabled) {
-    background: linear-gradient(135deg, #7a4bd6 0%, #6f42c1 100%);
-    box-shadow: 0 2px 6px rgba(155, 114, 234, 0.3);
-    transform: translateY(0);
-  }
-  
-  .btn-save:focus-visible {
-    outline: 2px solid #6f42c1;
-    outline-offset: 2px;
-    background: linear-gradient(135deg, var(--pd-primary) 0%, var(--pd-primary-hover) 100%);
-  }
-  
-  .btn-cancel:disabled,
-  .btn-save:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+  .btn-save:hover {
+    background: #7a4dd4;
+    transform: translateY(-1px);
   }
   
   /* ============================================
-     ERROR MESSAGE (ПОВІДОМЛЕННЯ ПРО ПОМИЛКУ) - ПО ЦЕНТРУ
-     ============================================ */
-  .error-message {
-    font-size: 0.875rem;
-    color: var(--pd-danger);
-    margin-top: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    text-align: center;
-  }
-  
-  /* ============================================
-     SUCCESS MESSAGE (ПОВІДОМЛЕННЯ ПРО УСПІХ) - ПО ЦЕНТРУ
-     ============================================ */
-  .success-message {
-    font-size: 0.875rem;
-    color: var(--pd-success);
-    margin-top: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    text-align: center;
-  }
-  
-  /* ============================================
-     RESPONSIVE / MOBILE
+     АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
      ============================================ */
   @media (max-width: 768px) {
-    .content-header {
-      padding: var(--pd-padding-sm);
-      margin-bottom: 1rem;
+    .social-accounts-container {
+      padding: 1rem;
+    }
+  
+    .section-header {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+  
+    .header-actions {
+      justify-content: center;
+    }
+  
+    .filter-select {
+      width: 100%;
+      max-width: 300px;
+    }
+  
+    .platforms-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .accounts-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .account-card {
+      padding: 1rem;
+    }
+  
+    .account-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  
+    .account-actions {
+      flex-direction: column;
+    }
+  
+    .account-actions button {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+    }
+  
+    .form-actions button {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .platforms-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
   
     .page-title {
@@ -591,158 +635,90 @@
     .page-subtitle {
       font-size: 0.9rem;
     }
-  
-    .personal-data-grid {
-      padding: var(--pd-padding-sm);
-      max-width: 100%;
-    }
-  
-    .data-row {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 0.875rem;
-    }
-  
-    .data-label {
-      min-width: auto;
-      font-size: 0.825rem;
-      text-align: center; /* На мобільних теж по центру */
-    }
-  
-    .data-value {
-      font-size: 0.95rem;
-    }
-  
-    .edit-button-wrapper {
-      padding: 0 var(--pd-padding-sm);
-    }
-  
-    .edit-button {
-      width: 100%;
-      max-width: 300px;
-      justify-content: center;
-    }
-  
-    .form-actions {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .form-actions .btn-cancel,
-    .form-actions .btn-save {
-      width: 100%;
-      max-width: 300px;
-    }
-  
-    .form-input {
-      max-width: 100%;
-    }
-  
-    .input-wrapper {
-      max-width: 100%;
-    }
   }
   
   /* ============================================
-     TABLET
+     ТЁМНАЯ ТЕМА
      ============================================ */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .personal-data-grid {
-      max-width: 700px;
+  @media (prefers-color-scheme: dark) {
+    .social-accounts-container {
+      background: #1a1a2e;
+      color: #f8f9fa;
     }
   
-    .data-label {
-      min-width: 200px;
-    }
-  }
-  
-  /* ============================================
-     ACCESSIBILITY: REDUCED MOTION
-     ============================================ */
-  @media (prefers-reduced-motion: reduce) {
-    .content-header,
     .page-title,
+    .account-username,
+    .section-subtitle,
+    .form-label,
+    .checkbox-text {
+      color: #f8f9fa;
+    }
+  
     .page-subtitle,
-    .personal-data-grid,
-    .data-row,
-    .edit-button-wrapper,
-    .edit-button,
-    .btn-cancel,
-    .btn-save {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none;
-    }
-  }
-  
-  /* ============================================
-     ACCESSIBILITY: HIGH CONTRAST
-     ============================================ */
-  @media (prefers-contrast: high) {
-    .personal-data-grid {
-      border: 2px solid #000000;
-      background: #ffffff;
+    .account-stats,
+    .empty-state,
+    .form-input::placeholder,
+    .input-prefix {
+      color: #adb5bd;
     }
   
-    .data-row {
-      border: 2px solid #000000;
-      background: #ffffff;
+    .section-header,
+    .platform-card,
+    .account-card,
+    .form-input,
+    .filter-select {
+      background: #23233d;
+      border-color: #2a2a4a;
     }
   
-    .form-input {
-      border-width: 2px;
-      border-color: #000000;
-      background: #ffffff;
+    .account-card.disconnected {
+      background: rgba(220, 53, 69, 0.05);
     }
   
-    .edit-button {
-      background: #000000;
-      border: 2px solid #000000;
+    .platform-preview {
+      background: #2a2a4a;
     }
   
     .btn-cancel {
-      background: #ffffff;
-      color: #000000;
-      border: 2px solid #000000;
+      background: #2a2a4a;
+      color: #f8f9fa;
     }
   
-    .btn-save {
-      background: #000000;
-      color: #ffffff;
-      border: 2px solid #000000;
-    }
-  }
-  
-  /* ============================================
-     PRINT STYLES
-     ============================================ */
-  @media print {
-    .content-header,
-    .page-title,
-    .page-subtitle,
-    .personal-data-grid,
-    .data-row {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      background: #ffffff !important;
+    .btn-cancel:hover {
+      background: #3a3a5a;
     }
   
-    .edit-button-wrapper {
-      display: none;
+    .empty-state svg {
+      color: #2a2a4a;
     }
   
-    .data-row {
-      break-inside: avoid;
+    .form-input:focus {
+      border-color: #8a5fe0;
     }
   }
   
   /* ============================================
-     UTILITY CLASSES
+     ДОСТУПНОСТЬ
      ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
   
-  /* Візуально прихований, але доступний для скрінрідерів */
+  /* Фокус для навигации с клавиатуры */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #8a5fe0;
+    outline-offset: 2px;
+  }
+  
+  /* Скрыто визуально, но доступно для скринридеров */
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -753,63 +729,4 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
-  }
-  
-  /* Підказка під полем */
-  .form-hint {
-    font-size: 0.875rem;
-    color: var(--pd-text-muted);
-    margin-top: 0.25rem;
-    line-height: 1.4;
-    text-align: center;
-    background: #ffffff;
-  }
-  
-  /* Стан валідації */
-  .form-input:invalid:not(:placeholder-shown) {
-    border-color: var(--pd-danger);
-    background: #ffffff;
-  }
-  
-  .form-input:valid:not(:placeholder-shown) {
-    border-color: var(--pd-success);
-    background: #ffffff;
-  }
-  
-  /* Loading state */
-  .loading {
-    opacity: 0.6;
-    pointer-events: none;
-    position: relative;
-  }
-  
-  .loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--pd-border);
-    border-top-color: var(--pd-primary);
-    border-radius: 50%;
-    animation: pdSpin 0.8s linear infinite;
-    transform: translate(-50%, -50%);
-  }
-  
-  @keyframes pdSpin {
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
-  }
-  
-  /* Центрування всього контенту */
-  .personal-data-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    background: #ffffff;
   }

@@ -4,16 +4,17 @@
    .notifications-container {
     max-width: 100%;
     animation: fadeIn 0.3s ease-out;
+    min-height: 400px;
+    position: relative;
   }
   
-  /* Анимация появления контейнера */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
   /* ============================================
-     ЗАГОЛОВОК СПОВІЩЕНЬ
+     ЗАГОЛОВОК
      ============================================ */
   .notifications-header {
     display: flex;
@@ -38,7 +39,6 @@
     margin: 0;
   }
   
-  /* Бейдж непрочитанных с анимацией пульсации */
   .notifications-badge {
     display: inline-flex;
     align-items: center;
@@ -60,7 +60,108 @@
   }
   
   /* ============================================
-     ФИЛЬТРЫ СПОВІЩЕНЬ
+     LOADING SPINNER (⚡ прискорено)
+     ============================================ */
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 12px;
+  }
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e9ecef;
+    border-top: 4px solid #9b72ea;
+    border-radius: 50%;
+    /* ⚡ Прискорено: 1s → 0.7s */
+    animation: spin 0.7s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  /* ============================================
+     СКЕЛЕТОН ЗАВАНТАЖЕННЯ (⚡ прискорено)
+     ============================================ */
+  .loading-wrapper {
+    width: 100%;
+  }
+  
+  .skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .skeleton-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    /* ⚡ Прискорено: 1.5s → 1s */
+    animation: pulse-skeleton 1s infinite ease-in-out;
+  }
+  
+  .skeleton-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    flex-shrink: 0;
+  }
+  
+  .skeleton-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .skeleton-line {
+    height: 12px;
+    background: #e9ecef;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .skeleton-line.short { width: 40%; }
+  .skeleton-line.medium { width: 60%; }
+  .skeleton-line.long { width: 90%; }
+  
+  @keyframes pulse-skeleton {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  /* ============================================
+     ФІЛЬТРИ
      ============================================ */
   .notifications-filters {
     display: flex;
@@ -96,7 +197,7 @@
   }
   
   /* ============================================
-     КНОПКА "ОТМЕТИТЬ ВСЕ КАК ПРОЧИТАННЫЕ"
+     КНОПКА "ПОЗНАЧИТИ ВСІ"
      ============================================ */
   .mark-all-btn {
     display: inline-flex;
@@ -124,7 +225,7 @@
   }
   
   /* ============================================
-     СПИСОК СПОВІЩЕНЬ
+     СПИСОК ТА ЕЛЕМЕНТИ
      ============================================ */
   .notifications-list {
     list-style: none;
@@ -135,36 +236,6 @@
     gap: 12px;
   }
   
-  /* ============================================
-     ПУСТОЕ СОСТОЯНИЕ
-     ============================================ */
-  .notifications-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 24px;
-    text-align: center;
-    color: #6c757d;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 2px dashed #e9ecef;
-  }
-  
-  .empty-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.6;
-  }
-  
-  .notifications-empty p {
-    margin: 0;
-    font-size: 15px;
-  }
-  
-  /* ============================================
-     ЭЛЕМЕНТ СПОВІЩЕНИЯ
-     ============================================ */
   .notification-item {
     display: flex;
     align-items: flex-start;
@@ -174,19 +245,13 @@
     border: 1px solid #e9ecef;
     border-radius: 12px;
     transition: all 0.2s;
-    animation: slideIn 0.3s ease-out;
+    /* ⚡ Прискорено: 0.3s → 0.25s */
+    animation: slideIn 0.25s ease-out;
   }
   
-  /* Анимация появления сповіщения */
   @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   
   .notification-item:hover {
@@ -194,13 +259,11 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
   
-  /* Непрочитанное сповіщение */
   .notification-item.unread {
     border-left: 4px solid #9b72ea;
     background: linear-gradient(to right, #faf7ff, white);
   }
   
-  /* Прочитанное сповіщение */
   .notification-item.read {
     opacity: 0.85;
   }
@@ -210,7 +273,7 @@
   }
   
   /* ============================================
-     ИКОНКИ ТИПОВ СПОВІЩЕНИЙ
+     ІКОНКИ ТА ТЕКСТ
      ============================================ */
   .type-icon {
     display: flex;
@@ -229,9 +292,6 @@
   .type-warning { background: #fff3cd; color: #856404; }
   .type-error { background: #f8d7da; color: #721c24; }
   
-  /* ============================================
-     ТЕКСТ СПОВІЩЕНИЯ
-     ============================================ */
   .notification-content {
     display: flex;
     gap: 12px;
@@ -265,7 +325,7 @@
   }
   
   /* ============================================
-     КНОПКИ ДЕЙСТВИЙ
+     КНОПКИ ДІЙ
      ============================================ */
   .notification-actions {
     display: flex;
@@ -315,7 +375,7 @@
   }
   
   /* ============================================
-     ПОДВАЛ (КНОПКА ОЧИСТКИ)
+     ПОДВАЛ ТА ПУСТИЙ СТАН
      ============================================ */
   .notifications-footer {
     margin-top: 24px;
@@ -347,8 +407,32 @@
     outline-offset: 2px;
   }
   
+  .notifications-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+    color: #6c757d;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #e9ecef;
+  }
+  
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+  
+  .notifications-empty p {
+    margin: 0;
+    font-size: 15px;
+  }
+  
   /* ============================================
-     АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+     АДАПТИВНІСТЬ
      ============================================ */
   @media (max-width: 768px) {
     .notifications-header {
@@ -382,7 +466,7 @@
   }
   
   /* ============================================
-     ПОДДЕРЖКА УМЕНЬШЕНИЯ ДВИЖЕНИЯ
+     ПІДТРИМКА ЗМЕНШЕНОГО РУХУ
      ============================================ */
   @media (prefers-reduced-motion: reduce) {
     .notification-item,
@@ -390,12 +474,77 @@
     .filter-btn,
     .action-btn,
     .clear-all-btn,
-    .mark-all-btn {
+    .mark-all-btn,
+    .skeleton-item,
+    .spinner,
+    .notifications-badge {
       animation: none !important;
       transition: none !important;
     }
+  }
+  
+  /* ============================================
+     ТЕМНА ТЕМА (автоматична)
+     ============================================ */
+  @media (prefers-color-scheme: dark) {
+    .notifications-container {
+      background: #1a1a2e;
+    }
     
-    .notifications-badge {
-      animation: none !important;
+    .notifications-title {
+      color: #ffffff;
+    }
+    
+    .notifications-subtitle {
+      color: #b0b0b0;
+    }
+    
+    .notifications-header {
+      border-bottom-color: #2a2a4a;
+    }
+    
+    .filter-btn {
+      background: #1e1e3a;
+      border-color: #2a2a4a;
+      color: #b0b0b0;
+    }
+    
+    .filter-btn:hover {
+      background: #2a2a4a;
+    }
+    
+    .notification-item {
+      background: #16213e;
+      border-color: #2a2a4a;
+    }
+    
+    .notification-title {
+      color: #ffffff;
+    }
+    
+    .notification-message {
+      color: #b0b0b0;
+    }
+    
+    .notification-item.unread {
+      background: linear-gradient(to right, #2a2244, #16213e);
+    }
+    
+    .skeleton-item {
+      background: #16213e;
+      border-color: #2a2a4a;
+    }
+    
+    .skeleton-icon,
+    .skeleton-line {
+      background: #2a2a4a;
+    }
+    
+    .loading-overlay {
+      background: rgba(26, 26, 46, 0.95);
+    }
+    
+    .loading-text {
+      color: #b0b0b0;
     }
   }

@@ -72,6 +72,74 @@ const PLATFORMS = {
 };
 
 // ============================================
+// КОМПОНЕНТ: Toast Notification
+// ============================================
+
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  const icons = {
+    success: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    ),
+    error: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    ),
+    info: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </svg>
+    ),
+    warning: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    )
+  };
+
+  const typeClasses = {
+    success: 'toast-success',
+    error: 'toast-error',
+    info: 'toast-info',
+    warning: 'toast-warning'
+  };
+
+  return (
+    <div className={`toast ${typeClasses[type]}`} role="alert" aria-live="assertive">
+      <div className="toast-icon">{icons[type]}</div>
+      <div className="toast-content">
+        <p className="toast-message">{message}</p>
+      </div>
+      <button 
+        className="toast-close" 
+        onClick={onClose}
+        aria-label="Закрити сповіщення"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
+// ============================================
 // ОСНОВНИЙ КОМПОНЕНТ: PersonalData
 // ============================================
 
@@ -85,6 +153,19 @@ const PersonalData = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [filterStatus, setFilterStatus] = useState('all');
+  
+  // Toast notifications state
+  const [toast, setToast] = useState(null);
+
+  // Helper function to show toast
+  const showToast = useCallback((message, type = 'info') => {
+    setToast({ message, type, id: Date.now() });
+  }, []);
+
+  // Close toast handler
+  const closeToast = useCallback(() => {
+    setToast(null);
+  }, []);
 
   useEffect(() => {
     const loadAccounts = async () => {
@@ -217,6 +298,7 @@ const PersonalData = () => {
   const handleSave = (e) => {
     e.preventDefault();
     if (!validateForm()) {
+      showToast('Будь ласка, виправте помилки у формі', 'error');
       return;
     }
 
@@ -231,12 +313,14 @@ const PersonalData = () => {
         ...formData
       };
       setAccounts(prev => [...prev, newAccount]);
+      // 🗑️ Сповіщення при підключенні видалено за запитом
     } else if (modalMode === 'edit' && editingAccount) {
       setAccounts(prev => prev.map(acc => 
         acc.id === editingAccount.id 
           ? { ...acc, ...formData, username: formData.username || formData.channelUrl || acc.username }
           : acc
       ));
+      showToast(`Налаштування ${PLATFORMS[selectedPlatform]?.name} оновлено`, 'success');
     }
     closeModal();
   };
@@ -245,17 +329,32 @@ const PersonalData = () => {
     const account = accounts.find(acc => acc.id === accountId);
     if (window.confirm(`Ви впевнені, що хочете відключити ${account?.username}?`)) {
       setAccounts(prev => prev.filter(acc => acc.id !== accountId));
+      showToast(`${account?.username} відключено`, 'warning');
     }
   };
 
   const handleReconnect = (accountId) => {
+    const account = accounts.find(acc => acc.id === accountId);
     setAccounts(prev => prev.map(acc => 
       acc.id === accountId ? { ...acc, status: 'connected', lastSync: 'щойно' } : acc
     ));
+    showToast(`${account?.username} підключено знову`, 'success');
   };
 
-  const handleCopyUsername = (username) => {
-    navigator.clipboard.writeText(username);
+  const handleCopyUsername = async (username) => {
+    try {
+      await navigator.clipboard.writeText(username);
+      showToast('Скопійовано в буфер обміну', 'success');
+    } catch (err) {
+      // Fallback для старих браузерів
+      const textarea = document.createElement('textarea');
+      textarea.value = username;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('Скопійовано в буфер обміну', 'success');
+    }
   };
 
   const renderFormField = (field) => {
@@ -307,12 +406,24 @@ const PersonalData = () => {
           <div className="loading-spinner" aria-hidden="true" />
           <p>Завантаження акаунтів...</p>
         </div>
+        {toast && (
+          <div className="toast-container">
+            <Toast {...toast} onClose={closeToast} />
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div className="social-accounts-container">
+      {/* Toast Notifications Container */}
+      {toast && (
+        <div className="toast-container" role="region" aria-live="polite" aria-atomic="true">
+          <Toast {...toast} onClose={closeToast} />
+        </div>
+      )}
+
       <header className="section-header">
         <div>
           <h1 className="page-title">Налаштування профілю</h1>

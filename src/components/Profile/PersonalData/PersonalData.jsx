@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Modal from './../../Modal/Modal';
 import './PersonalData.css';
 
 // ============================================
-// КОНФИГУРАЦИЯ ПЛАТФОРМ
+// КОНФІГУРАЦІЯ ПЛАТФОРМ
 // ============================================
+
 const PLATFORMS = {
   instagram: {
     id: 'instagram',
@@ -12,7 +13,7 @@ const PLATFORMS = {
     icon: '📸',
     color: '#E4405F',
     placeholder: '@username',
-    supportsAutoPost: true, // Поддерживает автопостинг
+    supportsAutoPost: true,
     fields: [
       { id: 'username', label: 'Нікнейм', type: 'text', required: true, prefix: '@' },
       { id: 'accessToken', label: 'Access Token (опціонально)', type: 'password', required: false },
@@ -30,6 +31,32 @@ const PLATFORMS = {
       { id: 'pageId', label: 'ID сторінки', type: 'text', required: false },
     ]
   },
+  youtube: {
+    id: 'youtube',
+    name: 'YouTube',
+    icon: '▶️',
+    color: '#FF0000',
+    placeholder: 'youtube.com/@channel',
+    supportsAutoPost: true,
+    fields: [
+      { id: 'username', label: 'Посилання на канал', type: 'url', required: true },
+      { id: 'channelId', label: 'ID каналу (опціонально)', type: 'text', required: false },
+      { id: 'monetized', label: 'Монетизований канал', type: 'checkbox', required: false }
+    ]
+  },
+  twitter: {
+    id: 'twitter',
+    name: 'Twitter',
+    icon: '🐦',
+    color: '#000000',
+    placeholder: '@username',
+    supportsAutoPost: true,
+    fields: [
+      { id: 'username', label: 'Нікнейм', type: 'text', required: true, prefix: '@' },
+      { id: 'profileUrl', label: 'Посилання на профіль', type: 'url', required: false },
+      { id: 'verified', label: 'Верифікований акаунт', type: 'checkbox', required: false }
+    ]
+  },
   tiktok: {
     id: 'tiktok',
     name: 'TikTok',
@@ -41,33 +68,29 @@ const PLATFORMS = {
       { id: 'username', label: 'Нікнейм', type: 'text', required: true, prefix: '@' },
       { id: 'businessAccount', label: 'Бізнес-акаунт', type: 'checkbox', required: false }
     ]
-  }
+  },
 };
 
-const PersonalData = () => {
-  // ============================================
-  // СОСТОЯНИЯ КОМПОНЕНТА
-  // ============================================
-  const [accounts, setAccounts] = useState([]);        // Список подключенных аккаунтов
-  const [loading, setLoading] = useState(true);         // Состояние загрузки
-  const [isModalOpen, setIsModalOpen] = useState(false); // Открыто ли модальное окно
-  const [modalMode, setModalMode] = useState('add');     // Режим модалки: 'add' или 'edit'
-  const [selectedPlatform, setSelectedPlatform] = useState(null); // Выбранная платформа
-  const [editingAccount, setEditingAccount] = useState(null);     // Редактируемый аккаунт
-  const [formData, setFormData] = useState({});         // Данные формы
-  const [errors, setErrors] = useState({});             // Ошибки валидации
-  const [filterStatus, setFilterStatus] = useState('all'); // Фильтр по статусу
+// ============================================
+// ОСНОВНИЙ КОМПОНЕНТ: PersonalData
+// ============================================
 
-  // ============================================
-  // ЗАГРУЗКА ДАННЫХ ПРИ МОНТАЖЕ
-  // ============================================
+const PersonalData = () => {
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [editingAccount, setEditingAccount] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [filterStatus, setFilterStatus] = useState('all');
+
   useEffect(() => {
     const loadAccounts = async () => {
       try {
-        // Имитация задержки загрузки
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Моковые данные для демонстрации
         const mockAccounts = [
           {
             id: 1,
@@ -88,20 +111,42 @@ const PersonalData = () => {
             lastSync: '15 хв тому',
             autoPost: false,
             pageId: '123456789'
-          },
+          },    
           {
             id: 3,
+            platform: 'youtube',
+            username: 'youtube.com/@MyChannel',
+            followers: '23.7K',
+            status: 'connected',
+            lastSync: '5 хв тому',
+            autoPost: true,
+            channelId: 'UCxxxxxxxxxxxxxx',
+            monetized: true
+          },
+          {
+            id: 4,
+            platform: 'twitter',
+            username: '@news_hub',
+            followers: '5.8K',
+            status: 'connected',
+            lastSync: '1 год тому',
+            autoPost: true,
+            verified: true,
+            profileUrl: 'https://twitter.com/news_hub'
+          },
+          {
+            id: 5,
             platform: 'tiktok',
             username: '@viral_content',
             followers: '45.1K',
             status: 'disconnected',
             lastSync: '2 дні тому',
             businessAccount: true
-          }
+          },
         ];
         setAccounts(mockAccounts);
       } catch (err) {
-        console.error('Ошибка загрузки аккаунтов:', err);
+        console.error('Помилка завантаження акаунтів:', err);
       } finally {
         setLoading(false);
       }
@@ -109,16 +154,10 @@ const PersonalData = () => {
     loadAccounts();
   }, []);
 
-  // ============================================
-  // ФИЛЬТРАЦИЯ АККАУНТОВ ПО СТАТУСУ
-  // ============================================
   const filteredAccounts = accounts.filter(account => 
     filterStatus === 'all' || account.status === filterStatus
   );
 
-  // ============================================
-  // ОТКРЫТИЕ МОДАЛКИ: ДОБАВЛЕНИЕ
-  // ============================================
   const openAddModal = (platformId) => {
     setSelectedPlatform(platformId);
     setModalMode('add');
@@ -127,9 +166,6 @@ const PersonalData = () => {
     setIsModalOpen(true);
   };
 
-  // ============================================
-  // ОТКРЫТИЕ МОДАЛКИ: РЕДАКТИРОВАНИЕ
-  // ============================================
   const openEditModal = (account) => {
     setSelectedPlatform(account.platform);
     setModalMode('edit');
@@ -139,9 +175,6 @@ const PersonalData = () => {
     setIsModalOpen(true);
   };
 
-  // ============================================
-  // ЗАКРЫТИЕ МОДАЛКИ + СБРОС СОСТОЯНИЙ
-  // ============================================
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPlatform(null);
@@ -150,38 +183,28 @@ const PersonalData = () => {
     setErrors({});
   };
 
-  // ============================================
-  // ОБРАБОТКА ИЗМЕНЕНИЙ В ФОРМЕ
-  // ============================================
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    // Очищаем ошибку при изменении поля
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
   };
 
-  // ============================================
-  // ВАЛИДАЦИЯ ФОРМЫ
-  // ============================================
   const validateForm = () => {
     const newErrors = {};
     const platform = PLATFORMS[selectedPlatform];
     
     platform.fields.forEach(field => {
-      // Проверка обязательных полей
       if (field.required && !formData[field.id]?.trim()) {
         newErrors[field.id] = `Це поле обов'язкове`;
       }
-      // Проверка формата URL
       if (field.type === 'url' && formData[field.id] && !/^https?:\/\//.test(formData[field.id])) {
         newErrors[field.id] = 'Введіть коректне посилання';
       }
-      // Проверка формата email
       if (field.type === 'email' && formData[field.id] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData[field.id])) {
         newErrors[field.id] = 'Введіть коректний email';
       }
@@ -191,15 +214,13 @@ const PersonalData = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ============================================
-  // СОХРАНЕНИЕ ДАННЫХ (ДОБАВЛЕНИЕ / РЕДАКТИРОВАНИЕ)
-  // ============================================
   const handleSave = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     if (modalMode === 'add') {
-      // Создаём новый аккаунт
       const newAccount = {
         id: Date.now(),
         platform: selectedPlatform,
@@ -211,7 +232,6 @@ const PersonalData = () => {
       };
       setAccounts(prev => [...prev, newAccount]);
     } else if (modalMode === 'edit' && editingAccount) {
-      // Обновляем существующий аккаунт
       setAccounts(prev => prev.map(acc => 
         acc.id === editingAccount.id 
           ? { ...acc, ...formData, username: formData.username || formData.channelUrl || acc.username }
@@ -221,27 +241,23 @@ const PersonalData = () => {
     closeModal();
   };
 
-  // ============================================
-  // ОТКЛЮЧЕНИЕ АККАУНТА
-  // ============================================
   const handleDisconnect = (accountId) => {
-    if (window.confirm('Ви впевнені, що хочете відключити цей акаунт?')) {
+    const account = accounts.find(acc => acc.id === accountId);
+    if (window.confirm(`Ви впевнені, що хочете відключити ${account?.username}?`)) {
       setAccounts(prev => prev.filter(acc => acc.id !== accountId));
     }
   };
 
-  // ============================================
-  // ПЕРЕПОДКЛЮЧЕНИЕ АККАУНТА
-  // ============================================
   const handleReconnect = (accountId) => {
     setAccounts(prev => prev.map(acc => 
       acc.id === accountId ? { ...acc, status: 'connected', lastSync: 'щойно' } : acc
     ));
   };
 
-  // ============================================
-  // РЕНДЕР ПОЛЯ ФОРМЫ (текст / чекбокс)
-  // ============================================
+  const handleCopyUsername = (username) => {
+    navigator.clipboard.writeText(username);
+  };
+
   const renderFormField = (field) => {
     if (field.type === 'checkbox') {
       return (
@@ -270,7 +286,7 @@ const PersonalData = () => {
             type={field.type}
             id={field.id}
             name={field.id}
-            className={`form-input ${errors[field.id] ? 'error' : ''}`}
+            className={`form-input ${errors[field.id] ? 'error' : ''} ${field.prefix ? 'with-prefix' : ''}`}
             value={formData[field.id] || ''}
             onChange={handleInputChange}
             placeholder={PLATFORMS[selectedPlatform]?.placeholder}
@@ -284,9 +300,6 @@ const PersonalData = () => {
     );
   };
 
-  // ============================================
-  // СОСТОЯНИЕ ЗАГРУЗКИ
-  // ============================================
   if (loading) {
     return (
       <div className="social-accounts-container">
@@ -298,15 +311,11 @@ const PersonalData = () => {
     );
   }
 
-  // ============================================
-  // ОСНОВНОЙ РЕНДЕР КОМПОНЕНТА
-  // ============================================
   return (
     <div className="social-accounts-container">
-      {/* Заголовок раздела + фильтр */}
       <header className="section-header">
         <div>
-          <h1 className="page-title">Соціальні мережі</h1>
+          <h1 className="page-title">Налаштування профілю</h1>
           <p className="page-subtitle">Підключіть акаунти для управління публікаціями.</p>
         </div>
         <div className="header-actions">
@@ -323,7 +332,6 @@ const PersonalData = () => {
         </div>
       </header>
 
-      {/* Сетка платформ для добавления */}
       <section className="platforms-grid" aria-label="Доступні платформи">
         {Object.values(PLATFORMS).map((platform) => {
           const isConnected = accounts.some(acc => acc.platform === platform.id);
@@ -345,7 +353,6 @@ const PersonalData = () => {
         })}
       </section>
 
-      {/* Список подключенных аккаунтов */}
       {filteredAccounts.length > 0 && (
         <section className="accounts-list" aria-label="Підключені акаунти">
           <h2 className="section-subtitle">Ваші акаунти ({filteredAccounts.length})</h2>
@@ -360,7 +367,6 @@ const PersonalData = () => {
                   itemScope
                   itemType="https://schema.org/Organization"
                 >
-                  {/* Шапка карточки: платформа + статус */}
                   <div className="account-header">
                     <div className="account-platform" style={{ borderColor: platform.color }}>
                       <span className="platform-icon" style={{ color: platform.color }}>{platform.icon}</span>
@@ -371,9 +377,20 @@ const PersonalData = () => {
                     </span>
                   </div>
 
-                  {/* Информация об аккаунте */}
                   <div className="account-info">
-                    <div className="account-username" itemProp="name">{account.username}</div>
+                    <button 
+                      className="account-username clickable" 
+                      itemProp="name"
+                      onClick={() => handleCopyUsername(account.username)}
+                      title="Натисніть, щоб скопіювати"
+                      aria-label={`Скопіювати ${account.username}`}
+                    >
+                      {account.username}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="copy-icon" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    </button>
                     <div className="account-stats">
                       <span className="stat-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -394,7 +411,6 @@ const PersonalData = () => {
                     </div>
                   </div>
 
-                  {/* Кнопки действий */}
                   <div className="account-actions">
                     <button 
                       className="btn-edit" 
@@ -439,7 +455,6 @@ const PersonalData = () => {
         </section>
       )}
 
-      {/* Пустое состояние: нет аккаунтов в фильтре */}
       {filteredAccounts.length === 0 && accounts.length > 0 && (
         <div className="empty-state" role="status">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -453,7 +468,6 @@ const PersonalData = () => {
         </div>
       )}
 
-      {/* Пустое состояние: вообще нет аккаунтов */}
       {accounts.length === 0 && (
         <div className="empty-state" role="status">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -467,7 +481,6 @@ const PersonalData = () => {
         </div>
       )}
 
-      {/* Модальное окно: добавление / редактирование */}
       <Modal 
         isOpen={isModalOpen} 
         onClose={closeModal} 
@@ -476,7 +489,6 @@ const PersonalData = () => {
       >
         {selectedPlatform && (
           <form className="social-form" onSubmit={handleSave} noValidate>
-            {/* Превью платформы */}
             <div className="platform-preview">
               <span className="platform-icon" style={{ color: PLATFORMS[selectedPlatform].color }}>
                 {PLATFORMS[selectedPlatform].icon}
@@ -484,10 +496,8 @@ const PersonalData = () => {
               <span className="platform-name">{PLATFORMS[selectedPlatform].name}</span>
             </div>
 
-            {/* Динамические поля формы */}
             {PLATFORMS[selectedPlatform].fields.map(renderFormField)}
 
-            {/* Кнопки формы */}
             <div className="form-actions">
               <button type="button" className="btn-cancel" onClick={closeModal}>
                 Скасувати

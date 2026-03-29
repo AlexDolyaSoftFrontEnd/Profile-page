@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Імпортуємо хук навігації
 import './Home.css';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // 2. Ініціалізуємо хук
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
+
+  // 3. Функція для переходу
+  const handleAuthClick = () => {
+    navigate('/login'); // Замініть '/login' на ваш реальний шлях до компонента авторизації
+  };
 
   if (loading) {
     return (
@@ -36,7 +43,7 @@ const Home = () => {
           </div>
           <div className="alert-content">
             <p className="alert-text">
-              Надсилайте публікації з адмін-панелі, використовуючи власний акаунт.
+              Надсилайте свої публікації з адмінки в мережі.
             </p>
           </div>
           <button className="alert-action" aria-label="Дія">
@@ -48,7 +55,19 @@ const Home = () => {
           </button>
         </article>
 
-        <article className="alert-card alert-info">
+        {/* 4. Додаємо onClick та стиль курсору до потрібної картки */}
+        <article 
+          className="alert-card alert-info" 
+          onClick={handleAuthClick}
+          style={{ cursor: 'pointer' }} // Візуально показує, що можна клікнути
+          role="button" // Для доступності (accessibility)
+          tabIndex="0" // Дозволяє фокус клавіатурою
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleAuthClick();
+            }
+          }}
+        >
           <div className="alert-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -56,10 +75,11 @@ const Home = () => {
           </div>
           <div className="alert-content">
             <p className="alert-text">
-              Захистіть свій обліковий запис за допомогою двофакторної автентифікації.
+              Зайдіть в свій обліковий запис за допомогою автентифікації.
             </p>
           </div>
-          <button className="alert-action" aria-label="Дія">
+          {/* Кнопку всередині можна залишити як іконку, але основна дія тепер на всій картці */}
+          <button className="alert-action" aria-label="Перейти до авторизації" onClick={(e) => e.stopPropagation()}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"/>
             </svg>

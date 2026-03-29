@@ -1,9 +1,5 @@
 /* ============================================
-   БАЗОВЫЕ СТИЛИ - АКЦЕНТ #8a5fe0
-   ============================================ */
-
-/* ============================================
-   КОНТЕЙНЕР
+   БАЗОВІ СТИЛИ - АКЦЕНТ #8a5fe0
    ============================================ */
    .social-accounts-container {
     max-width: 1200px;
@@ -12,11 +8,12 @@
     background: #ffffff;
     min-height: 100vh;
     color: #212529;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
   }
   
   /* ============================================
-     СОСТОЯНИЕ ЗАГРУЗКИ
+     СТАН ЗАВАНТАЖЕННЯ
      ============================================ */
   .loading-state {
     display: flex;
@@ -24,7 +21,7 @@
     align-items: center;
     justify-content: center;
     min-height: 400px;
-    gap: 1rem;
+    gap: 1.25rem;
     color: #6c757d;
   }
   
@@ -32,7 +29,7 @@
     width: 48px;
     height: 48px;
     border: 4px solid #e9ecef;
-    border-top-color: #8a5fe0; /* Акцентный цвет */
+    border-top-color: #8a5fe0;
     border-radius: 50%;
     animation: saSpin 1s linear infinite;
   }
@@ -42,7 +39,7 @@
   }
   
   /* ============================================
-     ЗАГОЛОВОК РАЗДЕЛА
+     ЗАГОЛОВОК СЕКЦІЇ
      ============================================ */
   .section-header {
     display: flex;
@@ -51,24 +48,26 @@
     gap: 1rem;
     padding: 1.5rem;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     animation: saFadeIn 0.4s ease-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
   
   @keyframes saFadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
   .page-title {
     font-size: 1.75rem;
     font-weight: 700;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.35rem 0;
     color: #212529;
-    line-height: 1.3;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
   
   .page-subtitle {
@@ -86,38 +85,43 @@
   }
   
   /* ============================================
-     ФИЛЬТР ПО СТАТУСУ (SELECT)
+     ФІЛЬТР (SELECT)
      ============================================ */
   .filter-select {
-    padding: 0.625rem 2rem 0.625rem 1rem;
+    padding: 0.625rem 2.25rem 0.625rem 1rem;
     border: 1px solid #e9ecef;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.9rem;
     background: #ffffff;
     color: #212529;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s ease;
     appearance: none;
-    /* Кастомная стрелочка */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 0.75rem center;
+    background-position: right 0.85rem center;
+    min-width: 160px;
+  }
+  
+  .filter-select:hover {
+    border-color: #ced4da;
   }
   
   .filter-select:focus {
     outline: none;
     border-color: #8a5fe0;
-    box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15);
+    box-shadow: 0 0 0 4px rgba(138, 95, 224, 0.12);
+    background-color: #fff;
   }
   
   /* ============================================
-     СЕТКА ПЛАТФОРМ (ДОБАВЛЕНИЕ)
+     СІТКА ПЛАТФОРМ
      ============================================ */
   .platforms-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
     animation: saFadeIn 0.4s ease-out 0.1s both;
   }
   
@@ -125,53 +129,68 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    padding: 1.25rem 1rem;
+    gap: 0.6rem;
+    padding: 1.35rem 1rem;
     background: #ffffff;
     border: 2px solid #e9ecef;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     position: relative;
   }
   
   .platform-card:hover {
-    border-color: #8a5fe0; /* Акцент при наведении */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
+    border-color: #8a5fe0;
+    box-shadow: 0 8px 25px rgba(138, 95, 224, 0.15);
+    transform: translateY(-3px);
+  }
+  
+  .platform-card:active {
+    transform: translateY(-1px);
   }
   
   .platform-card.connected {
-    border-color: #28a745; /* Зеленый для подключенных */
-    background: rgba(40, 167, 69, 0.05);
+    border-color: #28a745;
+    background: linear-gradient(145deg, #ffffff, #f8fff9);
   }
   
   .platform-card.connected:hover {
-    background: rgba(40, 167, 69, 0.1);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
   }
   
   .platform-icon {
-    font-size: 2rem;
+    font-size: 2.1rem;
     line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  
+  .platform-card:hover .platform-icon {
+    transform: scale(1.08);
   }
   
   .platform-name {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: #212529;
   }
   
   .platform-status {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 0.75rem;
+    top: 0.6rem;
+    right: 0.6rem;
+    font-size: 0.7rem;
     color: #28a745;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
   }
   
   /* ============================================
-     СПИСОК ПОДКЛЮЧЕННЫХ АККАУНТОВ
+     СПИСОК АКАУНТІВ
      ============================================ */
   .section-subtitle {
     font-size: 1.25rem;
@@ -179,113 +198,118 @@
     margin: 0 0 1rem 0;
     color: #212529;
     animation: saFadeIn 0.4s ease-out 0.2s both;
+    letter-spacing: -0.01em;
   }
   
   .accounts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 1.1rem;
   }
   
   .account-card {
-    padding: 1.25rem;
+    padding: 1.35rem;
     background: #ffffff;
     border: 1px solid #e9ecef;
-    border-radius: 12px;
-    transition: all 0.2s ease-out;
+    border-radius: 14px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     animation: saSlideUp 0.4s ease-out both;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   }
   
-  /* Задержка анимации для эффекта "лесенки" */
-  .account-card:nth-child(1) { animation-delay: 0.3s; }
-  .account-card:nth-child(2) { animation-delay: 0.35s; }
-  .account-card:nth-child(3) { animation-delay: 0.4s; }
-  .account-card:nth-child(4) { animation-delay: 0.45s; }
-  .account-card:nth-child(5) { animation-delay: 0.5s; }
+  .account-card:nth-child(1) { animation-delay: 0.1s; }
+  .account-card:nth-child(2) { animation-delay: 0.15s; }
+  .account-card:nth-child(3) { animation-delay: 0.2s; }
+  .account-card:nth-child(4) { animation-delay: 0.25s; }
+  .account-card:nth-child(5) { animation-delay: 0.3s; }
   
   @keyframes saSlideUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
   .account-card:hover {
     border-color: #8a5fe0;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
   }
   
   .account-card.disconnected {
-    opacity: 0.85;
-    background: #f8f9fa;
+    opacity: 0.9;
+    background: #fafafa;
   }
   
   .account-card.disconnected:hover {
     opacity: 1;
+    border-color: #ced4da;
   }
   
-  /* Шапка карточки аккаунта */
+  /* Шапка картки */
   .account-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid #f1f3f5;
   }
   
   .account-platform {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding-left: 0.5rem;
-    border-left: 3px solid; /* Цвет платформы */
+    gap: 0.6rem;
+    padding-left: 0.6rem;
+    border-left: 3px solid;
   }
   
   .account-platform .platform-icon {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
   
   .account-platform .platform-name {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 600;
+    color: #212529;
   }
   
-  /* Бейдж статуса */
+  /* Бейдж статусу */
   .status-badge {
-    padding: 0.25rem 0.75rem;
+    padding: 0.3rem 0.85rem;
     border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
+    transition: background-color 0.2s ease;
   }
   
   .status-badge.connected {
-    background: rgba(40, 167, 69, 0.15);
-    color: #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(40, 167, 69, 0.08));
+    color: #1e7e34;
   }
   
   .status-badge.disconnected {
-    background: rgba(220, 53, 69, 0.15);
-    color: #dc3545;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.12), rgba(220, 53, 69, 0.06));
+    color: #c82333;
   }
   
-  /* Информация об аккаунте */
+  /* Інформація */
   .account-info {
-    margin-bottom: 1rem;
+    margin-bottom: 1.1rem;
   }
   
   .account-username {
     font-size: 1.1rem;
     font-weight: 600;
     color: #212529;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     word-break: break-all;
+    line-height: 1.4;
   }
   
   .account-stats {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
     color: #6c757d;
     font-size: 0.875rem;
   }
@@ -293,34 +317,46 @@
   .stat-item {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
+    font-weight: 500;
   }
   
   .stat-item svg {
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
+    opacity: 0.8;
   }
   
-  /* Кнопки действий в карточке */
+  /* Кнопки дій */
   .account-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
   
   .account-actions button {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.5rem 1rem;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 9px;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s ease;
     background: #f8f9fa;
     color: #212529;
+    min-height: 36px;
+  }
+  
+  .account-actions button:hover {
+    transform: translateY(-1px);
+  }
+  
+  .account-actions button:active {
+    transform: translateY(0);
   }
   
   .account-actions button svg {
@@ -329,102 +365,115 @@
   }
   
   .btn-edit:hover {
-    background: rgba(138, 95, 224, 0.15);
+    background: linear-gradient(135deg, rgba(138, 95, 224, 0.15), rgba(138, 95, 224, 0.08));
     color: #8a5fe0;
   }
   
   .btn-danger {
-    background: rgba(220, 53, 69, 0.1) !important;
-    color: #dc3545 !important;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.12), rgba(220, 53, 69, 0.06)) !important;
+    color: #c82333 !important;
   }
   
   .btn-danger:hover {
-    background: rgba(220, 53, 69, 0.2) !important;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.1)) !important;
   }
   
   .btn-success {
-    background: rgba(40, 167, 69, 0.1) !important;
-    color: #28a745 !important;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.12), rgba(40, 167, 69, 0.06)) !important;
+    color: #1e7e34 !important;
   }
   
   .btn-success:hover {
-    background: rgba(40, 167, 69, 0.2) !important;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(40, 167, 69, 0.1)) !important;
   }
   
   /* ============================================
-     ПУСТОЕ СОСТОЯНИЕ
+     ПУСТИЙ СТАН
      ============================================ */
   .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3rem 1rem;
+    padding: 3.5rem 1.5rem;
     text-align: center;
     color: #6c757d;
     animation: saFadeIn 0.4s ease-out;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    border-radius: 16px;
+    border: 1px dashed #e9ecef;
   }
   
   .empty-state svg {
     width: 64px;
     height: 64px;
-    margin-bottom: 1rem;
-    color: #e9ecef;
+    margin-bottom: 1.25rem;
+    color: #dee2e6;
+    opacity: 0.8;
   }
   
   .empty-state p {
     margin: 0.5rem 0;
     font-size: 1rem;
+    color: #495057;
   }
   
   .empty-subtitle {
     font-size: 0.9rem !important;
+    color: #6c757d !important;
   }
   
   .btn-clear {
-    margin-top: 1rem;
-    padding: 0.5rem 1.25rem;
-    background: #8a5fe0;
+    margin-top: 1.25rem;
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(135deg, #8a5fe0, #7a4dd4);
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-out;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(138, 95, 224, 0.25);
   }
   
   .btn-clear:hover {
-    background: #7a4dd4;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #7a4dd4, #6a3dc9);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 95, 224, 0.35);
+  }
+  
+  .btn-clear:active {
+    transform: translateY(0);
   }
   
   /* ============================================
-     ФОРМА В МОДАЛЬНОМ ОКНЕ
+     ФОРМА В МОДАЛЦІ
      ============================================ */
   .social-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.35rem;
   }
   
   .platform-preview {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
   }
   
   .platform-preview .platform-icon {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   
   .platform-preview .platform-name {
     font-weight: 600;
     font-size: 1rem;
+    color: #212529;
   }
   
   .form-group {
@@ -439,11 +488,12 @@
     color: #212529;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.3rem;
   }
   
   .required-mark {
-    color: #dc3545; /* Красный для обязательных полей */
+    color: #dc3545;
+    font-weight: 600;
   }
   
   .input-wrapper {
@@ -454,118 +504,139 @@
   
   .input-prefix {
     position: absolute;
-    left: 12px;
+    left: 14px;
     color: #6c757d;
     font-size: 0.9rem;
     pointer-events: none;
     background: #ffffff;
-    padding: 0 4px;
+    padding: 0 5px;
+    z-index: 1;
   }
   
   .form-input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    padding-left: 12px;
+    padding: 0.8rem 1.1rem;
     border: 1px solid #e9ecef;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.95rem;
     background: #ffffff;
     color: #212529;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s ease;
   }
   
   .form-input.with-prefix {
-    padding-left: 2.5rem; /* Отступ для префикса */
+    padding-left: 2.6rem;
+  }
+  
+  .form-input:hover {
+    border-color: #ced4da;
   }
   
   .form-input:focus {
     outline: none;
     border-color: #8a5fe0;
-    box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15);
+    box-shadow: 0 0 0 4px rgba(138, 95, 224, 0.12);
+    background-color: #fff;
   }
   
   .form-input.error {
     border-color: #dc3545;
+    background-color: #fff5f5;
   }
   
   .form-input.error:focus {
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.12);
   }
   
   .form-input::placeholder {
-    color: #6c757d;
+    color: #adb5bd;
   }
   
   .form-error {
     font-size: 0.8rem;
     color: #dc3545;
-    margin-top: 0.25rem;
+    margin-top: 0.2rem;
+    font-weight: 500;
   }
   
   /* Чекбокс */
   .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
     cursor: pointer;
     user-select: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .checkbox-label:hover {
+    opacity: 0.9;
   }
   
   .checkbox-input {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
     accent-color: #8a5fe0;
     cursor: pointer;
+    border-radius: 4px;
   }
   
   .checkbox-text {
     font-size: 0.95rem;
     color: #212529;
+    font-weight: 500;
   }
   
-  /* Кнопки формы */
+  /* Кнопки форми */
   .form-actions {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.85rem;
     justify-content: flex-end;
-    padding-top: 1rem;
+    padding-top: 1.25rem;
     margin-top: 0.5rem;
     border-top: 1px solid #e9ecef;
   }
   
   .form-actions button {
-    padding: 0.625rem 1.5rem;
+    padding: 0.7rem 1.75rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-out;
-    min-width: 100px;
+    transition: all 0.25s ease;
+    min-width: 110px;
   }
   
   .btn-cancel {
-    background: #f8f9fa;
+    background: #f1f3f5;
     color: #212529;
   }
   
   .btn-cancel:hover {
     background: #e9ecef;
-  }
-  
-  .btn-save {
-    background: #8a5fe0;
-    color: #fff;
-  }
-  
-  .btn-save:hover {
-    background: #7a4dd4;
     transform: translateY(-1px);
   }
   
+  .btn-save {
+    background: linear-gradient(135deg, #8a5fe0, #7a4dd4);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(138, 95, 224, 0.25);
+  }
+  
+  .btn-save:hover {
+    background: linear-gradient(135deg, #7a4dd4, #6a3dc9);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 95, 224, 0.35);
+  }
+  
+  .btn-save:active {
+    transform: translateY(0);
+  }
+  
   /* ============================================
-     АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
+     АДАПТИВНІСТЬ
      ============================================ */
   @media (max-width: 768px) {
     .social-accounts-container {
@@ -576,19 +647,35 @@
       flex-direction: column;
       align-items: stretch;
       text-align: center;
+      padding: 1.25rem;
     }
   
     .header-actions {
       justify-content: center;
+      width: 100%;
     }
   
     .filter-select {
       width: 100%;
-      max-width: 300px;
+      max-width: 280px;
+      margin: 0 auto;
     }
   
     .platforms-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+    }
+  
+    .platform-card {
+      padding: 1.1rem 0.75rem;
+    }
+  
+    .platform-icon {
+      font-size: 1.8rem;
+    }
+  
+    .platform-name {
+      font-size: 0.82rem;
     }
   
     .accounts-grid {
@@ -596,13 +683,13 @@
     }
   
     .account-card {
-      padding: 1rem;
+      padding: 1.15rem;
     }
   
     .account-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
   
     .account-actions {
@@ -629,16 +716,25 @@
     }
   
     .page-title {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
     }
   
     .page-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
+    }
+  
+    .section-subtitle {
+      font-size: 1.1rem;
+    }
+  
+    .account-stats {
+      gap: 0.85rem;
+      font-size: 0.82rem;
     }
   }
   
   /* ============================================
-     ТЁМНАЯ ТЕМА
+     ТЕМНА ТЕМА
      ============================================ */
   @media (prefers-color-scheme: dark) {
     .social-accounts-container {
@@ -650,13 +746,14 @@
     .account-username,
     .section-subtitle,
     .form-label,
-    .checkbox-text {
+    .checkbox-text,
+    .account-platform .platform-name {
       color: #f8f9fa;
     }
   
     .page-subtitle,
     .account-stats,
-    .empty-state,
+    .empty-state p,
     .form-input::placeholder,
     .input-prefix {
       color: #adb5bd;
@@ -666,17 +763,35 @@
     .platform-card,
     .account-card,
     .form-input,
-    .filter-select {
+    .filter-select,
+    .platform-preview {
       background: #23233d;
       border-color: #2a2a4a;
     }
   
-    .account-card.disconnected {
-      background: rgba(220, 53, 69, 0.05);
+    .section-header {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
   
-    .platform-preview {
-      background: #2a2a4a;
+    .account-card {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  
+    .account-card:hover {
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+  
+    .account-card.disconnected {
+      background: rgba(220, 53, 69, 0.06);
+    }
+  
+    .account-header {
+      border-bottom-color: #2a2a4a;
+    }
+  
+    .empty-state {
+      background: linear-gradient(180deg, #1e1e32 0%, #23233d 100%);
+      border-color: #2a2a4a;
     }
   
     .btn-cancel {
@@ -688,17 +803,33 @@
       background: #3a3a5a;
     }
   
+    .form-input {
+      background: #1a1a2e;
+    }
+  
+    .form-input:focus {
+      background: #1a1a2e;
+    }
+  
+    .form-input.error {
+      background: rgba(220, 53, 69, 0.1);
+    }
+  
     .empty-state svg {
       color: #2a2a4a;
     }
   
-    .form-input:focus {
-      border-color: #8a5fe0;
+    .status-badge.connected {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.25), rgba(40, 167, 69, 0.12));
+    }
+  
+    .status-badge.disconnected {
+      background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.1));
     }
   }
   
   /* ============================================
-     ДОСТУПНОСТЬ
+     ДОСТУПНІСТЬ
      ============================================ */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -707,10 +838,10 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
   
-  /* Фокус для навигации с клавиатуры */
   button:focus-visible,
   input:focus-visible,
   select:focus-visible {
@@ -718,7 +849,6 @@
     outline-offset: 2px;
   }
   
-  /* Скрыто визуально, но доступно для скринридеров */
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -729,4 +859,31 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+  
+  /* ============================================
+     ДОДАТКОВІ СТИЛІ ДЛЯ КОМПОНЕНТА
+     ============================================ */
+  
+  .account-username.clickable {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  
+  .account-username.clickable:hover {
+    opacity: 0.85;
+  }
+  
+  .account-username .copy-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .account-username.clickable:hover .copy-icon {
+    opacity: 1;
   }

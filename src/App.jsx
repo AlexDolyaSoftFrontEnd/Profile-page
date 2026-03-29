@@ -13,47 +13,6 @@ import Home from './components/Profile/Home/Home';
 import News from './components/Profile/News/News';
 
 // ============================================
-// КОНФІГУРАЦІЯ МАРШРУТІВ
-// ============================================
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Navigate to="/profile" replace />,
-  },
-  {
-    path: '/profile',
-    element: <ProfilePage />, // Батьківський компонент з <Outlet />
-    children: [
-      // Home — головний маршрут (відображається на /profile)
-      {
-        index: true,
-        element: <Home />,
-      },
-      // Інші маршрути профілю
-      {
-        path: 'personal-data',
-        element: <PersonalData />,
-      },
-      {
-        path: 'notifications',
-        element: <Notifications />,
-      },
-      {
-        path: 'news',
-        element: <News />,
-      },
-      // Обробка невідомих шляхів
-      {
-        path: '*',
-        element: <Navigate to="/profile" replace />,
-      },
-    ],
-    errorElement: <ProfileErrorBoundary />,
-  },
-]);
-
-// ============================================
 // Компонент обробки помилок
 // ============================================
 
@@ -75,8 +34,56 @@ function ProfileErrorBoundary({ error }) {
 }
 
 // ============================================
+// КОНФІГУРАЦІЯ МАРШРУТІВ
+// ============================================
+
+const router = createBrowserRouter([
+  // Головна сторінка — редирект на профіль
+  {
+    path: '/',
+    element: <Navigate to="/profile" replace />,
+  },
+  
+  // Захищені маршрути профілю
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+    errorElement: <ProfileErrorBoundary />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: 'personal-data',
+        element: <PersonalData />,
+      },
+      {
+        path: 'notifications',
+        element: <Notifications />,
+      },
+      {
+        path: 'news',
+        element: <News />,
+      },
+      {
+        path: '*',
+        element: <Navigate to="/profile" replace />,
+      },
+    ],
+  },
+  
+  // 🚫 Глобальна обробка невідомих маршрутів
+  {
+    path: '*',
+    element: <Navigate to="/profile" replace />,
+  },
+]);
+
+// ============================================
 // Головний компонент додатку
 // ============================================
+
 function App() {
   return <RouterProvider router={router} />;
 }

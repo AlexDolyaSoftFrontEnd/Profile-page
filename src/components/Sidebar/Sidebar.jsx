@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -17,13 +17,6 @@ const SocialIcon = () => (
   </svg>
 );
 
-const NotificationIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-  </svg>
-);
-
 const NewsIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
@@ -33,10 +26,8 @@ const NewsIcon = () => (
 // --- Конфігурація меню (Статичні дані) ---
 const MENU_ITEMS = [
   { id: 'home', label: 'Головна', path: '/profile/home', icon: HomeIcon },
-  { id: 'personal-data', label: 'Соціальні мережі', path: '/profile/personal-data', icon: SocialIcon },
-  { id: 'notifications', label: 'Сповіщення', path: '/profile/notifications', icon: NotificationIcon },
+  { id: 'personal-data', label: 'Налаштування профілю', path: '/profile/personal-data', icon: SocialIcon },
   { id: 'news', label: 'Новини', path: '/profile/news', icon: NewsIcon },
-  // Налаштування видалено
 ];
 
 const Sidebar = () => {
@@ -73,4 +64,4 @@ const Sidebar = () => {
   );
 };
 
-export default memo(Sidebar);
+export default Sidebar;

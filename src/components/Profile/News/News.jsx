@@ -19,12 +19,12 @@ const NewsLoader = () => (
    КОНСТАНТИ ТА КОНФІГУРАЦІЯ
    ============================================ */
 const PLATFORMS = {
-  all: { id: 'all', name: 'Всі мережі', icon: '🌐', color: '#8a5fe0', badgeColor: 'linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%)' },
-  instagram: { id: 'instagram', name: 'Instagram', icon: '📸', color: '#E4405F', badgeColor: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)', settings: { maxMediaFiles: 10, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4'], maxFileSizeMB: 100, supportsStories: true, supportsReels: true } },
-  facebook: { id: 'facebook', name: 'Facebook', icon: '📘', color: '#1877F2', badgeColor: 'linear-gradient(135deg, #1877F2 0%, #42B72A 100%)', settings: { maxMediaFiles: 5, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 250, supportsStories: true, supportsReels: false } },
-  tiktok: { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #69C9D0 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime'], maxFileSizeMB: 287, supportsStories: false, supportsReels: false, verticalVideoOnly: true } },
-  youtube: { id: 'youtube', name: 'YouTube', icon: '▶️', color: '#FF0000', badgeColor: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime', 'video/x-matroska'], maxFileSizeMB: 256, supportsStories: false, supportsReels: false, supportsShorts: true, minVideoDuration: 12, maxVideoDuration: 43200, recommendedResolution: '1920x1080', recommendedAspectRatio: '16:9' } },
-  twitter: { id: 'twitter', name: 'Twitter', icon: '🐦', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #1DA1F2 100%)', settings: { maxMediaFiles: 4, allowedMediaTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 512, supportsStories: false, supportsReels: false, supportsThreads: true, maxTextLength: 280, recommendedImageResolution: '1600x900', recommendedVideoResolution: '1280x720', recommendedAspectRatio: '16:9 or 1:1' } }
+  all: { id: 'all', name: 'Всі мережі', color: '#8a5fe0', badgeColor: 'linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%)' },
+  instagram: { id: 'instagram', name: 'Instagram', color: '#E4405F', badgeColor: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)', settings: { maxMediaFiles: 10, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4'], maxFileSizeMB: 100, supportsStories: true, supportsReels: true } },
+  facebook: { id: 'facebook', name: 'Facebook', color: '#1877F2', badgeColor: 'linear-gradient(135deg, #1877F2 0%, #42B72A 100%)', settings: { maxMediaFiles: 5, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 250, supportsStories: true, supportsReels: false } },
+  youtube: { id: 'youtube', name: 'YouTube', color: '#FF0000', badgeColor: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime', 'video/x-matroska'], maxFileSizeMB: 256, supportsStories: false, supportsReels: false, supportsShorts: true, minVideoDuration: 12, maxVideoDuration: 43200, recommendedResolution: '1920x1080', recommendedAspectRatio: '16:9' } },
+  twitter: { id: 'twitter', name: 'Twitter', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #1DA1F2 100%)', settings: { maxMediaFiles: 4, allowedMediaTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 512, supportsStories: false, supportsReels: false, supportsThreads: true, maxTextLength: 280, recommendedImageResolution: '1600x900', recommendedVideoResolution: '1280x720', recommendedAspectRatio: '16:9 or 1:1' } },
+  tiktok: { id: 'tiktok', name: 'TikTok', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #69C9D0 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime'], maxFileSizeMB: 287, supportsStories: false, supportsReels: false, verticalVideoOnly: true } }
 };
 
 const MOCK_PUBLICATIONS = [
@@ -229,7 +229,7 @@ const EditPublicationModal = ({ publication, platform, onClose, onSave, onDelete
         <div className="modal-header">
           <div className="modal-header-left">
             <h2 id="modal-title" className="modal-title">Редагувати публікацію</h2>
-            <div className="modal-platform-badge" style={{ background: platform?.badgeColor }}><span aria-hidden="true">{platform?.icon}</span>{platform?.name}</div>
+            <div className="modal-platform-badge" style={{ background: platform?.badgeColor }}>{platform?.name}</div>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Закрити модальне вікно"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
@@ -281,7 +281,7 @@ const PublicationCard = ({ publication, isVisible, platform, onEdit }) => {
   const status = statusConfig[publication.status] || statusConfig.draft;
   return (<article className={`news-card ${isVisible ? 'news-card-visible' : ''}`} itemScope itemType="https://schema.org/SocialMediaPosting" aria-hidden={!isVisible}>
     <div className="news-card-content">
-      <div className="news-card-header"><div className="news-card-badge" style={{ background: platform.badgeColor }} aria-label={`Платформа: ${platform.name}`}><span className="platform-icon" aria-hidden="true">{platform.icon}</span>{platform.name}</div><span className="status-badge" style={{ color: status.color, background: status.bg }} aria-label={`Статус: ${status.text}`}>{status.text}</span></div>
+      <div className="news-card-header"><div className="news-card-badge" style={{ background: platform.badgeColor }} aria-label={`Платформа: ${platform.name}`}>{platform.name}</div><span className="status-badge" style={{ color: status.color, background: status.bg }} aria-label={`Статус: ${status.text}`}>{status.text}</span></div>
       <div className="news-card-meta"><span className="news-card-author">{publication.author}</span><span className="news-card-dot" aria-hidden="true">•</span><time className="news-card-time" dateTime={publication.scheduledFor}>{new Date(publication.scheduledFor).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</time></div>
       <h2 className="news-card-title" itemProp="headline">{publication.title}</h2><p className="news-card-description" itemProp="description">{publication.description}</p>
       <div className="news-card-footer"><button className="news-card-link" onClick={(e) => { e.stopPropagation(); onEdit(publication); }} aria-label={`Редагувати публікацію: ${publication.title}`}>Редагувати<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="link-arrow" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg></button></div>
@@ -290,7 +290,7 @@ const PublicationCard = ({ publication, isVisible, platform, onEdit }) => {
 };
 
 /* ============================================
-   ОСНОВНИЙ КОНТЕНТ (винесено з News)
+   ОСНОВНИЙ КОНТЕНТ 
    ============================================ */
 const NewsContent = () => {
   const { publications, setPublications, error, activePlatform, filteredPublications, visibleCards, handlePlatformChange, fetchPublications } = usePublications();
@@ -314,7 +314,7 @@ const NewsContent = () => {
 
   return (<div className="news-container" role="region" aria-label="Публікації">
     <header className="news-header"><h1 className="news-title">Публікації</h1><p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p></header>
-    <nav className="news-tabs" role="tablist" aria-label="Соціальні мережі">{Object.values(PLATFORMS).map((platform) => { const publicationCount = platform.id === 'all' ? MOCK_PUBLICATIONS.length : MOCK_PUBLICATIONS.filter(p => p.platform === platform.id).length; const isActive = activePlatform === platform.id; return (<button key={platform.id} role="tab" aria-selected={isActive} aria-controls={`${platform.id}-panel`} id={`${platform.id}-tab`} className={`news-tab-btn ${isActive ? 'active' : ''}`} onClick={() => handlePlatformChange(platform.id)} style={{ '--platform-color': platform.color }}><span className="platform-icon" aria-hidden="true">{platform.icon}</span><span className="platform-name">{platform.name}</span><span className="tab-count" aria-label={`${publicationCount} публікацій`}>{publicationCount}</span></button>); })}</nav>
+    <nav className="news-tabs" role="tablist" aria-label="Соціальні мережі">{Object.values(PLATFORMS).map((platform) => { const publicationCount = platform.id === 'all' ? MOCK_PUBLICATIONS.length : MOCK_PUBLICATIONS.filter(p => p.platform === platform.id).length; const isActive = activePlatform === platform.id; return (<button key={platform.id} role="tab" aria-selected={isActive} aria-controls={`${platform.id}-panel`} id={`${platform.id}-tab`} className={`news-tab-btn ${isActive ? 'active' : ''}`} onClick={() => handlePlatformChange(platform.id)} style={{ '--platform-color': platform.color }}><span className="platform-name">{platform.name}</span><span className="tab-count" aria-label={`${publicationCount} публікацій`}>{publicationCount}</span></button>); })}</nav>
     <section role="tabpanel" id={`${activePlatform}-panel`} aria-labelledby={`${activePlatform}-tab`} className="news-tab-panel">
       <div className="news-list">{filteredPublications.map((publication, index) => (<PublicationCard key={publication.id} publication={publication} isVisible={visibleCards.includes(index)} platform={PLATFORMS[publication.platform]} onEdit={handleEditPublication} />))}</div>
       {filteredPublications.length === 0 && <EmptyState platformName={currentPlatform.name} onCreatePublication={activePlatform !== 'all' ? handleCreatePublication : undefined} />}
@@ -324,12 +324,10 @@ const NewsContent = () => {
 };
 
 /* ============================================
-   LAZY-ЗАВАНТАЖЕННЯ (демо з затримкою)
+   LAZY-ЗАВАНТАЖЕННЯ
    ============================================ */
 // Для демо з імітацією мережевої затримки:
 const NewsContentLazy = lazy(() => new Promise((resolve) => { setTimeout(() => resolve({ default: NewsContent }), 500); }));
-// Для продакшену (реальний код-спліттинг):
-// const NewsContentLazy = lazy(() => import('./NewsContent'));
 
 /* ============================================
    ЕКСПОРТ ГОЛОВНОГО КОМПОНЕНТА

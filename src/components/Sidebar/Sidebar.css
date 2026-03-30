@@ -12,14 +12,8 @@
     border-right: 1px solid #e5e7eb;
     position: relative;
     overflow: visible;
-  }
-  
-  .sidebar-top,
-  .sidebar-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
+    flex-shrink: 0;
+    z-index: 50;
   }
   
   .sidebar-nav {
@@ -56,91 +50,25 @@
     border-radius: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #6b7280; /* Сірий колір іконки */
+    color: #6b7280;
     position: relative;
+    text-decoration: none;
   }
   
   .sidebar-nav-item:hover {
-    background-color: #f5f3ff; /* Фіолетовий відтінок при наведенні */
-    color: #8a5fe0; /* Яскраво-фіолетовий колір */
-    transform: scale(1.05);
+    background-color: #f5f3ff;
+    color: #8a5fe0;
+    transform: translateY(-2px);
   }
   
   .sidebar-nav-item.active {
-    background-color: #8a5fe0; /* Основний фіолетовий акцент */
-    color: #ffffff; /* Білий текст */
-    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.4); /* Фіолетова тінь */
+    background-color: #8a5fe0;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.4);
   }
   
   .sidebar-nav-item:active {
-    transform: scale(0.95);
-  }
-  
-  /* ==============================
-     Тултіпи (підказки)
-     ============================== */
-  .nav-tooltip {
-    position: absolute;
-    left: calc(100% + 16px);
-    top: 50%;
-    transform: translateY(-50%) translateX(-4px);
-    min-width: 120px;
-    max-width: 200px;
-    padding: 10px 14px;
-    background-color: #1e293b; /* Темний фон */
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    z-index: 1000;
-    border: 1px solid rgba(138, 95, 224, 0.5); /* Фіолетова межа */
-  }
-  
-  /* Текст у тултіпі */
-  .tooltip-text {
-    display: block;
-  }
-  
-  /* Показуємо тултіп при наведенні тільки */
-  .nav-item-wrapper:hover .nav-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0);
-  }
-  
-  /* Стрілочка до тултіпа */
-  .nav-tooltip::before,
-  .nav-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  /* Зовнішня стрілочка */
-  .nav-tooltip::before {
-    left: -8px;
-    width: 8px;
-    height: 8px;
-    background-color: #1e293b;
-    border-left: 1px solid rgba(138, 95, 224, 0.5);
-    border-top: 1px solid rgba(138, 95, 224, 0.5);
-    transform: translateY(-50%) rotate(45deg);
-  }
-  
-  /* Внутрішня стрілочка */
-  .nav-tooltip::after {
-    left: -5px;
-    width: 5px;
-    height: 5px;
-    background-color: #1e293b;
-    transform: translateY(-50%) rotate(45deg);
+    transform: scale(0.98);
   }
   
   /* ==============================
@@ -157,28 +85,61 @@
   .nav-icon svg {
     width: 24px;
     height: 24px;
+    stroke-width: 2;
   }
   
   /* ==============================
-     Особливі кнопки
+     Підказки праворуч (центровані по вертикалі)
      ============================== */
-  .help-btn {
-    margin-bottom: 8px;
-  }
-  
-  .profile-btn {
-    background: linear-gradient(135deg, #8a5fe0 0%, #6d4ab8 100%); /* Фіолетовий градієнт */
+  .nav-tooltip {
+    position: absolute;
+    left: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-8px);
+    min-width: 140px;
+    max-width: 200px;
+    padding: 8px 14px;
+    background-color: #1e293b;
     color: #ffffff;
-    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 1000;
+    text-align: center;
   }
   
-  .profile-btn:hover {
-    background: linear-gradient(135deg, #9f7bea 0%, #8a5fe0 100%);
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(138, 95, 224, 0.5);
+  /* Показуємо тултіп при наведенні */
+  .nav-item-wrapper:hover .nav-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
   }
   
-  /* ⚠️ ВИДАЛЕНО: Тепер активна вкладка не показує тултіп постійно */
+  /* Стрілочка тултіпа (справа, вказує вліво на кнопку) */
+  .tooltip-arrow {
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: #1e293b;
+    border-radius: 2px;
+    box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Текст у тултіпі */
+  .tooltip-text {
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
   
   /* ==============================
      Адаптивність
@@ -206,26 +167,15 @@
     
     .nav-tooltip {
       font-size: 12px;
-      padding: 8px 12px;
-      right: 100%;
-      left: auto;
-      transform: translateY(-50%) translateX(4px);
+      padding: 7px 12px;
+      min-width: 120px;
+      left: calc(100% + 12px);
     }
     
-    .nav-item-wrapper:hover .nav-tooltip {
-      transform: translateY(-50%) translateX(0);
-    }
-    
-    .nav-tooltip::before {
-      right: -8px;
-      left: auto;
-      border-right: 1px solid rgba(138, 95, 224, 0.5);
-      border-top: 1px solid rgba(138, 95, 224, 0.5);
-    }
-    
-    .nav-tooltip::after {
-      right: -5px;
-      left: auto;
+    .tooltip-arrow {
+      width: 9px;
+      height: 9px;
+      left: -4px;
     }
   }
   
@@ -234,15 +184,19 @@
      ============================== */
   @media (prefers-reduced-motion: reduce) {
     .nav-tooltip,
-    .sidebar-nav-item,
-    .nav-item-wrapper {
+    .sidebar-nav-item {
       transition: none !important;
+      transform: none !important;
+    }
+    
+    .nav-item-wrapper:hover .nav-tooltip {
+      transform: translateY(-50%) !important;
     }
   }
   
   /* Фокус для клавіатурної навігації */
   .sidebar-nav-item:focus-visible {
-    outline: 2px solid #8a5fe0; /* Фіолетовий контур фокусу */
+    outline: 2px solid #8a5fe0;
     outline-offset: 4px;
   }
   
@@ -253,41 +207,28 @@
       border-right-color: #374151;
     }
     
+    .sidebar-nav-item {
+      color: #9ca3af;
+    }
+    
     .sidebar-nav-item:hover {
       background-color: #374151;
+      color: #8a5fe0;
+    }
+    
+    .sidebar-nav-item.active {
+      background-color: #8a5fe0;
+      color: #ffffff;
     }
     
     .nav-tooltip {
       background-color: #111827;
-      border-color: rgba(138, 95, 224, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
-  }
-  
-  /* ==============================
-     Покращення UX
-     ============================== */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-50%) translateX(-8px);
+    
+    .tooltip-arrow {
+      background-color: #111827;
     }
-    to {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-    }
-  }
-  
-  .nav-tooltip {
-    animation: fadeIn 0.2s ease forwards;
-  }
-  
-  /* Затримка появи при швидкому русі мишкою */
-  .nav-item-wrapper {
-    --tooltip-delay: 150ms;
-  }
-  
-  .nav-item-wrapper:hover .nav-tooltip {
-    animation-delay: var(--tooltip-delay);
   }
   
   /* ==============================
@@ -295,8 +236,9 @@
      ============================== */
   .app-layout {
     display: flex;
-    height: 100vh; /* Забезпечує повну висоту */
+    height: 100vh;
     width: 100%;
+    overflow: hidden;
   }
   
   .main-content {
@@ -305,4 +247,11 @@
     background-color: #f9fafb;
     overflow-y: auto;
     height: 100vh;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .main-content {
+      background-color: #111827;
+      color: #f9fafb;
+    }
   }

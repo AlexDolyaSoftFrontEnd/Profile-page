@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import Modal from './../../Modal/Modal';
 import './PersonalData.css';
 
@@ -10,7 +10,6 @@ const PLATFORMS = {
   instagram: {
     id: 'instagram',
     name: 'Instagram',
-    icon: '📸',
     color: '#E4405F',
     placeholder: '@username',
     supportsAutoPost: true,
@@ -22,7 +21,6 @@ const PLATFORMS = {
   facebook: {
     id: 'facebook',
     name: 'Facebook',
-    icon: '📘',
     color: '#1877F2',
     placeholder: 'facebook.com/username',
     supportsAutoPost: true,
@@ -34,7 +32,6 @@ const PLATFORMS = {
   youtube: {
     id: 'youtube',
     name: 'YouTube',
-    icon: '▶️',
     color: '#FF0000',
     placeholder: 'youtube.com/@channel',
     supportsAutoPost: true,
@@ -47,7 +44,6 @@ const PLATFORMS = {
   twitter: {
     id: 'twitter',
     name: 'Twitter',
-    icon: '🐦',
     color: '#000000',
     placeholder: '@username',
     supportsAutoPost: true,
@@ -60,7 +56,6 @@ const PLATFORMS = {
   tiktok: {
     id: 'tiktok',
     name: 'TikTok',
-    icon: '🎵',
     color: '#000000',
     placeholder: '@username',
     supportsAutoPost: false,
@@ -76,7 +71,7 @@ const PLATFORMS = {
 // ============================================
 
 const Toast = ({ message, type, onClose }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
     }, 3000);
@@ -140,12 +135,69 @@ const Toast = ({ message, type, onClose }) => {
 };
 
 // ============================================
+// МОКОВІ ДАНІ (замість асинхронного завантаження)
+// ============================================
+
+const MOCK_ACCOUNTS = [
+  {
+    id: 1,
+    platform: 'instagram',
+    username: '@smm_master',
+    followers: '12.5K',
+    status: 'connected',
+    lastSync: '2 хв тому',
+    autoPost: true,
+    accessToken: '••••••••'
+  },
+  {
+    id: 2,
+    platform: 'facebook',
+    username: 'facebook.com/smm.page',
+    followers: '8.2K',
+    status: 'connected',
+    lastSync: '15 хв тому',
+    autoPost: false,
+    pageId: '123456789'
+  },    
+  {
+    id: 3,
+    platform: 'youtube',
+    username: 'youtube.com/@MyChannel',
+    followers: '23.7K',
+    status: 'connected',
+    lastSync: '5 хв тому',
+    autoPost: true,
+    channelId: 'UCxxxxxxxxxxxxxx',
+    monetized: true
+  },
+  {
+    id: 4,
+    platform: 'twitter',
+    username: '@news_hub',
+    followers: '5.8K',
+    status: 'connected',
+    lastSync: '1 год тому',
+    autoPost: true,
+    verified: true,
+    profileUrl: 'https://twitter.com/news_hub'
+  },
+  {
+    id: 5,
+    platform: 'tiktok',
+    username: '@viral_content',
+    followers: '45.1K',
+    status: 'disconnected',
+    lastSync: '2 дні тому',
+    businessAccount: true
+  },
+];
+
+// ============================================
 // ОСНОВНИЙ КОМПОНЕНТ: PersonalData
 // ============================================
 
 const PersonalData = () => {
-  const [accounts, setAccounts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [accounts, setAccounts] = useState(MOCK_ACCOUNTS);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [selectedPlatform, setSelectedPlatform] = useState(null);
@@ -153,87 +205,13 @@ const PersonalData = () => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [filterStatus, setFilterStatus] = useState('all');
-  
-  // Toast notifications state
   const [toast, setToast] = useState(null);
 
-  // Helper function to show toast
   const showToast = useCallback((message, type = 'info') => {
     setToast({ message, type, id: Date.now() });
   }, []);
 
-  // Close toast handler
-  const closeToast = useCallback(() => {
-    setToast(null);
-  }, []);
-
-  useEffect(() => {
-    const loadAccounts = async () => {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const mockAccounts = [
-          {
-            id: 1,
-            platform: 'instagram',
-            username: '@smm_master',
-            followers: '12.5K',
-            status: 'connected',
-            lastSync: '2 хв тому',
-            autoPost: true,
-            accessToken: '••••••••'
-          },
-          {
-            id: 2,
-            platform: 'facebook',
-            username: 'facebook.com/smm.page',
-            followers: '8.2K',
-            status: 'connected',
-            lastSync: '15 хв тому',
-            autoPost: false,
-            pageId: '123456789'
-          },    
-          {
-            id: 3,
-            platform: 'youtube',
-            username: 'youtube.com/@MyChannel',
-            followers: '23.7K',
-            status: 'connected',
-            lastSync: '5 хв тому',
-            autoPost: true,
-            channelId: 'UCxxxxxxxxxxxxxx',
-            monetized: true
-          },
-          {
-            id: 4,
-            platform: 'twitter',
-            username: '@news_hub',
-            followers: '5.8K',
-            status: 'connected',
-            lastSync: '1 год тому',
-            autoPost: true,
-            verified: true,
-            profileUrl: 'https://twitter.com/news_hub'
-          },
-          {
-            id: 5,
-            platform: 'tiktok',
-            username: '@viral_content',
-            followers: '45.1K',
-            status: 'disconnected',
-            lastSync: '2 дні тому',
-            businessAccount: true
-          },
-        ];
-        setAccounts(mockAccounts);
-      } catch (err) {
-        console.error('Помилка завантаження акаунтів:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadAccounts();
-  }, []);
+  const closeToast = useCallback(() => setToast(null), []);
 
   const filteredAccounts = accounts.filter(account => 
     filterStatus === 'all' || account.status === filterStatus
@@ -279,6 +257,8 @@ const PersonalData = () => {
     const newErrors = {};
     const platform = PLATFORMS[selectedPlatform];
     
+    if (!platform) return true;
+    
     platform.fields.forEach(field => {
       if (field.required && !formData[field.id]?.trim()) {
         newErrors[field.id] = `Це поле обов'язкове`;
@@ -313,7 +293,6 @@ const PersonalData = () => {
         ...formData
       };
       setAccounts(prev => [...prev, newAccount]);
-      // 🗑️ Сповіщення при підключенні видалено за запитом
     } else if (modalMode === 'edit' && editingAccount) {
       setAccounts(prev => prev.map(acc => 
         acc.id === editingAccount.id 
@@ -346,7 +325,6 @@ const PersonalData = () => {
       await navigator.clipboard.writeText(username);
       showToast('Скопійовано в буфер обміну', 'success');
     } catch (err) {
-      // Fallback для старих браузерів
       const textarea = document.createElement('textarea');
       textarea.value = username;
       document.body.appendChild(textarea);
@@ -399,25 +377,8 @@ const PersonalData = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="social-accounts-container">
-        <div className="loading-state">
-          <div className="loading-spinner" aria-hidden="true" />
-          <p>Завантаження акаунтів...</p>
-        </div>
-        {toast && (
-          <div className="toast-container">
-            <Toast {...toast} onClose={closeToast} />
-          </div>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="social-accounts-container">
-      {/* Toast Notifications Container */}
       {toast && (
         <div className="toast-container" role="region" aria-live="polite" aria-atomic="true">
           <Toast {...toast} onClose={closeToast} />
@@ -456,7 +417,6 @@ const PersonalData = () => {
               }
               aria-label={`${isConnected ? 'Редагувати' : 'Додати'} ${platform.name}`}
             >
-              <span className="platform-icon" style={{ color: platform.color }}>{platform.icon}</span>
               <span className="platform-name">{platform.name}</span>
               {isConnected && <span className="platform-status connected">●</span>}
             </button>
@@ -480,7 +440,6 @@ const PersonalData = () => {
                 >
                   <div className="account-header">
                     <div className="account-platform" style={{ borderColor: platform.color }}>
-                      <span className="platform-icon" style={{ color: platform.color }}>{platform.icon}</span>
                       <span className="platform-name">{platform.name}</span>
                     </div>
                     <span className={`status-badge ${account.status}`}>
@@ -601,9 +560,6 @@ const PersonalData = () => {
         {selectedPlatform && (
           <form className="social-form" onSubmit={handleSave} noValidate>
             <div className="platform-preview">
-              <span className="platform-icon" style={{ color: PLATFORMS[selectedPlatform].color }}>
-                {PLATFORMS[selectedPlatform].icon}
-              </span>
               <span className="platform-name">{PLATFORMS[selectedPlatform].name}</span>
             </div>
 

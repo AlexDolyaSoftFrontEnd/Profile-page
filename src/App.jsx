@@ -8,7 +8,6 @@ import {
 // Імпорти компонентів
 import ProfilePage from './components/Profile/ProfilePage/ProfilePage';
 import PersonalData from './components/Profile/PersonalData/PersonalData';
-import Notifications from './components/Profile/Notifications/Notifications';
 import Home from './components/Profile/Home/Home';
 import News from './components/Profile/News/News';
 
@@ -57,10 +56,6 @@ const router = createBrowserRouter([
       {
         path: 'personal-data',
         element: <PersonalData />,
-      },
-      {
-        path: 'notifications',
-        element: <Notifications />,
       },
       {
         path: 'news',

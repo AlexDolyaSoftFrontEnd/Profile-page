@@ -1,1198 +1,696 @@
-/* ============================================
-   ОСНОВНИЙ КОНТЕЙНЕР
-   ============================================ */
+/* News.css */
+
+/* ========================================
+   KEYFRAMES
+   ======================================== */
+   @keyframes spin { to { transform: rotate(360deg); } }
+   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+   @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+   @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+   @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+   
+   /* ========================================
+      LOADER OVERLAY (ПРОЗОРИЙ)
+      ======================================== */
+   .loader-overlay {
+     position: fixed;
+     inset: 0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     z-index: 9999;
+     background: transparent;
+     pointer-events: none;
+   }
+   
+   .loader-content {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 0.75rem;
+     animation: fadeIn 0.25s ease-out;
+     pointer-events: auto;
+   }
+   
+   .loader-spinner {
+     width: 40px;
+     height: 40px;
+     border: 3px solid rgba(138, 95, 224, 0.25);
+     border-top-color: #8a5fe0;
+     border-radius: 50%;
+     animation: spin 1s linear infinite;
+   }
+   
+   .loader-content p {
+     margin: 0;
+     font-size: 0.9rem;
+     font-weight: 500;
+     color: #4b5563;
+   }
+   
+   .loader-content p::after {
+     content: '...';
+     animation: pulse 1.4s infinite steps(3);
+     display: inline-block;
+     width: 1em;
+     text-align: left;
+   }
+   
+   @keyframes pulse {
+     0%, 20% { content: '.'; }
+     40%, 60% { content: '..'; }
+     80%, 100% { content: '...'; }
+   }
+   
+   /* ========================================
+      ОСНОВНИЙ КОНТЕЙНЕР
+      ======================================== */
    .news-container {
-    padding: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  
-  /* ============================================
-     ЗАГОЛОВОК СЕКЦІЇ
-     ============================================ */
-  .news-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid #e0e0e0;
-  }
-  
-  .news-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 0.5rem 0;
-    letter-spacing: -0.5px;
-  }
-  
-  .news-subtitle {
-    color: #666;
-    margin: 0;
-    font-size: 1.1rem;
-  }
-  
-  /* ============================================
-     ТАБИ ПЛАТФОРМ
-     ============================================ */
-  .news-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    padding: 0.25rem;
-    background: #f5f5f7;
-    border-radius: 12px;
-    width: fit-content;
-    flex-wrap: wrap; /* Дозволяє перенос на мобільних */
-  }
-  
-  .news-tab-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: transparent;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .news-tab-btn:hover {
-    color: #1a1a1a;
-    background: rgba(138, 95, 224, 0.1);
-  }
-  
-  /* Активний таб: виділений градієнтом */
-  .news-tab-btn.active {
-    background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35);
-  }
-  
-  .platform-icon {
-    font-size: 1.1rem;
-    flex-shrink: 0;
-  }
-  
-  .platform-name {
-    flex-shrink: 0;
-  }
-  
-  /* Лічильник постів у табі */
-  .tab-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #666;
-  }
-  
-  .news-tab-btn.active .tab-count {
-    background: rgba(255, 255, 255, 0.25);
-    color: #fff;
-  }
-  
-  .news-tab-panel {
-    min-height: 200px;
-  }
-  
-  /* ============================================
-     СПИСОК КАРТОК
-     ============================================ */
-  .news-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 10px 0;
-  }
-  
-  /* ============================================
-     КАРТКА ПОСТА
-     ============================================ */
-  .news-card {
-    width: 100%;
-    max-width: 800px;
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
-    padding: 2rem;
-    cursor: pointer;
-    box-shadow: 
-      0 15px 35px -10px rgba(138, 95, 224, 0.15),
-      0 8px 20px -5px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
-    
-    /* Початковий стан для анімації появи */
-    transform: translateY(30px);
-    opacity: 0;
-    transition: 
-      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  /* Видима картка: запускає анімацію появи */
-  .news-card-visible {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  
-  /* Ефект при наведенні на картку */
-  .news-card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 
-      0 25px 50px -15px rgba(138, 95, 224, 0.25),
-      0 15px 30px -10px rgba(0, 0, 0, 0.15),
-      0 0 0 2px #8a5fe0,
-      0 0 30px rgba(138, 95, 224, 0.2);
-  }
-  
-  .news-card-content {
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Декоративна тінь під карткою */
-  .news-card-shadow {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    background: linear-gradient(135deg, 
-      rgba(138, 95, 224, 0.15) 0%, 
-      rgba(138, 95, 224, 0.05) 50%, 
-      transparent 100%);
-    border-radius: 16px;
-    z-index: -1;
-    opacity: 0.5;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  
-  .news-card:hover .news-card-shadow {
-    opacity: 0.15;
-  }
-  
-  /* ============================================
-     ШАПКА КАРТКИ: ПЛАТФОРМА + СТАТУС
-     ============================================ */
-  .news-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  
-  /* Бейдж платформи з градієнтом */
-  .news-card-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.75rem;
-    color: #fff;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Бейдж статусу поста */
-  .status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }
-  
-  /* ============================================
-     МЕТА-ІНФОРМАЦІЯ
-     ============================================ */
-  .news-card-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-    color: #666;
-  }
-  
-  .news-card-author {
-    font-weight: 600;
-    color: #8a5fe0;
-  }
-  
-  .news-card-dot {
-    color: #999;
-  }
-  
-  .news-card-time {
-    font-style: italic;
-  }
-  
-  /* ============================================
-     ЗАГОЛОВОК ТА ОПИС
-     ============================================ */
-  .news-card-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 1rem 0;
-    line-height: 1.3;
-    letter-spacing: -0.3px;
-  }
-  
-  .news-card-description {
-    color: #555;
-    margin: 0 0 1.5rem 0;
-    line-height: 1.7;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  
-  /* ============================================
-     ФУТЕР І КНОПКА
-     ============================================ */
-  .news-card-footer {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  /* Кнопка "Редагувати" */
-  .news-card-link {
-    background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35);
-  }
-  
-  .news-card-link:hover {
-    transform: translateX(5px);
-    box-shadow: 0 6px 25px rgba(138, 95, 224, 0.5);
-    background: linear-gradient(135deg, #9b75e8 0%, #8a5fe0 100%);
-  }
-  
-  .link-arrow {
-    width: 18px;
-    height: 18px;
-    transition: transform 0.3s ease;
-  }
-  
-  .news-card-link:hover .link-arrow {
-    transform: translateX(3px);
-  }
-  
-  /* ============================================
-     СТАНИ: ЗАВАНТАЖЕННЯ / ПОМИЛКА / ПУСТО
-     ============================================ */
-  .news-loading,
-  .news-error,
-  .news-empty {
-    text-align: center;
-    padding: 4rem 1rem;
-    color: #666;
-  }
-  
-  .news-error {
-    color: #dc3545;
-  }
-  
-  .news-error svg {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 1.5rem;
-    stroke: #dc3545;
-  }
-  
-  .empty-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 1.5rem;
-    color: #ccc;
-    stroke: #ccc;
-  }
-  
-  .empty-subtitle {
-    font-size: 0.9rem !important;
-    color: #999;
-  }
-  
-  .retry-btn {
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    background: #8a5fe0;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35);
-  }
-  
-  .retry-btn:hover {
-    background: #9b75e8;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(138, 95, 224, 0.5);
-  }
-  
-  /* Спінер завантаження */
-  .loading-spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #e0e0e0;
-    border-top-color: #8a5fe0;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1.5rem;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  /* ============================================
-     ТЕМНА ТЕМА (автоматична)
-     ============================================ */
-  @media (prefers-color-scheme: dark) {
-    .news-card {
-      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-      border-color: #2a2a4a;
-    }
-    
-    .news-title,
-    .news-card-title {
-      color: #ffffff;
-    }
-    
-    .news-subtitle,
-    .news-card-description {
-      color: #b0b0b0;
-    }
-    
-    .news-tabs {
-      background: #1e1e3a;
-    }
-    
-    .news-tab-btn {
-      color: #b0b0b0;
-    }
-    
-    .news-tab-btn:hover {
-      color: #ffffff;
-      background: rgba(138, 95, 224, 0.2);
-    }
-    
-    .tab-count {
-      background: rgba(255, 255, 255, 0.15);
-      color: #e0e0e0;
-    }
-    
-    .news-card-shadow {
-      background: linear-gradient(135deg, 
-        rgba(138, 95, 224, 0.25) 0%, 
-        rgba(138, 95, 224, 0.1) 50%, 
-        transparent 100%);
-    }
-  }
-  
-  /* ============================================
-     АДАПТИВНІСТЬ
-     ============================================ */
-  @media (max-width: 768px) {
-    .news-container {
-      padding: 1rem;
-    }
-    
-    .news-header {
-      margin-bottom: 1.5rem;
-    }
-    
-    .news-title {
-      font-size: 1.5rem;
-    }
-    
-    .news-list {
-      gap: 1rem;
-    }
-    
-    .news-card {
-      padding: 1.5rem;
-    }
-    
-    /* На мобільних шапка картки в колонку */
-    .news-card-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .news-tabs {
-      width: 100%;
-      justify-content: center;
-    }
-    
-    .news-tab-btn {
-      flex: 1;
-      justify-content: center;
-      padding: 0.65rem 0.5rem;
-      font-size: 0.9rem;
-      min-width: 100px;
-    }
-    
-    .tab-count {
-      min-width: 18px;
-      height: 18px;
-      font-size: 0.7rem;
-    }
-  }
-  
-  /* ============================================
-     ДОСТУПНІСТЬ (ACCESSIBILITY)
-     ============================================ */
-  .news-tab-btn:focus-visible,
-  .retry-btn:focus-visible,
-  .news-card-link:focus-visible {
-    outline: 2px solid #8a5fe0;
-    outline-offset: 2px;
-  }
-  
-  /* Відключення анімацій для користувачів з prefers-reduced-motion */
-  @media (prefers-reduced-motion: reduce) {
-    .news-card,
-    .news-card-link,
-    .retry-btn,
-    .loading-spinner {
-      transition: none !important;
-      animation: none !important;
-    }
-    
-    .news-card-visible {
-      transform: none !important;
-    }
-  }/* ============================================
-   MODAL STYLES
-   ============================================ */
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
-  animation: modalFadeIn 0.2s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-content {
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #eee;
-  position: sticky;
-  top: 0;
-  background: #fff;
-  z-index: 1;
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  color: #666;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, color 0.2s;
-}
-
-.modal-close:hover {
-  background: #f5f5f5;
-  color: #333;
-}
-
-.modal-close svg {
-  width: 20px;
-  height: 20px;
-}
-
-.modal-platform-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  margin: 0 1.5rem 1rem;
-  border-radius: 20px;
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%);
-}
-
-.modal-form {
-  padding: 0 1.5rem 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-group-half {
-  flex: 1;
-  min-width: 0;
-}
-
-.form-row {
-  display: flex;
-  gap: 1rem;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.form-label .required {
-  color: #e4405f;
-  margin-left: 2px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #fff;
-  color: #1a1a1a;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #8a5fe0;
-  box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15);
-}
-
-.form-input.error {
-  border-color: #e4405f;
-}
-
-.form-input.error:focus {
-  box-shadow: 0 0 0 3px rgba(228, 64, 95, 0.15);
-}
-
-.form-input::placeholder {
-  color: #999;
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 100px;
-  font-family: inherit;
-}
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 16px;
-  padding-right: 2.5rem;
-}
-
-.form-input-readonly {
-  background: #f9f9f9;
-  color: #666;
-  cursor: not-allowed;
-}
-
-.form-error {
-  display: block;
-  font-size: 0.75rem;
-  color: #e4405f;
-  margin-top: 0.375rem;
-  font-weight: 500;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
-  margin-top: 0.5rem;
-}
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%);
-  color: #fff;
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(138, 95, 224, 0.4);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-secondary {
-  background: #f5f5f5;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background: #eee;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .modal-actions {
-    flex-direction: column-reverse;
-  }
-  
-  .btn {
-    width: 100%;
-  }
-}
-
-/* Scrollbar for modal */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 3px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
-}
-
-/* ============================================
-   🖼️ MEDIA UPLOAD & PREVIEW STYLES
-   ============================================ */
-
-   .media-upload-section {
-    margin-bottom: 1.5rem;
-  }
-  
-  .media-dropzone {
-    border: 2px dashed #ccc;
-    border-radius: 12px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: #fafafa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .media-dropzone:hover:not(.disabled) {
-    border-color: #8a5fe0;
-    background: #f8f5ff;
-  }
-  
-  .media-dropzone.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .media-input-hidden {
-    display: none;
-  }
-  
-  .dropzone-icon {
-    width: 40px;
-    height: 40px;
-    color: #8a5fe0;
-  }
-  
-  .dropzone-text {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .dropzone-subtext {
-    font-size: 0.8125rem;
-    color: #666;
-  }
-  
-  .dropzone-full {
-    color: #28a745;
-    font-weight: 500;
-  }
-  
-  /* 🖼️ Grid превью медіафайлів */
-  .media-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
-  
-  .media-preview-item {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f5f5f5;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: flex-end;
-  }
-  
-  .media-preview-media {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .media-preview-info {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    padding: 0.5rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.75rem;
-  }
-  
-  .media-preview-name {
-    max-width: 70%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .media-preview-size {
-    opacity: 0.9;
-  }
-  
-  .media-preview-remove {
-    position: absolute;
-    top: 0.375rem;
-    right: 0.375rem;
-    z-index: 3;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: rgba(228, 64, 95, 0.9);
-    color: #fff;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  
-  .media-preview-remove:hover {
-    background: #e4405f;
-  }
-  
-  .media-preview-remove svg {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .media-preview-order {
-    position: absolute;
-    top: 0.375rem;
-    left: 0.375rem;
-    z-index: 3;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .media-preview-more {
-    grid-column: span 2;
-    text-align: center;
-    padding: 0.75rem;
-    background: #f0f0f0;
-    border-radius: 10px;
-    font-weight: 500;
-    color: #666;
-  }
-  
-  /* ============================================
-     🪟 MODAL ENHANCEMENTS
-     ============================================ */
-  
-  .modal-content-large {
-    max-width: 680px;
-    max-height: 95vh;
-  }
-  
-  .modal-header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .modal-platform-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 0.8125rem;
-    font-weight: 500;
-  }
-  
-  /* 📑 Modal Tabs */
-  .modal-tabs {
-    display: flex;
-    gap: 0.25rem;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid #eee;
-    background: #fff;
-    position: sticky;
-    top: 60px;
-    z-index: 2;
-    overflow-x: auto;
-  }
-  
-  .modal-tab-btn {
-    padding: 0.75rem 1rem;
-    border: none;
-    background: none;
-    color: #666;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 8px 8px 0 0;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    white-space: nowrap;
-  }
-  
-  .modal-tab-btn:hover {
-    color: #333;
-    background: #f9f9f9;
-  }
-  
-  .modal-tab-btn.active {
-    color: #8a5fe0;
-    background: #f8f5ff;
-    font-weight: 600;
-  }
-  
-  /* 📋 Form Enhancements */
-  .form-hint {
-    display: block;
-    font-size: 0.8125rem;
-    color: #666;
-    margin-top: 0.25rem;
-    font-weight: normal;
-  }
-  
-  .form-checkbox-group {
-    margin-top: 0.5rem;
-  }
-  
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    font-size: 0.9375rem;
-    color: #333;
-  }
-  
-  .checkbox-label input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #8a5fe0;
-  }
-  
-  /* 💡 Platform Tips */
-  .platform-tips {
-    background: #f8f9ff;
-    border: 1px solid #e0e7ff;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .platform-tips h4 {
-    margin: 0 0 0.5rem;
-    font-size: 0.9375rem;
-    color: #333;
-  }
-  
-  .platform-tips ul {
-    margin: 0;
-    padding-left: 1.25rem;
-    font-size: 0.875rem;
-    color: #555;
-  }
-  
-  .platform-tips li {
-    margin-bottom: 0.25rem;
-  }
-  
-  /* 🔗 Input with copy button */
-  .input-with-copy {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .input-with-copy .form-input {
-    flex: 1;
-  }
-  
-  .btn-copy {
-    padding: 0.75rem;
-    background: #f5f5f5;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  
-  .btn-copy:hover {
-    background: #eee;
-    border-color: #ccc;
-  }
-  
-  .btn-copy svg {
-    width: 18px;
-    height: 18px;
-    color: #666;
-  }
-  
-  /* ⚠️ Danger Zone */
-  .danger-zone {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border: 1px solid #ffcdd2;
-    border-radius: 10px;
-    background: #fff5f5;
-  }
-  
-  .danger-zone h4 {
-    margin: 0 0 0.25rem;
-    color: #c62828;
-    font-size: 0.9375rem;
-  }
-  
-  .danger-zone p {
-    margin: 0 0 0.75rem;
-    color: #666;
-    font-size: 0.875rem;
-  }
-  
-  .btn-danger {
-    background: #ffcdd2;
-    color: #c62828;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: background 0.2s;
-  }
-  
-  .btn-danger:hover {
-    background: #ef9a9a;
-  }
-  
-  /* 🏷️ Tag Pills in PostCard */
-  .news-card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    margin: 0.75rem 0;
-  }
-  
-  .tag-pill {
-    padding: 0.25rem 0.625rem;
-    background: #f0f0f0;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    color: #555;
-    font-weight: 500;
-  }
-  
-  .tag-more {
-    padding: 0.25rem 0.5rem;
-    color: #888;
-    font-size: 0.75rem;
-  }
-  
-  /* ============================================
-     📱 RESPONSIVE ADJUSTMENTS
-     ============================================ */
-  
-  @media (max-width: 700px) {
-    .modal-content-large {
-      max-width: 100%;
-      margin: 0.5rem;
-    }
-    
-    .modal-tabs {
-      padding: 0 1rem;
-    }
-    
-    .modal-tab-btn {
-      padding: 0.625rem 0.75rem;
-      font-size: 0.875rem;
-    }
-    
-    .form-row {
-      flex-direction: column;
-    }
-    
-    .media-preview-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .modal-actions {
-      flex-direction: column;
-    }
-    
-    .btn {
-      width: 100%;
-    }
-  }
-  
-  /* ============================================
-     ♿ ACCESSIBILITY FOCUS STYLES
-     ============================================ */
-  
-  .modal-tab-btn:focus-visible,
-  .media-dropzone:focus-visible,
-  .btn-copy:focus-visible {
-    outline: 2px solid #8a5fe0;
-    outline-offset: 2px;
-  }
-  
-  /* Reduce motion for users who prefer it */
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
+     padding: 2rem;
+     max-width: 900px;
+     margin: 0 auto;
+     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+   }
+   
+   .news-header {
+     margin-bottom: 2rem;
+     padding-bottom: 1.5rem;
+     border-bottom: 2px solid #e0e0e0;
+   }
+   
+   .news-title {
+     font-size: 2rem;
+     font-weight: 700;
+     color: #1a1a1a;
+     margin: 0 0 0.5rem 0;
+     letter-spacing: -0.5px;
+   }
+   
+   .news-subtitle {
+     color: #666;
+     margin: 0;
+     font-size: 1.1rem;
+   }
+   
+   /* ========================================
+      ТАБИ ПЛАТФОРМ
+      ======================================== */
+   .news-tabs {
+     display: flex;
+     gap: 0.5rem;
+     margin-bottom: 2rem;
+     padding: 0.25rem;
+     background: #f5f5f7;
+     border-radius: 12px;
+     width: fit-content;
+     flex-wrap: wrap;
+   }
+   
+   .news-tab-btn {
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+     padding: 0.75rem 1.25rem;
+     background: transparent;
+     border: none;
+     border-radius: 10px;
+     font-size: 0.95rem;
+     font-weight: 500;
+     color: #666;
+     cursor: pointer;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   }
+   
+   .news-tab-btn:hover { color: #1a1a1a; background: rgba(138, 95, 224, 0.1); }
+   .news-tab-btn.active { background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%); color: #fff; box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35); }
+   
+   .platform-icon { font-size: 1.1rem; flex-shrink: 0; }
+   .platform-name { flex-shrink: 0; }
+   
+   .tab-count {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     min-width: 20px;
+     height: 20px;
+     padding: 0 6px;
+     background: rgba(0, 0, 0, 0.1);
+     border-radius: 10px;
+     font-size: 0.75rem;
+     font-weight: 600;
+     color: #666;
+   }
+   
+   .news-tab-btn.active .tab-count { background: rgba(255, 255, 255, 0.25); color: #fff; }
+   .news-tab-panel { min-height: 200px; }
+   
+   /* ========================================
+      СПИСОК КАРТОК
+      ======================================== */
+   .news-list { display: flex; flex-direction: column; gap: 1.5rem; padding: 10px 0; }
+   
+   /* ========================================
+      КАРТКА ПУБЛІКАЦІЇ
+      ======================================== */
+   .news-card {
+     width: 100%;
+     max-width: 800px;
+     background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+     border: 1px solid #e0e0e0;
+     border-radius: 16px;
+     padding: 2rem;
+     cursor: pointer;
+     box-shadow: 0 15px 35px -10px rgba(138, 95, 224, 0.15), 0 8px 20px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+     transform: translateY(30px);
+     opacity: 0;
+     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+   }
+   
+   .news-card-visible { transform: translateY(0); opacity: 1; }
+   .news-card:hover { transform: translateY(-5px) !important; box-shadow: 0 25px 50px -15px rgba(138, 95, 224, 0.25), 0 15px 30px -10px rgba(0, 0, 0, 0.15), 0 0 0 2px #8a5fe0, 0 0 30px rgba(138, 95, 224, 0.2); }
+   
+   .news-card-content { position: relative; z-index: 1; }
+   
+   .news-card-shadow {
+     position: absolute;
+     top: 15px;
+     left: 15px;
+     right: 15px;
+     bottom: 15px;
+     background: linear-gradient(135deg, rgba(138, 95, 224, 0.15) 0%, rgba(138, 95, 224, 0.05) 50%, transparent 100%);
+     border-radius: 16px;
+     z-index: -1;
+     opacity: 0.5;
+     pointer-events: none;
+     transition: opacity 0.4s ease;
+   }
+   
+   .news-card:hover .news-card-shadow { opacity: 0.15; }
+   
+   /* Шапка картки */
+   .news-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+   
+   .news-card-badge {
+     display: inline-flex;
+     align-items: center;
+     gap: 0.35rem;
+     padding: 0.35rem 0.75rem;
+     color: #fff;
+     border-radius: 20px;
+     font-size: 0.75rem;
+     font-weight: 600;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
+   }
+   
+   .status-badge {
+     padding: 0.25rem 0.75rem;
+     border-radius: 20px;
+     font-size: 0.75rem;
+     font-weight: 600;
+     text-transform: uppercase;
+     letter-spacing: 0.3px;
+   }
+   
+   /* Мета-інформація */
+   .news-card-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; color: #666; }
+   .news-card-author { font-weight: 600; color: #8a5fe0; }
+   .news-card-dot { color: #999; }
+   .news-card-time { font-style: italic; }
+   
+   /* Заголовок та опис */
+   .news-card-title { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; margin: 0 0 1rem 0; line-height: 1.3; letter-spacing: -0.3px; }
+   .news-card-description { color: #555; margin: 0 0 1.5rem 0; line-height: 1.7; font-size: 1rem; font-weight: 500; }
+   
+   /* Футер */
+   .news-card-footer { display: flex; justify-content: flex-end; }
+   
+   .news-card-link {
+     background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%);
+     color: #fff;
+     border: none;
+     border-radius: 8px;
+     padding: 0.75rem 1.5rem;
+     font-weight: 600;
+     font-size: 0.95rem;
+     cursor: pointer;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+     display: inline-flex;
+     align-items: center;
+     gap: 0.5rem;
+     box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35);
+   }
+   
+   .news-card-link:hover { transform: translateX(5px); box-shadow: 0 6px 25px rgba(138, 95, 224, 0.5); background: linear-gradient(135deg, #9b75e8 0%, #8a5fe0 100%); }
+   .link-arrow { width: 18px; height: 18px; transition: transform 0.3s ease; }
+   .news-card-link:hover .link-arrow { transform: translateX(3px); }
+   
+   /* ========================================
+      СТАНИ: ПОМИЛКА / ПУСТО
+      ======================================== */
+   .news-error, .news-empty { text-align: center; padding: 4rem 1rem; color: #666; }
+   .news-error { color: #dc3545; }
+   .news-error svg { width: 56px; height: 56px; margin-bottom: 1.5rem; stroke: #dc3545; }
+   .empty-icon { width: 64px; height: 64px; margin: 0 auto 1.5rem; color: #ccc; stroke: #ccc; }
+   .empty-subtitle { font-size: 0.9rem !important; color: #999; }
+   
+   .retry-btn {
+     margin-top: 1.5rem;
+     padding: 0.75rem 1.5rem;
+     background: #8a5fe0;
+     color: #fff;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer;
+     font-weight: 600;
+     font-size: 1rem;
+     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+     box-shadow: 0 4px 15px rgba(138, 95, 224, 0.35);
+   }
+   
+   .retry-btn:hover { background: #9b75e8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(138, 95, 224, 0.5); }
+   
+   /* ========================================
+      MODAL STYLES
+      ======================================== */
+   .modal-overlay {
+     position: fixed;
+     top: 0; left: 0; right: 0; bottom: 0;
+     background: rgba(0, 0, 0, 0.6);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     z-index: 1000;
+     padding: 1rem;
+     animation: modalFadeIn 0.2s ease-out;
+   }
+   
+   .modal-content {
+     background: #fff;
+     border-radius: 16px;
+     width: 100%;
+     max-width: 520px;
+     max-height: 90vh;
+     overflow-y: auto;
+     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+     animation: modalSlideIn 0.3s ease-out;
+   }
+   
+   .modal-content-large { max-width: 680px; max-height: 95vh; }
+   
+   .modal-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 1.25rem 1.5rem;
+     border-bottom: 1px solid #eee;
+     position: sticky;
+     top: 0;
+     background: #fff;
+     z-index: 1;
+   }
+   
+   .modal-header-left { display: flex; align-items: center; gap: 1rem; }
+   .modal-title { font-size: 1.25rem; font-weight: 600; color: #1a1a1a; margin: 0; }
+   
+   .modal-close {
+     background: none;
+     border: none;
+     padding: 0.5rem;
+     cursor: pointer;
+     color: #666;
+     border-radius: 8px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     transition: background 0.2s, color 0.2s;
+   }
+   
+   .modal-close:hover { background: #f5f5f5; color: #333; }
+   .modal-close svg { width: 20px; height: 20px; }
+   
+   .modal-platform-badge {
+     display: inline-flex;
+     align-items: center;
+     gap: 0.375rem;
+     padding: 0.375rem 0.75rem;
+     border-radius: 20px;
+     color: #fff;
+     font-size: 0.8125rem;
+     font-weight: 500;
+   }
+   
+   .modal-form { padding: 0 1.5rem 1.5rem; }
+   .form-group { margin-bottom: 1.25rem; }
+   .form-group-half { flex: 1; min-width: 0; }
+   .form-row { display: flex; gap: 1rem; }
+   
+   .form-input {
+     width: 100%;
+     padding: 0.75rem 1rem;
+     border: 2px solid #e0e0e0;
+     border-radius: 10px;
+     font-size: 1rem;
+     transition: border-color 0.2s, box-shadow 0.2s;
+     background: #fff;
+     color: #1a1a1a;
+   }
+   
+   .form-input:focus { outline: none; border-color: #8a5fe0; box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.15); }
+   .form-input.error { border-color: #e4405f; }
+   .form-input.error:focus { box-shadow: 0 0 0 3px rgba(228, 64, 95, 0.15); }
+   .form-input::placeholder { color: #999; }
+   .form-textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+   
+   .form-select {
+     appearance: none;
+     background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+     background-repeat: no-repeat;
+     background-position: right 1rem center;
+     background-size: 16px;
+     padding-right: 2.5rem;
+   }
+   
+   .form-input-readonly { background: #f9f9f9; color: #666; cursor: not-allowed; }
+   .form-error { display: block; font-size: 0.75rem; color: #e4405f; margin-top: 0.375rem; font-weight: 500; }
+   
+   .modal-actions {
+     display: flex;
+     gap: 0.75rem;
+     justify-content: flex-end;
+     padding-top: 1rem;
+     border-top: 1px solid #eee;
+     margin-top: 0.5rem;
+   }
+   
+   .btn {
+     padding: 0.75rem 1.5rem;
+     border-radius: 10px;
+     font-size: 0.9375rem;
+     font-weight: 500;
+     cursor: pointer;
+     transition: all 0.2s;
+     border: none;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 0.5rem;
+   }
+   
+   .btn-primary { background: linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%); color: #fff; }
+   .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(138, 95, 224, 0.4); }
+   .btn-primary:active { transform: translateY(0); }
+   .btn-secondary { background: #f5f5f5; color: #333; }
+   .btn-secondary:hover { background: #eee; }
+   
+   /* Modal Tabs */
+   .modal-tabs {
+     display: flex;
+     gap: 0.25rem;
+     padding: 0 1.5rem;
+     border-bottom: 1px solid #eee;
+     background: #fff;
+     position: sticky;
+     top: 60px;
+     z-index: 2;
+     overflow-x: auto;
+   }
+   
+   .modal-tab-btn {
+     padding: 0.75rem 1rem;
+     border: none;
+     background: none;
+     color: #666;
+     font-size: 0.9375rem;
+     font-weight: 500;
+     cursor: pointer;
+     border-radius: 8px 8px 0 0;
+     transition: all 0.2s;
+     display: flex;
+     align-items: center;
+     gap: 0.375rem;
+     white-space: nowrap;
+   }
+   
+   .modal-tab-btn:hover { color: #333; background: #f9f9f9; }
+   .modal-tab-btn.active { color: #8a5fe0; background: #f8f5ff; font-weight: 600; }
+   
+   /* Media Upload */
+   .media-upload-section { margin-bottom: 1.5rem; }
+   
+   .media-dropzone {
+     border: 2px dashed #ccc;
+     border-radius: 12px;
+     padding: 2rem 1.5rem;
+     text-align: center;
+     cursor: pointer;
+     transition: all 0.2s ease;
+     background: #fafafa;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 0.75rem;
+   }
+   
+   .media-dropzone:hover:not(.disabled) { border-color: #8a5fe0; background: #f8f5ff; }
+   .media-dropzone.disabled { opacity: 0.6; cursor: not-allowed; }
+   .media-input-hidden { display: none; }
+   .dropzone-icon { width: 40px; height: 40px; color: #8a5fe0; }
+   .dropzone-text { font-weight: 500; color: #333; }
+   .dropzone-subtext { font-size: 0.8125rem; color: #666; }
+   .dropzone-full { color: #28a745; font-weight: 500; }
+   
+   .media-preview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+   
+   .media-preview-item {
+     position: relative;
+     border-radius: 10px;
+     overflow: hidden;
+     background: #f5f5f5;
+     aspect-ratio: 1;
+     display: flex;
+     align-items: flex-end;
+   }
+   
+   .media-preview-media { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+   
+   .media-preview-info {
+     position: relative;
+     z-index: 2;
+     width: 100%;
+     padding: 0.5rem;
+     background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+     color: #fff;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     font-size: 0.75rem;
+   }
+   
+   .media-preview-name { max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+   .media-preview-size { opacity: 0.9; }
+   
+   .media-preview-remove {
+     position: absolute;
+     top: 0.375rem;
+     right: 0.375rem;
+     z-index: 3;
+     width: 24px;
+     height: 24px;
+     border-radius: 50%;
+     background: rgba(228, 64, 95, 0.9);
+     color: #fff;
+     border: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     transition: background 0.2s;
+   }
+   
+   .media-preview-remove:hover { background: #e4405f; }
+   .media-preview-remove svg { width: 14px; height: 14px; }
+   
+   .media-preview-order {
+     position: absolute;
+     top: 0.375rem;
+     left: 0.375rem;
+     z-index: 3;
+     width: 20px;
+     height: 20px;
+     border-radius: 50%;
+     background: rgba(0,0,0,0.6);
+     color: #fff;
+     font-size: 0.75rem;
+     font-weight: 600;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+   }
+   
+   .media-preview-more { grid-column: span 2; text-align: center; padding: 0.75rem; background: #f0f0f0; border-radius: 10px; font-weight: 500; color: #666; }
+   .media-clear-all { grid-column: span 2; background: none; border: none; color: #8a5fe0; cursor: pointer; font-size: 0.875rem; margin-top: 0.5rem; }
+   
+   /* Platform Tips */
+   .platform-tips {
+     background: #f8f9ff;
+     border: 1px solid #e0e7ff;
+     border-radius: 10px;
+     padding: 1rem;
+     margin-top: 1rem;
+   }
+   
+   .platform-tips h4 { margin: 0 0 0.5rem; font-size: 0.9375rem; color: #333; }
+   .platform-tips ul { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: #555; }
+   .platform-tips li { margin-bottom: 0.25rem; }
+   
+   /* Input with copy */
+   .input-with-copy { display: flex; gap: 0.5rem; }
+   .input-with-copy .form-input { flex: 1; }
+   
+   .btn-copy {
+     padding: 0.75rem;
+     background: #f5f5f5;
+     border: 2px solid #e0e0e0;
+     border-radius: 10px;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     transition: all 0.2s;
+   }
+   
+   .btn-copy:hover { background: #eee; border-color: #ccc; }
+   .btn-copy svg { width: 18px; height: 18px; color: #666; }
+   
+   /* Danger Zone */
+   .danger-zone {
+     margin-top: 1.5rem;
+     padding: 1rem;
+     border: 1px solid #ffcdd2;
+     border-radius: 10px;
+     background: #fff5f5;
+   }
+   
+   .danger-zone h4 { margin: 0 0 0.25rem; color: #c62828; font-size: 0.9375rem; }
+   .btn-danger {
+     background: #ffcdd2;
+     color: #c62828;
+     border: none;
+     padding: 0.5rem 1rem;
+     border-radius: 8px;
+     cursor: pointer;
+     font-size: 0.875rem;
+     font-weight: 500;
+     transition: background 0.2s;
+   }
+   .btn-danger:hover { background: #ef9a9a; }
+   
+   /* Checkbox */
+   .form-checkbox-group { margin-top: 0.5rem; }
+   .checkbox-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9375rem; color: #333; }
+   .checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: #8a5fe0; }
+   
+   /* ========================================
+      DARK MODE
+      ======================================== */
+   @media (prefers-color-scheme: dark) {
+     .loader-content p { color: #d1d5db; }
+     .loader-spinner { border-color: rgba(138, 95, 224, 0.3); border-top-color: #9b75e8; }
+   
+     .news-container { background-color: #111827; }
+     .news-title, .news-card-title { color: #ffffff; }
+     .news-subtitle, .news-card-description { color: #b0b0b0; }
+     .news-tabs { background: #1e1e3a; }
+     .news-tab-btn { color: #b0b0b0; }
+     .news-tab-btn:hover { color: #ffffff; background: rgba(138, 95, 224, 0.2); }
+     .tab-count { background: rgba(255, 255, 255, 0.15); color: #e0e0e0; }
+     .news-card { background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%); border-color: #2a2a4a; }
+     .news-card-shadow { background: linear-gradient(135deg, rgba(138, 95, 224, 0.25) 0%, rgba(138, 95, 224, 0.1) 50%, transparent 100%); }
+   
+     .modal-content { background: #1f2937; }
+     .modal-header { border-bottom-color: #374151; background: #1f2937; }
+     .modal-title { color: #f9fafb; }
+     .modal-close { color: #9ca3af; }
+     .modal-close:hover { background: #374151; color: #f9fafb; }
+     .modal-tabs { border-bottom-color: #374151; background: #1f2937; }
+     .modal-tab-btn { color: #9ca3af; }
+     .modal-tab-btn:hover { color: #f9fafb; background: #374151; }
+     .modal-tab-btn.active { color: #9b75e8; background: rgba(138, 95, 224, 0.2); }
+     .form-input { background: #374151; border-color: #4b5563; color: #f9fafb; }
+     .form-input:focus { border-color: #9b75e8; box-shadow: 0 0 0 3px rgba(138, 95, 224, 0.2); }
+     .form-input-readonly { background: #1f2937; color: #9ca3af; }
+     .platform-tips { background: rgba(138, 95, 224, 0.1); border-color: rgba(138, 95, 224, 0.3); }
+     .platform-tips h4 { color: #f9fafb; }
+     .platform-tips ul { color: #d1d5db; }
+     .btn-secondary { background: #374151; color: #f9fafb; }
+     .btn-secondary:hover { background: #4b5563; }
+     .media-dropzone { background: #1f2937; border-color: #4b5563; }
+     .media-dropzone:hover:not(.disabled) { border-color: #9b75e8; background: rgba(138, 95, 224, 0.1); }
+     .dropzone-text { color: #f9fafb; }
+     .dropzone-subtext { color: #9ca3af; }
+     .media-preview-item { background: #374151; }
+     .checkbox-label { color: #f9fafb; }
+   }
+   
+   /* ========================================
+      RESPONSIVE
+      ======================================== */
+   @media (max-width: 768px) {
+     .news-container { padding: 1rem; }
+     .news-header { margin-bottom: 1.5rem; }
+     .news-title { font-size: 1.5rem; }
+     .news-list { gap: 1rem; }
+     .news-card { padding: 1.5rem; }
+     .news-card-header { flex-direction: column; align-items: flex-start; }
+   
+     .modal-content-large { max-width: 100%; margin: 0.5rem; }
+     .modal-tabs { padding: 0 1rem; }
+     .modal-tab-btn { padding: 0.625rem 0.75rem; font-size: 0.875rem; }
+     .form-row { flex-direction: column; }
+     .media-preview-grid { grid-template-columns: 1fr; }
+     .modal-actions { flex-direction: column; }
+     .btn { width: 100%; }
+   }
+   
+   @media (max-width: 480px) {
+     .news-tabs { width: 100%; justify-content: center; }
+     .news-tab-btn { flex: 1; justify-content: center; padding: 0.65rem 0.5rem; font-size: 0.9rem; min-width: 100px; }
+     .tab-count { min-width: 18px; height: 18px; font-size: 0.7rem; }
+   }
+   
+   /* ========================================
+      ACCESSIBILITY
+      ======================================== */
+   .news-tab-btn:focus-visible,
+   .retry-btn:focus-visible,
+   .news-card-link:focus-visible,
+   .modal-tab-btn:focus-visible,
+   .media-dropzone:focus-visible,
+   .btn-copy:focus-visible {
+     outline: 2px solid #8a5fe0;
+     outline-offset: 2px;
+   }
+   
+   @media (prefers-reduced-motion: reduce) {
+     *, *::before, *::after {
+       animation-duration: 0.01ms !important;
+       animation-iteration-count: 1 !important;
+       transition-duration: 0.01ms !important;
+     }
+     .loader-spinner { animation: none; opacity: 0.9; }
+     .loader-content p::after { animation: none; content: '...'; }
+     .news-card, .news-card-link, .retry-btn { transition: none !important; animation: none !important; }
+     .news-card-visible { transform: none !important; }
+   }
+   
+   /* Scrollbar for modal */
+   .modal-content::-webkit-scrollbar { width: 6px; }
+   .modal-content::-webkit-scrollbar-track { background: #f5f5f5; border-radius: 3px; }
+   .modal-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+   .modal-content::-webkit-scrollbar-thumb:hover { background: #aaa; }
+   @media (prefers-color-scheme: dark) {
+     .modal-content::-webkit-scrollbar-track { background: #374151; }
+     .modal-content::-webkit-scrollbar-thumb { background: #6b7280; }
+     .modal-content::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+   }

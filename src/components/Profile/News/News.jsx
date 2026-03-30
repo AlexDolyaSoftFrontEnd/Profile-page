@@ -1,103 +1,33 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+// News.jsx
+import React, { Suspense, lazy, useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import './News.css';
 
-// ============================================
-// КОНСТАНТИ ТА КОНФІГУРАЦІЯ
-// ============================================
+/* ============================================
+   LOADER (Прозорий Fallback для Suspense)
+   ============================================ */
+const NewsLoader = () => (
+  <div className="loader-overlay" role="status" aria-live="polite">
+    <div className="loader-content">
+      <div className="loader-spinner" aria-hidden="true" />
+      <p>Завантаження публікацій...</p>
+    </div>
+  </div>
+);
 
+/* ============================================
+   КОНСТАНТИ ТА КОНФІГУРАЦІЯ
+   ============================================ */
 const PLATFORMS = {
-  all: {
-    id: 'all',
-    name: 'Всі мережі',
-    icon: '🌐',
-    color: '#8a5fe0',
-    badgeColor: 'linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%)'
-  },
-  instagram: {
-    id: 'instagram',
-    name: 'Instagram',
-    icon: '📸',
-    color: '#E4405F',
-    badgeColor: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)',
-    settings: {
-      maxMediaFiles: 10,
-      allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4'],
-      maxFileSizeMB: 100,
-      supportsStories: true,
-      supportsReels: true
-    }
-  },
-  facebook: {
-    id: 'facebook',
-    name: 'Facebook',
-    icon: '📘',
-    color: '#1877F2',
-    badgeColor: 'linear-gradient(135deg, #1877F2 0%, #42B72A 100%)',
-    settings: {
-      maxMediaFiles: 5,
-      allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4', 'video/quicktime'],
-      maxFileSizeMB: 250,
-      supportsStories: true,
-      supportsReels: false
-    }
-  },
-  tiktok: {
-    id: 'tiktok',
-    name: 'TikTok',
-    icon: '🎵',
-    color: '#000000',
-    badgeColor: 'linear-gradient(135deg, #000000 0%, #69C9D0 100%)',
-    settings: {
-      maxMediaFiles: 1,
-      allowedMediaTypes: ['video/mp4', 'video/quicktime'],
-      maxFileSizeMB: 287,
-      supportsStories: false,
-      supportsReels: false,
-      verticalVideoOnly: true
-    }
-  },
-  youtube: {
-    id: 'youtube',
-    name: 'YouTube',
-    icon: '▶️',
-    color: '#FF0000',
-    badgeColor: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
-    settings: {
-      maxMediaFiles: 1,
-      allowedMediaTypes: ['video/mp4', 'video/quicktime', 'video/x-matroska'],
-      maxFileSizeMB: 256,
-      supportsStories: false,
-      supportsReels: false,
-      supportsShorts: true,
-      minVideoDuration: 12,
-      maxVideoDuration: 43200,
-      recommendedResolution: '1920x1080',
-      recommendedAspectRatio: '16:9'
-    }
-  },
-  twitter: {
-    id: 'twitter',
-    name: 'Twitter',
-    icon: '🐦',
-    color: '#000000',
-    badgeColor: 'linear-gradient(135deg, #000000 0%, #1DA1F2 100%)',
-    settings: {
-      maxMediaFiles: 4,
-      allowedMediaTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'],
-      maxFileSizeMB: 512,
-      supportsStories: false,
-      supportsReels: false,
-      supportsThreads: true,
-      maxTextLength: 280,
-      recommendedImageResolution: '1600x900',
-      recommendedVideoResolution: '1280x720',
-      recommendedAspectRatio: '16:9 or 1:1'
-    }
-  }
+  all: { id: 'all', name: 'Всі мережі', icon: '🌐', color: '#8a5fe0', badgeColor: 'linear-gradient(135deg, #8a5fe0 0%, #6d44b8 100%)' },
+  instagram: { id: 'instagram', name: 'Instagram', icon: '📸', color: '#E4405F', badgeColor: 'linear-gradient(135deg, #E4405F 0%, #C13584 100%)', settings: { maxMediaFiles: 10, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4'], maxFileSizeMB: 100, supportsStories: true, supportsReels: true } },
+  facebook: { id: 'facebook', name: 'Facebook', icon: '📘', color: '#1877F2', badgeColor: 'linear-gradient(135deg, #1877F2 0%, #42B72A 100%)', settings: { maxMediaFiles: 5, allowedMediaTypes: ['image/jpeg', 'image/png', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 250, supportsStories: true, supportsReels: false } },
+  tiktok: { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #69C9D0 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime'], maxFileSizeMB: 287, supportsStories: false, supportsReels: false, verticalVideoOnly: true } },
+  youtube: { id: 'youtube', name: 'YouTube', icon: '▶️', color: '#FF0000', badgeColor: 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)', settings: { maxMediaFiles: 1, allowedMediaTypes: ['video/mp4', 'video/quicktime', 'video/x-matroska'], maxFileSizeMB: 256, supportsStories: false, supportsReels: false, supportsShorts: true, minVideoDuration: 12, maxVideoDuration: 43200, recommendedResolution: '1920x1080', recommendedAspectRatio: '16:9' } },
+  twitter: { id: 'twitter', name: 'Twitter', icon: '🐦', color: '#000000', badgeColor: 'linear-gradient(135deg, #000000 0%, #1DA1F2 100%)', settings: { maxMediaFiles: 4, allowedMediaTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'], maxFileSizeMB: 512, supportsStories: false, supportsReels: false, supportsThreads: true, maxTextLength: 280, recommendedImageResolution: '1600x900', recommendedVideoResolution: '1280x720', recommendedAspectRatio: '16:9 or 1:1' } }
 };
 
-const MOCK_POSTS = [
+const MOCK_PUBLICATIONS = [
   { id: 4, platform: 'instagram', title: 'Stories: За лаштунками', description: 'Показали процес створення контенту для бренду.', author: 'Content Team', scheduledFor: '2026-03-16T10:00', status: 'draft', media: [], audience: 'followers' },
   { id: 7, platform: 'instagram', title: 'Reels: Тренди весни', description: 'Відео-огляд модних тенденцій нового сезону.', author: 'Creative Team', scheduledFor: '2026-03-17T18:00', status: 'published', media: [], audience: 'all' },
   { id: 10, platform: 'instagram', title: 'IGTV: Інтерв\'ю з засновником', description: 'Ексклюзивне інтерв\'ю про місію бренду та плани на майбутнє.', author: 'PR Team', scheduledFor: '2026-03-18T12:00', status: 'scheduled', media: [], audience: 'all' },
@@ -128,80 +58,65 @@ const MOCK_POSTS = [
   { id: 30, platform: 'twitter', title: 'GIF + жарт про індустрію', description: 'Легкий вірусний контент для підвищення залученості.', author: 'Creative Team', scheduledFor: '2026-04-07T18:00', status: 'draft', media: [], audience: 'all' }
 ];
 
-// ============================================
-// CUSTOM HOOK: useNewsPosts
-// ============================================
-
-const useNewsPosts = () => {
-  const [posts, setPosts] = useState([]);
+/* ============================================
+   CUSTOM HOOK: usePublications
+   ============================================ */
+const usePublications = () => {
+  const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleCards, setVisibleCards] = useState([]);
   const [activePlatform, setActivePlatform] = useState('all');
 
-  const fetchPosts = useCallback(async () => {
+  const fetchPublications = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       await new Promise(resolve => setTimeout(resolve, 500));
-      setPosts(MOCK_POSTS);
+      setPublications(MOCK_PUBLICATIONS);
       setVisibleCards([]);
-      MOCK_POSTS.forEach((_, index) => {
+      MOCK_PUBLICATIONS.forEach((_, index) => {
         setTimeout(() => {
           setVisibleCards(prev => [...prev, index]);
         }, index * 50);
       });
     } catch (err) {
-      setError('Не вдалося завантажити пости. Спробуйте пізніше.');
-      console.error('Posts fetch error:', err);
+      setError('Не вдалося завантажити публікації. Спробуйте пізніше.');
+      console.error('Publications fetch error:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+  useEffect(() => { fetchPublications(); }, [fetchPublications]);
 
-  const filteredPosts = useMemo(() => {
-    if (activePlatform === 'all') return posts;
-    return posts.filter(post => post.platform === activePlatform);
-  }, [posts, activePlatform]);
+  const filteredPublications = useMemo(() => {
+    if (activePlatform === 'all') return publications;
+    return publications.filter(pub => pub.platform === activePlatform);
+  }, [publications, activePlatform]);
 
   useEffect(() => {
     setVisibleCards([]);
-    filteredPosts.forEach((_, index) => {
+    filteredPublications.forEach((_, index) => {
       setTimeout(() => {
         setVisibleCards(prev => [...prev, index]);
       }, index * 50);
     });
-  }, [activePlatform, filteredPosts.length]);
+  }, [activePlatform, filteredPublications.length]);
 
   const handlePlatformChange = useCallback((platformId) => {
     setActivePlatform(platformId);
   }, []);
 
-  return {
-    posts,
-    setPosts,
-    loading,
-    error,
-    activePlatform,
-    filteredPosts,
-    visibleCards,
-    handlePlatformChange,
-    fetchPosts
-  };
+  return { publications, setPublications, loading, error, activePlatform, filteredPublications, visibleCards, handlePlatformChange, fetchPublications };
 };
 
-// ============================================
-// КОМПОНЕНТ: MediaUploadPreview
-// ============================================
-
+/* ============================================
+   КОМПОНЕНТ: MediaUploadPreview
+   ============================================ */
 const MediaUploadPreview = ({ platform, mediaFiles, onFilesChange, onRemoveFile, onClearAll }) => {
   const fileInputRef = useRef(null);
   const platformSettings = PLATFORMS[platform]?.settings;
-  
   const maxFiles = platformSettings?.maxMediaFiles || 2;
   const allowedTypes = platformSettings?.allowedMediaTypes || ['image/*', 'video/*'];
   const maxSizeBytes = (platformSettings?.maxFileSizeMB || 50) * 1024 * 1024;
@@ -210,11 +125,8 @@ const MediaUploadPreview = ({ platform, mediaFiles, onFilesChange, onRemoveFile,
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     const validFiles = [];
-    
     files.forEach(file => {
-      if (!allowedTypes.some(type => 
-        type.endsWith('/*') ? file.type.startsWith(type.split('/')[0]) : file.type === type
-      )) {
+      if (!allowedTypes.some(type => type.endsWith('/*') ? file.type.startsWith(type.split('/')[0]) : file.type === type)) {
         alert(`Файл "${file.name}" має недопустимий формат`);
         return;
       }
@@ -224,560 +136,134 @@ const MediaUploadPreview = ({ platform, mediaFiles, onFilesChange, onRemoveFile,
       }
       validFiles.push(file);
     });
-
     if (validFiles.length > 0 && remainingSlots > 0) {
       const filesToAdd = validFiles.slice(0, remainingSlots);
       onFilesChange([...mediaFiles, ...filesToAdd]);
     }
-    
     e.target.value = '';
   };
 
-  const getFilePreview = (file) => {
-    if (file.type.startsWith('image/')) {
-      return URL.createObjectURL(file);
-    }
-    if (file.type.startsWith('video/')) {
-      return URL.createObjectURL(file);
-    }
-    return null;
-  };
-
-  const formatFileName = (name, maxLength = 20) => {
-    if (name.length <= maxLength) return name;
-    const ext = name.split('.').pop();
-    return `${name.slice(0, maxLength - ext.length - 3)}...${ext}`;
-  };
+  const getFilePreview = (file) => file.type.startsWith('image/') || file.type.startsWith('video/') ? URL.createObjectURL(file) : null;
+  const formatFileName = (name, maxLength = 20) => name.length <= maxLength ? name : `${name.slice(0, maxLength - name.split('.').pop().length - 4)}...${name.split('.').pop()}`;
 
   return (
     <div className="media-upload-section">
-      <div 
-        className={`media-dropzone ${remainingSlots <= 0 ? 'disabled' : ''}`}
-        onClick={() => remainingSlots > 0 && fileInputRef.current?.click()}
-        role="button"
-        tabIndex={remainingSlots > 0 ? 0 : -1}
-        aria-disabled={remainingSlots <= 0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            if (remainingSlots > 0) fileInputRef.current?.click();
-          }
-        }}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept={allowedTypes.join(',')}
-          onChange={handleFileSelect}
-          className="media-input-hidden"
-          aria-label="Завантажити медіафайли"
-        />
-        
-        {remainingSlots > 0 ? (
-          <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="dropzone-icon" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            <span className="dropzone-text">
-              Натисніть або перетягніть файли сюди
-            </span>
-            <span className="dropzone-subtext">
-              {allowedTypes.map(t => t.replace('*','')).join(', ').toUpperCase()}
-            </span>
-          </>
-        ) : (
-          <span className="dropzone-full">Досягнуто ліміт файлів ({maxFiles})</span>
-        )}
+      <div className={`media-dropzone ${remainingSlots <= 0 ? 'disabled' : ''}`} onClick={() => remainingSlots > 0 && fileInputRef.current?.click()} role="button" tabIndex={remainingSlots > 0 ? 0 : -1} aria-disabled={remainingSlots <= 0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (remainingSlots > 0) fileInputRef.current?.click(); } }}>
+        <input ref={fileInputRef} type="file" multiple accept={allowedTypes.join(',')} onChange={handleFileSelect} className="media-input-hidden" aria-label="Завантажити медіафайли" />
+        {remainingSlots > 0 ? (<>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="dropzone-icon" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span className="dropzone-text">Натисніть або перетягніть файли сюди</span>
+          <span className="dropzone-subtext">{allowedTypes.map(t => t.replace('*','')).join(', ').toUpperCase()}</span>
+        </>) : <span className="dropzone-full">Досягнуто ліміт файлів ({maxFiles})</span>}
       </div>
-
       {mediaFiles.length > 0 && (
         <div className="media-preview-grid">
           {mediaFiles.slice(0, 2).map((file, index) => {
             const previewUrl = getFilePreview(file);
             const isVideo = file.type.startsWith('video/');
-            
             return (
               <div key={index} className="media-preview-item">
-                {isVideo ? (
-                  <video src={previewUrl} className="media-preview-media" muted loop onMouseOver={e => e.target.play()} onMouseOut={e => e.target.pause()} />
-                ) : (
-                  <img src={previewUrl} alt={file.name} className="media-preview-media" />
-                )}
-                
+                {isVideo ? <video src={previewUrl} className="media-preview-media" muted loop onMouseOver={e => e.target.play()} onMouseOut={e => e.target.pause()} /> : <img src={previewUrl} alt={file.name} className="media-preview-media" />}
                 <div className="media-preview-info">
-                  <span className="media-preview-name" title={file.name}>
-                    {formatFileName(file.name)}
-                  </span>
-                  <span className="media-preview-size">
-                    {(file.size / 1024 / 1024).toFixed(1)} MB
-                  </span>
+                  <span className="media-preview-name" title={file.name}>{formatFileName(file.name)}</span>
+                  <span className="media-preview-size">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
                 </div>
-                
-                <button 
-                  type="button"
-                  className="media-preview-remove"
-                  onClick={(e) => { e.stopPropagation(); onRemoveFile(index); }}
-                  aria-label={`Видалити файл ${file.name}`}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-                
+                <button type="button" className="media-preview-remove" onClick={(e) => { e.stopPropagation(); onRemoveFile(index); }} aria-label={`Видалити файл ${file.name}`}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                 <span className="media-preview-order">{index + 1}</span>
               </div>
             );
           })}
-          
-          {mediaFiles.length > 2 && (
-            <div className="media-preview-more">
-              +{mediaFiles.length - 2} ще
-            </div>
-          )}
-
-          {onClearAll && mediaFiles.length > 0 && (
-            <button 
-              type="button" 
-              className="media-clear-all"
-              onClick={(e) => { e.stopPropagation(); onClearAll(); }}
-            >
-              Очистити все
-            </button>
-          )}
+          {mediaFiles.length > 2 && <div className="media-preview-more">+{mediaFiles.length - 2} ще</div>}
+          {onClearAll && mediaFiles.length > 0 && <button type="button" className="media-clear-all" onClick={(e) => { e.stopPropagation(); onClearAll(); }}>Очистити все</button>}
         </div>
       )}
     </div>
   );
 };
 
-// ============================================
-// МОДАЛЬНЕ ВІКНО: EditPostModal
-// ============================================
-
-const EditPostModal = ({ post, platform, onClose, onSave, onDelete }) => {
+/* ============================================
+   МОДАЛЬНЕ ВІКНО: EditPublicationModal
+   ============================================ */
+const EditPublicationModal = ({ publication, platform, onClose, onSave, onDelete }) => {
   const modalRef = useRef(null);
   const firstInputRef = useRef(null);
-  
-  const [formData, setFormData] = useState({
-    title: post?.title || '',
-    description: post?.description || '',
-    scheduledFor: post?.scheduledFor || '',
-    status: post?.status || 'draft',
-    audience: post?.audience || 'all',
-    media: post?.media || []
-  });
-  
+  const [formData, setFormData] = useState({ title: publication?.title || '', description: publication?.description || '', scheduledFor: publication?.scheduledFor || '', status: publication?.status || 'draft', audience: publication?.audience || 'all', media: publication?.media || [] });
   const [errors, setErrors] = useState({});
   const [activeSettingsTab, setActiveSettingsTab] = useState('content');
   const [sendNotification, setSendNotification] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    if (firstInputRef.current) {
-      firstInputRef.current.focus();
-    }
-  }, []);
-
+  useEffect(() => { if (firstInputRef.current) firstInputRef.current.focus(); }, []);
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      }
+      if (e.key === 'Escape') { e.preventDefault(); onClose(); }
       if (e.key === 'Tab' && modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-        
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
+        const focusableElements = modalRef.current.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstElement = focusableElements[0], lastElement = focusableElements[focusableElements.length - 1];
+        if (e.shiftKey && document.activeElement === firstElement) { e.preventDefault(); lastElement.focus(); }
+        else if (!e.shiftKey && document.activeElement === lastElement) { e.preventDefault(); firstElement.focus(); }
       }
     };
-
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
-    
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'unset';
-    };
+    return () => { document.removeEventListener('keydown', handleKeyDown); document.body.style.overflow = 'unset'; };
   }, [onClose]);
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = "Заголовок обов'язковий";
-    if (!formData.description.trim()) newErrors.description = "Опис обов'язковий";
-    if (!formData.scheduledFor) newErrors.scheduledFor = "Оберіть дату публікації";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const validate = () => { const newErrors = {}; if (!formData.title.trim()) newErrors.title = "Заголовок обов'язковий"; if (!formData.description.trim()) newErrors.description = "Опис обов'язковий"; if (!formData.scheduledFor) newErrors.scheduledFor = "Оберіть дату публікації"; setErrors(newErrors); return Object.keys(newErrors).length === 0; };
+  const handleChange = (field) => (e) => { setFormData(prev => ({ ...prev, [field]: e.target.value })); if (errors[field]) setErrors(prev => ({ ...prev, [field]: null })); };
+  const handleMediaFilesChange = (files) => setFormData(prev => ({ ...prev, media: files }));
+  const handleRemoveMediaFile = (index) => setFormData(prev => ({ ...prev, media: prev.media.filter((_, i) => i !== index) }));
+  const handleClearAllMedia = () => setFormData(prev => ({ ...prev, media: [] }));
+  const handleSubmit = (e) => { e.preventDefault(); if (validate()) { onSave({ ...publication, ...formData, sendNotification }); onClose(); } };
+  const handleDelete = () => { if (window.confirm(`Ви впевнені, що хочете видалити публікацію "${formData.title}"?`)) { setIsDeleting(true); setTimeout(() => { onDelete?.(publication.id); onClose(); setIsDeleting(false); }, 300); } };
+  const handleCopyLink = async () => { const link = `https://app.example.com/draft/${publication?.id}`; try { await navigator.clipboard.writeText(link); alert('Посилання скопійовано!'); } catch (err) { const textarea = document.createElement('textarea'); textarea.value = link; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); alert('Посилання скопійовано!'); } };
 
-  const handleChange = (field) => (e) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }));
-    }
-  };
-
-  const handleMediaFilesChange = (files) => {
-    setFormData(prev => ({ ...prev, media: files }));
-  };
-
-  const handleRemoveMediaFile = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      media: prev.media.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleClearAllMedia = () => {
-    setFormData(prev => ({ ...prev, media: [] }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      onSave({ 
-        ...post, 
-        ...formData,
-        sendNotification
-      });
-      onClose();
-    }
-  };
-
-  const handleDelete = () => {
-    if (window.confirm(`Ви впевнені, що хочете видалити публікацію "${formData.title}"?`)) {
-      setIsDeleting(true);
-      setTimeout(() => {
-        onDelete?.(post.id);
-        onClose();
-        setIsDeleting(false);
-      }, 300);
-    }
-  };
-
-  const handleCopyLink = async () => {
-    const link = `https://app.example.com/draft/${post?.id}`;
-    try {
-      await navigator.clipboard.writeText(link);
-      alert('Посилання скопійовано!');
-    } catch (err) {
-      const textarea = document.createElement('textarea');
-      textarea.value = link;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      alert('Посилання скопійовано!');
-    }
-  };
-
-  const statusOptions = [
-    { value: '', label: 'Оберіть статус', disabled: true },
-    { value: 'draft', label: 'Чернетка' },
-    { value: 'scheduled', label: 'Заплановано' },
-    { value: 'published', label: 'Опубліковано' }
-  ];
-
-  const audienceOptions = [
-    { value: '', label: 'Оберіть аудиторію', disabled: true },
-    { value: 'all', label: 'Всім підписникам' },
-    { value: 'followers', label: 'Тільки активним підписникам' },
-    { value: 'custom', label: 'Обрана аудиторія' }
-  ];
-
-  const formatDateTimeLocal = (dateStr) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toISOString().slice(0, 16);
-  };
-
-  const settingsTabs = [
-    { id: 'content', label: 'Контент' },
-    { id: 'media', label: 'Медіа' },
-    { id: 'schedule', label: 'Публікація' },
-    { id: 'advanced', label: 'Додатково' }
-  ];
+  const statusOptions = [{ value: '', label: 'Оберіть статус', disabled: true }, { value: 'draft', label: 'Чернетка' }, { value: 'scheduled', label: 'Заплановано' }, { value: 'published', label: 'Опубліковано' }];
+  const audienceOptions = [{ value: '', label: 'Оберіть аудиторію', disabled: true }, { value: 'all', label: 'Всім підписникам' }, { value: 'followers', label: 'Тільки активним підписникам' }, { value: 'custom', label: 'Обрана аудиторія' }];
+  const formatDateTimeLocal = (dateStr) => dateStr ? new Date(dateStr).toISOString().slice(0, 16) : '';
+  const settingsTabs = [{ id: 'content', label: 'Контент' }, { id: 'media', label: 'Медіа' }, { id: 'schedule', label: 'Публікація' }, { id: 'advanced', label: 'Додатково' }];
 
   return createPortal(
-    <div 
-      className="modal-overlay" 
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
-      <div 
-        className="modal-content modal-content-large" 
-        ref={modalRef}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div className="modal-content modal-content-large" ref={modalRef} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div className="modal-header-left">
-            <h2 id="modal-title" className="modal-title">
-              Редагувати публікацію
-            </h2>
-            <div className="modal-platform-badge" style={{ background: platform?.badgeColor }}>
-              <span aria-hidden="true">{platform?.icon}</span>
-              {platform?.name}
-            </div>
+            <h2 id="modal-title" className="modal-title">Редагувати публікацію</h2>
+            <div className="modal-platform-badge" style={{ background: platform?.badgeColor }}><span aria-hidden="true">{platform?.icon}</span>{platform?.name}</div>
           </div>
-          <button 
-            className="modal-close" 
-            onClick={onClose}
-            aria-label="Закрити модальне вікно"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+          <button className="modal-close" onClick={onClose} aria-label="Закрити модальне вікно"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
-
-        <div className="modal-tabs">
-          {settingsTabs.map(tab => (
-            <button
-              key={tab.id}
-              className={`modal-tab-btn ${activeSettingsTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveSettingsTab(tab.id)}
-              role="tab"
-              aria-selected={activeSettingsTab === tab.id}
-              aria-controls={`panel-${tab.id}`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
+        <div className="modal-tabs">{settingsTabs.map(tab => (<button key={tab.id} className={`modal-tab-btn ${activeSettingsTab === tab.id ? 'active' : ''}`} onClick={() => setActiveSettingsTab(tab.id)} role="tab" aria-selected={activeSettingsTab === tab.id} aria-controls={`panel-${tab.id}`}>{tab.label}</button>))}</div>
         <form onSubmit={handleSubmit} className="modal-form">
-          
-          {activeSettingsTab === 'content' && (
-            <div id="panel-content" role="tabpanel" aria-labelledby="tab-content">
-              <div className="form-group">
-                <input
-                  ref={firstInputRef}
-                  id="post-title"
-                  type="text"
-                  className={`form-input ${errors.title ? 'error' : ''}`}
-                  value={formData.title}
-                  onChange={handleChange('title')}
-                  placeholder="Заголовок публікації *"
-                  aria-required="true"
-                  aria-invalid={!!errors.title}
-                />
-                {errors.title && <span className="form-error" role="alert">{errors.title}</span>}
-              </div>
-
-              <div className="form-group">
-                <textarea
-                  id="post-description"
-                  className={`form-input form-textarea ${errors.description ? 'error' : ''}`}
-                  value={formData.description}
-                  onChange={handleChange('description')}
-                  placeholder="Опис змісту публікації *"
-                  rows={4}
-                  aria-required="true"
-                  aria-invalid={!!errors.description}
-                />
-                {errors.description && <span className="form-error" role="alert">{errors.description}</span>}
-              </div>
+          {activeSettingsTab === 'content' && (<div id="panel-content" role="tabpanel" aria-labelledby="tab-content">
+            <div className="form-group"><input ref={firstInputRef} id="publication-title" type="text" className={`form-input ${errors.title ? 'error' : ''}`} value={formData.title} onChange={handleChange('title')} placeholder="Заголовок публікації *" aria-required="true" aria-invalid={!!errors.title} />{errors.title && <span className="form-error" role="alert">{errors.title}</span>}</div>
+            <div className="form-group"><textarea id="publication-description" className={`form-input form-textarea ${errors.description ? 'error' : ''}`} value={formData.description} onChange={handleChange('description')} placeholder="Опис змісту публікації *" rows={4} aria-required="true" aria-invalid={!!errors.description} />{errors.description && <span className="form-error" role="alert">{errors.description}</span>}</div>
+          </div>)}
+          {activeSettingsTab === 'media' && (<div id="panel-media" role="tabpanel" aria-labelledby="tab-media">
+            <MediaUploadPreview platform={platform?.id} mediaFiles={formData.media} onFilesChange={handleMediaFilesChange} onRemoveFile={handleRemoveMediaFile} onClearAll={handleClearAllMedia} />
+            <div className="platform-tips"><h4>Рекомендації для {platform?.name}:</h4><ul>
+              {platform?.id === 'instagram' && (<><li>Оптимальне співвідношення: 1:1 (квадрат) або 4:5</li><li>Reels: вертикальне відео 9:16, до 90 секунд</li><li>Stories: 9:16, до 15 секунд на слайд</li></>)}
+              {platform?.id === 'facebook' && (<><li>Рекомендовано: 1200x630px для посилань</li><li>Відео: до 240 хвилин, MP4 формат</li></>)}
+              {platform?.id === 'tiktok' && (<><li>Тільки вертикальне відео 9:16</li><li>Оптимальна тривалість: 15-60 секунд</li><li>Використовуйте трендові звуки для більшого охоплення</li></>)}
+              {platform?.id === 'youtube' && (<><li>Рекомендоване співвідношення: 16:9 (1920x1080)</li><li>Shorts: вертикальне відео 9:16, до 60 секунд</li><li>Мінімальна тривалість: 12 секунд, максимальна: 12 годин</li><li>Підтримувані формати: MP4, MOV, MKV</li></>)}
+              {platform?.id === 'twitter' && (<><li>Максимальна довжина тексту: 280 символів</li><li>До 4 медіафайлів в одному твіті (зображення, відео)</li><li>Рекомендоване співвідношення: 16:9 або 1:1 для зображень</li><li>Відео: до 2 хвилин 20 секунд для звичайних користувачів</li></>)}
+            </ul></div>
+          </div>)}
+          {activeSettingsTab === 'schedule' && (<div id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule">
+            <div className="form-row">
+              <div className="form-group form-group-half"><input id="publication-date" type="datetime-local" className={`form-input ${errors.scheduledFor ? 'error' : ''}`} value={formatDateTimeLocal(formData.scheduledFor)} onChange={handleChange('scheduledFor')} aria-required="true" aria-invalid={!!errors.scheduledFor} />{errors.scheduledFor && <span className="form-error" role="alert">{errors.scheduledFor}</span>}</div>
+              <div className="form-group form-group-half"><select id="publication-status" className="form-input form-select" value={formData.status} onChange={handleChange('status')}>{statusOptions.map(opt => (<option key={opt.value} value={opt.value} disabled={opt.disabled}>{opt.label}</option>))}</select></div>
             </div>
-          )}
-
-          {activeSettingsTab === 'media' && (
-            <div id="panel-media" role="tabpanel" aria-labelledby="tab-media">
-              <MediaUploadPreview
-                platform={platform?.id}
-                mediaFiles={formData.media}
-                onFilesChange={handleMediaFilesChange}
-                onRemoveFile={handleRemoveMediaFile}
-                onClearAll={handleClearAllMedia}
-              />
-              
-              <div className="platform-tips">
-                <h4>Рекомендації для {platform?.name}:</h4>
-                <ul>
-                  {platform?.id === 'instagram' && (
-                    <>
-                      <li>Оптимальне співвідношення: 1:1 (квадрат) або 4:5</li>
-                      <li>Reels: вертикальне відео 9:16, до 90 секунд</li>
-                      <li>Stories: 9:16, до 15 секунд на слайд</li>
-                    </>
-                  )}
-                  {platform?.id === 'facebook' && (
-                    <>
-                      <li>Рекомендовано: 1200x630px для посилань</li>
-                      <li>Відео: до 240 хвилин, MP4 формат</li>
-                    </>
-                  )}
-                  {platform?.id === 'tiktok' && (
-                    <>
-                      <li>Тільки вертикальне відео 9:16</li>
-                      <li>Оптимальна тривалість: 15-60 секунд</li>
-                      <li>Використовуйте трендові звуки для більшого охоплення</li>
-                    </>
-                  )}
-                  {platform?.id === 'youtube' && (
-                    <>
-                      <li>Рекомендоване співвідношення: 16:9 (1920x1080)</li>
-                      <li>Shorts: вертикальне відео 9:16, до 60 секунд</li>
-                      <li>Мінімальна тривалість: 12 секунд, максимальна: 12 годин</li>
-                      <li>Підтримувані формати: MP4, MOV, MKV</li>
-                    </>
-                  )}
-                  {platform?.id === 'twitter' && (
-                    <>
-                      <li>Максимальна довжина тексту: 280 символів</li>
-                      <li>До 4 медіафайлів в одному твіті (зображення, відео)</li>
-                      <li>Рекомендоване співвідношення: 16:9 або 1:1 для зображень</li>
-                      <li>Відео: до 2 хвилин 20 секунд для звичайних користувачів</li>
-                    </>
-                  )}
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {activeSettingsTab === 'schedule' && (
-            <div id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule">
-              <div className="form-row">
-                <div className="form-group form-group-half">
-                  <input
-                    id="post-date"
-                    type="datetime-local"
-                    className={`form-input ${errors.scheduledFor ? 'error' : ''}`}
-                    value={formatDateTimeLocal(formData.scheduledFor)}
-                    onChange={handleChange('scheduledFor')}
-                    aria-required="true"
-                    aria-invalid={!!errors.scheduledFor}
-                  />
-                  {errors.scheduledFor && <span className="form-error" role="alert">{errors.scheduledFor}</span>}
-                </div>
-
-                <div className="form-group form-group-half">
-                  <select
-                    id="post-status"
-                    className="form-input form-select"
-                    value={formData.status}
-                    onChange={handleChange('status')}
-                  >
-                    {statusOptions.map(opt => (
-                      <option key={opt.value} value={opt.value} disabled={opt.disabled}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <select
-                  id="post-audience"
-                  className="form-input form-select"
-                  value={formData.audience}
-                  onChange={handleChange('audience')}
-                >
-                  {audienceOptions.map(opt => (
-                    <option key={opt.value} value={opt.value} disabled={opt.disabled}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-checkbox-group">
-                <label className="checkbox-label">
-                  <input 
-                    type="checkbox" 
-                    checked={sendNotification}
-                    onChange={(e) => setSendNotification(e.target.checked)}
-                  />
-                  <span>Надіслати сповіщення підписникам після публікації</span>
-                </label>
-              </div>
-            </div>
-          )}
-
-          {activeSettingsTab === 'advanced' && (
-            <div id="panel-advanced" role="tabpanel" aria-labelledby="tab-advanced">
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-input form-input-readonly"
-                  value={post?.author || ''}
-                  placeholder="Автор"
-                  readOnly
-                  aria-readonly="true"
-                />
-              </div>
-
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-input form-input-readonly"
-                  value={`#${post?.id}`}
-                  placeholder="ID публікації"
-                  readOnly
-                  aria-readonly="true"
-                />
-              </div>
-
-              <div className="form-group">
-                <div className="input-with-copy">
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={`https://app.example.com/draft/${post?.id}`}
-                    placeholder="Посилання на чернетку"
-                    readOnly
-                  />
-                  <button 
-                    type="button" 
-                    className="btn-copy" 
-                    onClick={handleCopyLink}
-                    aria-label="Копіювати посилання"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div className="danger-zone">
-                <button 
-                  type="button" 
-                  className="btn btn-danger" 
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? 'Видалення...' : 'Видалити публікацію'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="modal-actions">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Скасувати
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Зберегти зміни
-            </button>
-          </div>
+            <div className="form-group"><select id="publication-audience" className="form-input form-select" value={formData.audience} onChange={handleChange('audience')}>{audienceOptions.map(opt => (<option key={opt.value} value={opt.value} disabled={opt.disabled}>{opt.label}</option>))}</select></div>
+            <div className="form-checkbox-group"><label className="checkbox-label"><input type="checkbox" checked={sendNotification} onChange={(e) => setSendNotification(e.target.checked)} /><span>Надіслати сповіщення підписникам після публікації</span></label></div>
+          </div>)}
+          {activeSettingsTab === 'advanced' && (<div id="panel-advanced" role="tabpanel" aria-labelledby="tab-advanced">
+            <div className="form-group"><input type="text" className="form-input form-input-readonly" value={publication?.author || ''} placeholder="Автор" readOnly aria-readonly="true" /></div>
+            <div className="form-group"><input type="text" className="form-input form-input-readonly" value={`#${publication?.id}`} placeholder="ID публікації" readOnly aria-readonly="true" /></div>
+            <div className="form-group"><div className="input-with-copy"><input type="text" className="form-input" value={`https://app.example.com/draft/${publication?.id}`} placeholder="Посилання на чернетку" readOnly /><button type="button" className="btn-copy" onClick={handleCopyLink} aria-label="Копіювати посилання"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div></div>
+            <div className="danger-zone"><button type="button" className="btn btn-danger" onClick={handleDelete} disabled={isDeleting}>{isDeleting ? 'Видалення...' : 'Видалити публікацію'}</button></div>
+          </div>)}
+          <div className="modal-actions"><button type="button" className="btn btn-secondary" onClick={onClose}>Скасувати</button><button type="submit" className="btn btn-primary">Зберегти зміни</button></div>
         </form>
       </div>
     </div>,
@@ -785,264 +271,69 @@ const EditPostModal = ({ post, platform, onClose, onSave, onDelete }) => {
   );
 };
 
-// ============================================
-// ДОПОМІЖНІ КОМПОНЕНТИ
-// ============================================
-
-const LoadingState = () => (
-  <div className="news-loading" role="status" aria-live="polite">
-    <div className="loading-spinner" aria-hidden="true" />
-    <p>Завантаження постів...</p>
-  </div>
-);
-
-const ErrorState = ({ error, onRetry }) => (
-  <div className="news-error" role="alert">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="12" />
-      <line x1="12" y1="16" x2="12.01" y2="16" />
-    </svg>
-    <p>{error}</p>
-    <button onClick={onRetry} className="retry-btn">Повторити</button>
-  </div>
-);
-
-const EmptyState = ({ platformName, onCreatePost }) => (
-  <div className="news-empty" role="status">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="empty-icon" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-    <p>Постів у {platformName} поки що немає.</p>
-    <p className="empty-subtitle">Створіть першу публікацію, щоб розпочати!</p>
-    {onCreatePost && (
-      <button className="btn btn-primary" onClick={onCreatePost}>
-        Створити публікацію
-      </button>
-    )}
-  </div>
-);
-
-const PostCard = ({ post, isVisible, platform, onEdit }) => {
-  const statusConfig = {
-    scheduled: { text: 'Заплановано', color: '#ffc107', bg: 'rgba(255, 193, 7, 0.15)' },
-    draft: { text: 'Чернетка', color: '#6c757d', bg: 'rgba(108, 117, 125, 0.15)' },
-    published: { text: 'Опубліковано', color: '#28a745', bg: 'rgba(40, 167, 69, 0.15)' }
-  };
-  
-  const status = statusConfig[post.status] || statusConfig.draft;
-
-  return (
-    <article
-      className={`news-card ${isVisible ? 'news-card-visible' : ''}`}
-      itemScope
-      itemType="https://schema.org/SocialMediaPosting"
-      aria-hidden={!isVisible}
-    >
-      <div className="news-card-content">
-        <div className="news-card-header">
-          <div className="news-card-badge" style={{ background: platform.badgeColor }} aria-label={`Платформа: ${platform.name}`}>
-            <span className="platform-icon" aria-hidden="true">{platform.icon}</span>
-            {platform.name}
-          </div>
-          <span className="status-badge" style={{ color: status.color, background: status.bg }} aria-label={`Статус: ${status.text}`}>
-            {status.text}
-          </span>
-        </div>
-
-        <div className="news-card-meta">
-          <span className="news-card-author">{post.author}</span>
-          <span className="news-card-dot" aria-hidden="true">•</span>
-          <time className="news-card-time" dateTime={post.scheduledFor}>
-            {new Date(post.scheduledFor).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
-          </time>
-        </div>
-        
-        <h2 className="news-card-title" itemProp="headline">{post.title}</h2>
-        <p className="news-card-description" itemProp="description">{post.description}</p>
-        
-        <div className="news-card-footer">
-          <button 
-            className="news-card-link"
-            onClick={(e) => { e.stopPropagation(); onEdit(post); }}
-            aria-label={`Редагувати пост: ${post.title}`}
-          >
-            Редагувати
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="link-arrow" aria-hidden="true">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div className="news-card-shadow" aria-hidden="true" />
-    </article>
-  );
+/* ============================================
+   ДОПОМІЖНІ КОМПОНЕНТИ
+   ============================================ */
+const ErrorState = ({ error, onRetry }) => (<div className="news-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg><p>{error}</p><button onClick={onRetry} className="retry-btn">Повторити</button></div>);
+const EmptyState = ({ platformName, onCreatePublication }) => (<div className="news-empty" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="empty-icon" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg><p>Публікацій у {platformName} поки що немає.</p><p className="empty-subtitle">Створіть першу публікацію, щоб розпочати!</p>{onCreatePublication && <button className="btn btn-primary" onClick={onCreatePublication}>Створити публікацію</button>}</div>);
+const PublicationCard = ({ publication, isVisible, platform, onEdit }) => {
+  const statusConfig = { scheduled: { text: 'Заплановано', color: '#ffc107', bg: 'rgba(255, 193, 7, 0.15)' }, draft: { text: 'Чернетка', color: '#6c757d', bg: 'rgba(108, 117, 125, 0.15)' }, published: { text: 'Опубліковано', color: '#28a745', bg: 'rgba(40, 167, 69, 0.15)' } };
+  const status = statusConfig[publication.status] || statusConfig.draft;
+  return (<article className={`news-card ${isVisible ? 'news-card-visible' : ''}`} itemScope itemType="https://schema.org/SocialMediaPosting" aria-hidden={!isVisible}>
+    <div className="news-card-content">
+      <div className="news-card-header"><div className="news-card-badge" style={{ background: platform.badgeColor }} aria-label={`Платформа: ${platform.name}`}><span className="platform-icon" aria-hidden="true">{platform.icon}</span>{platform.name}</div><span className="status-badge" style={{ color: status.color, background: status.bg }} aria-label={`Статус: ${status.text}`}>{status.text}</span></div>
+      <div className="news-card-meta"><span className="news-card-author">{publication.author}</span><span className="news-card-dot" aria-hidden="true">•</span><time className="news-card-time" dateTime={publication.scheduledFor}>{new Date(publication.scheduledFor).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</time></div>
+      <h2 className="news-card-title" itemProp="headline">{publication.title}</h2><p className="news-card-description" itemProp="description">{publication.description}</p>
+      <div className="news-card-footer"><button className="news-card-link" onClick={(e) => { e.stopPropagation(); onEdit(publication); }} aria-label={`Редагувати публікацію: ${publication.title}`}>Редагувати<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="link-arrow" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg></button></div>
+    </div><div className="news-card-shadow" aria-hidden="true" />
+  </article>);
 };
 
-// ============================================
-// ОСНОВНИЙ КОМПОНЕНТ: News
-// ============================================
-
-const News = () => {
-  const {
-    posts,
-    setPosts,
-    loading,
-    error,
-    activePlatform,
-    filteredPosts,
-    visibleCards,
-    handlePlatformChange,
-    fetchPosts
-  } = useNewsPosts();
-
-  const [editingPost, setEditingPost] = useState(null);
+/* ============================================
+   ОСНОВНИЙ КОНТЕНТ (винесено з News)
+   ============================================ */
+const NewsContent = () => {
+  const { publications, setPublications, error, activePlatform, filteredPublications, visibleCards, handlePlatformChange, fetchPublications } = usePublications();
+  const [editingPublication, setEditingPublication] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
-
   const currentPlatform = PLATFORMS[activePlatform];
 
-  const handleEditPost = useCallback((post) => {
-    setEditingPost(post);
-  }, []);
-
-  const handleCreatePost = useCallback(() => {
-    const newPost = {
-      id: Date.now(),
-      platform: activePlatform === 'all' ? 'instagram' : activePlatform,
-      title: '',
-      description: '',
-      author: 'Ви',
-      scheduledFor: new Date().toISOString().slice(0, 16),
-      status: 'draft',
-      media: [],
-      audience: 'all'
-    };
-    setEditingPost(newPost);
-    setIsCreating(true);
+  const handleEditPublication = useCallback((publication) => setEditingPublication(publication), []);
+  const handleCreatePublication = useCallback(() => {
+    const newPublication = { id: Date.now(), platform: activePlatform === 'all' ? 'instagram' : activePlatform, title: '', description: '', author: 'Ви', scheduledFor: new Date().toISOString().slice(0, 16), status: 'draft', media: [], audience: 'all' };
+    setEditingPublication(newPublication); setIsCreating(true);
   }, [activePlatform]);
+  const handleCloseModal = useCallback(() => { setEditingPublication(null); setIsCreating(false); }, []);
+  const handleSavePublication = useCallback((updatedPublication) => {
+    if (isCreating) setPublications(prevPublications => [...prevPublications, updatedPublication]);
+    else setPublications(prevPublications => prevPublications.map(p => p.id === updatedPublication.id ? updatedPublication : p));
+  }, [setPublications, isCreating]);
+  const handleDeletePublication = useCallback((publicationId) => { if (window.confirm('Ви впевнені, що хочете видалити цю публікацію?')) setPublications(prev => prev.filter(p => p.id !== publicationId)); }, [setPublications]);
 
-  const handleCloseModal = useCallback(() => {
-    setEditingPost(null);
-    setIsCreating(false);
-  }, []);
+  if (error) return (<div className="news-container" role="region" aria-label="Публікації"><header className="news-header"><h1 className="news-title">Публікації</h1><p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p></header><ErrorState error={error} onRetry={fetchPublications} /></div>);
 
-  const handleSavePost = useCallback((updatedPost) => {
-    if (isCreating) {
-      setPosts(prevPosts => [...prevPosts, updatedPost]);
-      console.log('Новий пост створено:', updatedPost);
-    } else {
-      setPosts(prevPosts => 
-        prevPosts.map(p => p.id === updatedPost.id ? updatedPost : p)
-      );
-      console.log('Пост оновлено:', updatedPost);
-    }
-  }, [setPosts, isCreating]);
-
-  const handleDeletePost = useCallback((postId) => {
-    if (window.confirm('Ви впевнені, що хочете видалити цю публікацію?')) {
-      setPosts(prev => prev.filter(p => p.id !== postId));
-      console.log('Пост видалено:', postId);
-    }
-  }, [setPosts]);
-
-  if (loading) {
-    return (
-      <div className="news-container" role="region" aria-label="Пости">
-        <header className="news-header">
-          <h1 className="news-title">Публікації</h1>
-          <p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p>
-        </header>
-        <LoadingState />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="news-container" role="region" aria-label="Пости">
-        <header className="news-header">
-          <h1 className="news-title">Публікації</h1>
-          <p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p>
-        </header>
-        <ErrorState error={error} onRetry={fetchPosts} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="news-container" role="region" aria-label="Пости">
-      <header className="news-header">
-        <h1 className="news-title">Публікації</h1>
-        <p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p>
-      </header>
-
-      <nav className="news-tabs" role="tablist" aria-label="Соціальні мережі">
-        {Object.values(PLATFORMS).map((platform) => {
-          const postCount = platform.id === 'all' 
-            ? MOCK_POSTS.length 
-            : MOCK_POSTS.filter(p => p.platform === platform.id).length;
-          const isActive = activePlatform === platform.id;
-          
-          return (
-            <button
-              key={platform.id}
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`${platform.id}-panel`}
-              id={`${platform.id}-tab`}
-              className={`news-tab-btn ${isActive ? 'active' : ''}`}
-              onClick={() => handlePlatformChange(platform.id)}
-              style={{ '--platform-color': platform.color }}
-            >
-              <span className="platform-icon" aria-hidden="true">{platform.icon}</span>
-              <span className="platform-name">{platform.name}</span>
-              <span className="tab-count" aria-label={`${postCount} постів`}>{postCount}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <section 
-        role="tabpanel"
-        id={`${activePlatform}-panel`}
-        aria-labelledby={`${activePlatform}-tab`}
-        className="news-tab-panel"
-      >
-        <div className="news-list">
-          {filteredPosts.map((post, index) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              isVisible={visibleCards.includes(index)}
-              platform={PLATFORMS[post.platform]}
-              onEdit={handleEditPost}
-            />
-          ))}
-        </div>
-
-        {filteredPosts.length === 0 && (
-          <EmptyState 
-            platformName={currentPlatform.name} 
-            onCreatePost={activePlatform !== 'all' ? handleCreatePost : undefined}
-          />
-        )}
-      </section>
-
-      {editingPost && (
-        <EditPostModal
-          post={editingPost}
-          platform={PLATFORMS[editingPost.platform]}
-          onClose={handleCloseModal}
-          onSave={handleSavePost}
-          onDelete={handleDeletePost}
-        />
-      )}
-    </div>
-  );
+  return (<div className="news-container" role="region" aria-label="Публікації">
+    <header className="news-header"><h1 className="news-title">Публікації</h1><p className="news-subtitle">Керуйте публікаціями в соціальних мережах.</p></header>
+    <nav className="news-tabs" role="tablist" aria-label="Соціальні мережі">{Object.values(PLATFORMS).map((platform) => { const publicationCount = platform.id === 'all' ? MOCK_PUBLICATIONS.length : MOCK_PUBLICATIONS.filter(p => p.platform === platform.id).length; const isActive = activePlatform === platform.id; return (<button key={platform.id} role="tab" aria-selected={isActive} aria-controls={`${platform.id}-panel`} id={`${platform.id}-tab`} className={`news-tab-btn ${isActive ? 'active' : ''}`} onClick={() => handlePlatformChange(platform.id)} style={{ '--platform-color': platform.color }}><span className="platform-icon" aria-hidden="true">{platform.icon}</span><span className="platform-name">{platform.name}</span><span className="tab-count" aria-label={`${publicationCount} публікацій`}>{publicationCount}</span></button>); })}</nav>
+    <section role="tabpanel" id={`${activePlatform}-panel`} aria-labelledby={`${activePlatform}-tab`} className="news-tab-panel">
+      <div className="news-list">{filteredPublications.map((publication, index) => (<PublicationCard key={publication.id} publication={publication} isVisible={visibleCards.includes(index)} platform={PLATFORMS[publication.platform]} onEdit={handleEditPublication} />))}</div>
+      {filteredPublications.length === 0 && <EmptyState platformName={currentPlatform.name} onCreatePublication={activePlatform !== 'all' ? handleCreatePublication : undefined} />}
+    </section>
+    {editingPublication && <EditPublicationModal publication={editingPublication} platform={PLATFORMS[editingPublication.platform]} onClose={handleCloseModal} onSave={handleSavePublication} onDelete={handleDeletePublication} />}
+  </div>);
 };
+
+/* ============================================
+   LAZY-ЗАВАНТАЖЕННЯ (демо з затримкою)
+   ============================================ */
+// Для демо з імітацією мережевої затримки:
+const NewsContentLazy = lazy(() => new Promise((resolve) => { setTimeout(() => resolve({ default: NewsContent }), 500); }));
+// Для продакшену (реальний код-спліттинг):
+// const NewsContentLazy = lazy(() => import('./NewsContent'));
+
+/* ============================================
+   ЕКСПОРТ ГОЛОВНОГО КОМПОНЕНТА
+   ============================================ */
+const News = () => (<Suspense fallback={<NewsLoader />}><NewsContentLazy /></Suspense>);
 
 export default News;

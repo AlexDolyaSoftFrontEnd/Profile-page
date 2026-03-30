@@ -1,31 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Імпортуємо хук навігації
+// Home.jsx
+import React, { Suspense, lazy } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-const Home = () => {
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // 2. Ініціалізуємо хук
+/* ========================================
+   LOADER (Прозорий Fallback)
+   ======================================== */
+const HomeLoader = () => (
+  <div className="loader-overlay" role="status" aria-live="polite">
+    <div className="loader-content">
+      <div className="loader-spinner" aria-hidden="true" />
+      <p>Завантаження...</p>
+    </div>
+  </div>
+);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, []);
+/* ========================================
+   ОСНОВНИЙ КОНТЕНТ
+   ======================================== */
+const HomeContent = () => {
+  const navigate = useNavigate();
 
-  // 3. Функція для переходу
   const handleAuthClick = () => {
-    navigate('/login'); // Замініть '/login' на ваш реальний шлях до компонента авторизації
+    navigate('/login');
   };
-
-  if (loading) {
-    return (
-      <div className="dashboard-container">
-        <div className="dashboard-loader" role="status" aria-live="polite">
-          <div className="loader-spinner" aria-hidden="true" />
-          <p>Завантаження...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="dashboard-container">
@@ -55,13 +53,12 @@ const Home = () => {
           </button>
         </article>
 
-        {/* 4. Додаємо onClick та стиль курсору до потрібної картки */}
         <article 
           className="alert-card alert-info" 
           onClick={handleAuthClick}
-          style={{ cursor: 'pointer' }} // Візуально показує, що можна клікнути
-          role="button" // Для доступності (accessibility)
-          tabIndex="0" // Дозволяє фокус клавіатурою
+          style={{ cursor: 'pointer' }}
+          role="button"
+          tabIndex="0"
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               handleAuthClick();
@@ -78,8 +75,11 @@ const Home = () => {
               Зайдіть в свій обліковий запис за допомогою автентифікації.
             </p>
           </div>
-          {/* Кнопку всередині можна залишити як іконку, але основна дія тепер на всій картці */}
-          <button className="alert-action" aria-label="Перейти до авторизації" onClick={(e) => e.stopPropagation()}>
+          <button 
+            className="alert-action" 
+            aria-label="Перейти до авторизації" 
+            onClick={(e) => e.stopPropagation()}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <polyline points="9 18 15 12 9 6"/>
             </svg>
@@ -89,5 +89,27 @@ const Home = () => {
     </div>
   );
 };
+
+/* ========================================
+   LAZY-ЗАВАНТАЖЕННЯ
+   ======================================== */
+// Демо з затримкою 600мс:
+const HomeContentLazy = lazy(() => 
+  new Promise((resolve) => {
+    setTimeout(() => resolve({ default: HomeContent }), 600);
+  })
+);
+
+// Продакшен (реальний код-спліттинг):
+// const HomeContentLazy = lazy(() => import('./HomeContent'));
+
+/* ========================================
+   ЕКСПОРТ
+   ======================================== */
+const Home = () => (
+  <Suspense fallback={<HomeLoader />}>
+    <HomeContentLazy />
+  </Suspense>
+);
 
 export default Home;

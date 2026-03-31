@@ -388,7 +388,7 @@ const PersonalData = () => {
       <header className="section-header">
         <div>
           <h1 className="page-title">Налаштування профілю</h1>
-          <p className="page-subtitle">Підключіть акаунти для управління публікаціями.</p>
+          <p className="page-subtitle">Підключіть акаунти для управління публікаціями</p>
         </div>
         <div className="header-actions">
           <select
